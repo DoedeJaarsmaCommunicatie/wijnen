@@ -11,18 +11,22 @@ class AppServiceProvider extends ServiceProvider
 	public function boot(): void
 	{
 		$providers = include get_stylesheet_directory() . '/src/config/app.php';
-		$this->providers = apply_filters('THEME_SLUG/app/register-providers/providers', $providers['providers']);
-		$this->boot();
+		$this->providers = apply_filters('wijnen/app/register-providers/providers', $providers['providers']);
+		do_action('wijnen/app/init');
 	}
 
 	public function register(): void
 	{
 		foreach ($this->providers as $provider) {
 			try {
-				do_action('THEME_SLUG/app/register-providers/register/' . (new \ReflectionClass($provider))->getShortName());
+				do_action('wijnen/app/register-providers/register/' . (new \ReflectionClass($provider))->getShortName());
 			} catch (\ReflectionException $exception) {
 				Log::warning('Reflection error while registering providers', ['class' => $provider]);
 			}
-			Container::get($provider);		}
+			Container::get($provider);
+		}
+
+		do_action('wijnen/app/providers/initialized');
+
 	}
 }
