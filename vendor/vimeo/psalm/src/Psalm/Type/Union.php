@@ -36,22 +36,6 @@ use Doctrine\Instantiator\Exception\UnexpectedValueException;
 
 class Union implements TypeNode
 {
-    const TAINTED_INPUT_SQL = 1;
-    const TAINTED_INPUT_HTML = 2;
-    const TAINTED_INPUT_SHELL = 4;
-    const TAINTED_USER_SECRET = 8;
-    const TAINTED_SYSTEM_SECRET = 16;
-
-    const TAINTED_INPUT = self::TAINTED_INPUT_SQL
-        | self::TAINTED_INPUT_HTML
-        | self::TAINTED_INPUT_SHELL;
-
-    const TAINTED = self::TAINTED_INPUT_SQL
-        | self::TAINTED_INPUT_HTML
-        | self::TAINTED_INPUT_SHELL
-        | self::TAINTED_USER_SECRET
-        | self::TAINTED_SYSTEM_SECRET;
-
     /**
      * @var non-empty-array<string, Atomic>
      */
@@ -180,14 +164,9 @@ class Union implements TypeNode
     private $id;
 
     /**
-     * @var ?int
+     * @var ?array<\Psalm\Internal\Taint\Taintable>
      */
-    public $tainted = null;
-
-    /**
-     * @var ?array<\Psalm\Internal\Taint\Source>
-     */
-    public $sources;
+    public $parent_nodes;
 
     /**
      * @var bool
@@ -397,6 +376,15 @@ class Union implements TypeNode
             $types[] = strval($type->getId());
         }
         sort($types);
+
+        if (\count($types) > 1) {
+            foreach ($types as $i => $type) {
+                if (strpos($type, ' as ') && strpos($type, '(') === false) {
+                    $types[$i] = '(' . $type . ')';
+                }
+            }
+        }
+
         $id = implode('|', $types);
 
         $this->id = $id;
@@ -848,7 +836,9 @@ class Union implements TypeNode
      */
     public function hasLowercaseString()
     {
-        return isset($this->types['string']) && $this->types['string'] instanceof Atomic\TLowercaseString;
+        return isset($this->types['string'])
+            && ($this->types['string'] instanceof Atomic\TLowercaseString
+                || $this->types['string'] instanceof Atomic\TNonEmptyLowercaseString);
     }
 
     /**
@@ -964,6 +954,19 @@ class Union implements TypeNode
                             }
                         )
                     );
+            }
+        );
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasConditional()
+    {
+        return (bool) array_filter(
+            $this->types,
+            function (Atomic $type) : bool {
+                return $type instanceof Type\Atomic\TConditional;
             }
         );
     }
@@ -1376,6 +1379,10 @@ class Union implements TypeNode
                         $codebase
                     );
 
+                    if ($atomic_type->as_type->isNullable() && $template_type->isVoid()) {
+                        $template_type = Type::getNull();
+                    }
+
                     if (TypeAnalyzer::isContainedBy(
                         $codebase,
                         $template_type,
@@ -1528,13 +1535,20 @@ class Union implements TypeNode
     /**
      * @return bool true if this is an int
      */
-    public function isInt()
+    public function isInt(bool $check_templates = false)
     {
-        if (!$this->isSingle()) {
-            return false;
-        }
-
-        return isset($this->types['int']) || $this->literal_int_types;
+        return count(
+            array_filter(
+                $this->types,
+                function ($type) use ($check_templates) {
+                    return $type instanceof TInt
+                        || ($check_templates
+                            && $type instanceof TTemplateParam
+                            && $type->as->isInt()
+                        );
+                }
+            )
+        ) === count($this->types);
     }
 
     /**
@@ -1552,17 +1566,20 @@ class Union implements TypeNode
     /**
      * @return bool true if this is a string
      */
-    public function isString()
+    public function isString(bool $check_templates = false)
     {
-        if (!$this->isSingle()) {
-            return false;
-        }
-
-        return isset($this->types['string'])
-            || isset($this->types['class-string'])
-            || isset($this->types['trait-string'])
-            || isset($this->types['numeric-string'])
-            || $this->literal_string_types;
+        return count(
+            array_filter(
+                $this->types,
+                function ($type) use ($check_templates) {
+                    return $type instanceof TString
+                        || ($check_templates
+                            && $type instanceof TTemplateParam
+                            && $type->as->isString()
+                        );
+                }
+            )
+        ) === count($this->types);
     }
 
     /**

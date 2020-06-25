@@ -30,6 +30,7 @@ $valid_long_options = [
     'config:',
     'debug',
     'debug-by-line',
+    'debug-emitted-issues',
     'diff',
     'diff-methods',
     'disable-extension:',
@@ -68,7 +69,10 @@ $valid_long_options = [
     'long-progress',
     'no-suggestions',
     'include-php-versions', // used for baseline
+    'pretty-print', // used for JSON reports
     'track-tainted-input',
+    'taint-analysis',
+    'security-analysis',
     'find-unused-psalm-suppress',
     'error-level:',
 ];
@@ -136,7 +140,7 @@ array_map(
 );
 
 if (!array_key_exists('use-ini-defaults', $options)) {
-    ini_set('display_errors', '1');
+    ini_set('display_errors', 'stderr');
     ini_set('display_startup_errors', '1');
     ini_set('memory_limit', (string) (8 * 1024 * 1024 * 1024));
 }
@@ -242,6 +246,7 @@ if (isset($options['i'])) {
                 && $arg !== '--init'
                 && $arg !== '--debug'
                 && $arg !== '--debug-by-line'
+                && $arg !== '--debug-emitted-issues'
                 && strpos($arg, '--disable-extension=') !== 0
                 && strpos($arg, '--root=') !== 0
                 && strpos($arg, '--r=') !== 0;
@@ -387,6 +392,10 @@ if (is_null($config->load_xdebug_stub) && '' !== $ini_handler->getSkippedVersion
     $config->load_xdebug_stub = true;
 }
 
+if (isset($options['debug-emitted-issues'])) {
+    $config->debug_emitted_issues = true;
+}
+
 setlocale(LC_CTYPE, 'C');
 
 if (isset($options['set-baseline'])) {
@@ -517,6 +526,7 @@ $stdout_report_options->show_suggestions = !array_key_exists('no-suggestions', $
  */
 $stdout_report_options->format = $output_format;
 $stdout_report_options->show_snippet = !isset($options['show-snippet']) || $options['show-snippet'] !== "false";
+$stdout_report_options->pretty = isset($options['pretty-print']) && $options['pretty-print'] !== "false";
 
 $project_analyzer = new ProjectAnalyzer(
     $config,
@@ -571,7 +581,10 @@ if ($config->find_unused_variables || $find_unused_variables) {
     $project_analyzer->getCodebase()->reportUnusedVariables();
 }
 
-if (isset($options['track-tainted-input'])) {
+if (isset($options['track-tainted-input'])
+    || isset($options['security-analysis'])
+    || isset($options['taint-analysis'])
+) {
     $project_analyzer->trackTaintedInputs();
 }
 

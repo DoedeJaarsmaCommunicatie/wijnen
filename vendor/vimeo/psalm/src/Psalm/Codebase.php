@@ -20,7 +20,7 @@ use function preg_match;
 use Psalm\Internal\Analyzer\ProjectAnalyzer;
 use Psalm\Internal\Analyzer\Statements\Block\ForeachAnalyzer;
 use Psalm\Internal\Analyzer\TypeAnalyzer;
-use Psalm\Internal\Codebase\CallMap;
+use Psalm\Internal\Codebase\InternalCallMapHandler;
 use Psalm\Internal\Provider\ClassLikeStorageProvider;
 use Psalm\Internal\Provider\FileProvider;
 use Psalm\Internal\Provider\FileReferenceProvider;
@@ -851,6 +851,8 @@ class Codebase
     /**
      * Given a function id, return the function like storage for
      * a method, closure, or function.
+     *
+     * @param non-empty-string $function_id
      */
     public function getFunctionLikeStorage(
         StatementsAnalyzer $statements_analyzer,
@@ -1032,7 +1034,7 @@ class Codebase
     public function getSymbolInformation(string $file_path, string $symbol)
     {
         if (\is_numeric($symbol[0])) {
-            return \preg_replace('/[^:]*:/', '', $symbol);
+            return \preg_replace('/^[^:]*:/', '', $symbol);
         }
 
         try {
@@ -1076,9 +1078,8 @@ class Codebase
             }
 
             if (strpos($symbol, '()')) {
-                $file_storage = $this->file_storage_provider->get($file_path);
-
                 $function_id = strtolower(substr($symbol, 0, -2));
+                $file_storage = $this->file_storage_provider->get($file_path);
 
                 if (isset($file_storage->functions[$function_id])) {
                     $function_storage = $file_storage->functions[$function_id];
@@ -1086,7 +1087,12 @@ class Codebase
                     return '<?php ' . $function_storage->getSignature(true);
                 }
 
-                return null;
+                if (!$function_id) {
+                    return null;
+                }
+
+                $function = $this->functions->getStorage(null, $function_id);
+                return '<?php ' . $function->getSignature(true);
             }
 
             $storage = $this->classlike_storage_provider->get($symbol);
@@ -1168,7 +1174,12 @@ class Codebase
                     return $file_storage->functions[$function_id]->location;
                 }
 
-                return null;
+                if (!$function_id) {
+                    return null;
+                }
+
+                $function = $this->functions->getStorage(null, $function_id);
+                return $function->location;
             }
 
             $storage = $this->classlike_storage_provider->get($symbol);
@@ -1236,7 +1247,7 @@ class Codebase
     }
 
     /**
-     * @return array{0: string, 1: int, 2: Range}|null
+     * @return array{0: non-empty-string, 1: int, 2: Range}|null
      */
     public function getFunctionArgumentAtPosition(string $file_path, Position $position)
     {
@@ -1290,7 +1301,7 @@ class Codebase
     }
 
     /**
-     * @param  string $function_symbol
+     * @param  non-empty-string $function_symbol
      */
     public function getSignatureInformation(string $function_symbol) : ?\LanguageServerProtocol\SignatureInformation
     {
@@ -1311,8 +1322,8 @@ class Codebase
 
                 $params = $function_storage->params;
             } catch (\Exception $exception) {
-                if (CallMap::inCallMap($function_symbol)) {
-                    $callables = CallMap::getCallablesFromCallMap($function_symbol);
+                if (InternalCallMapHandler::inCallMap($function_symbol)) {
+                    $callables = InternalCallMapHandler::getCallablesFromCallMap($function_symbol);
 
                     if (!$callables || !$callables[0]->params) {
                         return null;
@@ -1716,5 +1727,35 @@ class Codebase
         array $phantom_classes = []
     ): void {
         $this->scanner->queueClassLikeForScanning($fq_classlike_name, $analyze_too, $store_failure, $phantom_classes);
+    }
+
+    /**
+     * @param array<string> $taints
+     *
+     * @psalm-suppress PossiblyUnusedMethod
+     */
+    public function addTaintSource(
+        Type\Union $expr_type,
+        string $taint_id,
+        array $taints = \Psalm\Type\TaintKindGroup::ALL_INPUT,
+        ?CodeLocation $code_location = null
+    ) : void {
+        if (!$this->taint) {
+            return;
+        }
+
+        $source = new \Psalm\Internal\Taint\Source(
+            $taint_id,
+            $taint_id,
+            $code_location,
+            null,
+            $taints
+        );
+
+        $this->taint->addSource($source);
+
+        $expr_type->parent_nodes = [
+            $source,
+        ];
     }
 }

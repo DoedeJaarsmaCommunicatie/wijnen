@@ -28,6 +28,7 @@ use function is_dir;
 use function is_file;
 use function json_decode;
 use function libxml_clear_errors;
+use const GLOB_NOSORT;
 use const LIBXML_ERR_ERROR;
 use const LIBXML_ERR_FATAL;
 use function libxml_get_errors;
@@ -40,6 +41,7 @@ use function preg_quote;
 use function preg_replace;
 use Psalm\Config\IssueHandler;
 use Psalm\Config\ProjectFileFilter;
+use Psalm\Config\TaintAnalysisFileFilter;
 use Psalm\Exception\ConfigException;
 use Psalm\Internal\Analyzer\ClassLikeAnalyzer;
 use Psalm\Internal\Analyzer\FileAnalyzer;
@@ -75,6 +77,7 @@ use function chdir;
 use function simplexml_import_dom;
 use const LIBXML_NONET;
 use function is_a;
+use const SCANDIR_SORT_NONE;
 
 /**
  * @psalm-suppress PropertyNotSetInConstructor
@@ -181,6 +184,11 @@ class Config
     protected $project_files;
 
     /**
+     * @var ProjectFileFilter|null
+     */
+    protected $extra_files;
+
+    /**
      * The base directory of this config file
      *
      * @var string
@@ -230,7 +238,7 @@ class Config
     private $mock_classes = [];
 
     /**
-     * @var array<int, string>
+     * @var array<string, string>
      */
     private $stub_files = [];
 
@@ -295,6 +303,11 @@ class Config
      * @var bool
      */
     public $skip_checks_on_unresolvable_includes = true;
+
+    /**
+     * @var bool
+     */
+    public $seal_all_methods = false;
 
     /**
      * @var bool
@@ -550,6 +563,16 @@ class Config
      */
     public $max_string_length = 1000;
 
+    /**
+     * @var TaintAnalysisFileFilter|null
+     */
+    protected $taint_analysis_ignored_files;
+
+    /**
+     * @var bool whether to emit a backtrace of emitted issues to stderr
+     */
+    public $debug_emitted_issues = false;
+
     protected function __construct()
     {
         self::$instance = $this;
@@ -777,7 +800,8 @@ class Config
             'ensureArrayStringOffsetsExist' => 'ensure_array_string_offsets_exist',
             'ensureArrayIntOffsetsExist' => 'ensure_array_int_offsets_exist',
             'reportMixedIssues' => 'show_mixed_issues',
-            'skipChecksOnUnresolvableIncludes' => 'skip_checks_on_unresolvable_includes'
+            'skipChecksOnUnresolvableIncludes' => 'skip_checks_on_unresolvable_includes',
+            'sealAllMethods' => 'seal_all_methods'
         ];
 
         foreach ($booleanAttributes as $xmlName => $internalName) {
@@ -892,6 +916,18 @@ class Config
 
         if (isset($config_xml->projectFiles)) {
             $config->project_files = ProjectFileFilter::loadFromXMLElement($config_xml->projectFiles, $base_dir, true);
+        }
+
+        if (isset($config_xml->extraFiles)) {
+            $config->extra_files = ProjectFileFilter::loadFromXMLElement($config_xml->extraFiles, $base_dir, true);
+        }
+
+        if (isset($config_xml->taintAnalysis->ignoreFiles)) {
+            $config->taint_analysis_ignored_files = TaintAnalysisFileFilter::loadFromXMLElement(
+                $config_xml->taintAnalysis->ignoreFiles,
+                $base_dir,
+                false
+            );
         }
 
         if (isset($config_xml->fileExtensions)) {
@@ -1344,9 +1380,25 @@ class Config
      *
      * @return  bool
      */
+    public function isInExtraDirs($file_path)
+    {
+        return $this->extra_files && $this->extra_files->allows($file_path);
+    }
+
+    /**
+     * @param   string $file_path
+     *
+     * @return  bool
+     */
     public function mustBeIgnored($file_path)
     {
         return $this->project_files && $this->project_files->forbids($file_path);
+    }
+
+    public function trackTaintsInPath(string $file_path) : bool
+    {
+        return !$this->taint_analysis_ignored_files
+            || $this->taint_analysis_ignored_files->allows($file_path);
     }
 
     public function getReportingLevelForIssue(CodeIssue $e) : string
@@ -1603,6 +1655,18 @@ class Config
     }
 
     /**
+     * @return array<string>
+     */
+    public function getExtraDirectories()
+    {
+        if (!$this->extra_files) {
+            return [];
+        }
+
+        return $this->extra_files->getDirectories();
+    }
+
+    /**
      * @param   string $file_path
      *
      * @return  bool
@@ -1709,7 +1773,7 @@ class Config
         } elseif (is_dir($phpstorm_meta_path)) {
             $phpstorm_meta_path = realpath($phpstorm_meta_path);
 
-            foreach (glob($phpstorm_meta_path . '/*.meta.php') as $glob) {
+            foreach (glob($phpstorm_meta_path . '/*.meta.php', GLOB_NOSORT) as $glob) {
                 if (is_file($glob) && realpath(dirname($glob)) === $phpstorm_meta_path) {
                     $stub_files[] = $glob;
                 }
@@ -1952,7 +2016,7 @@ class Config
     public static function removeCacheDirectory($dir)
     {
         if (is_dir($dir)) {
-            $objects = scandir($dir);
+            $objects = scandir($dir, SCANDIR_SORT_NONE);
 
             if ($objects === false) {
                 throw new \UnexpectedValueException('Not expecting false here');
@@ -1984,11 +2048,16 @@ class Config
     /** @return void */
     public function addStubFile(string $stub_file)
     {
-        $this->stub_files[] = $stub_file;
+        $this->stub_files[$stub_file] = $stub_file;
+    }
+
+    public function hasStubFile(string $stub_file) : bool
+    {
+        return isset($this->stub_files[$stub_file]);
     }
 
     /**
-     * @return array<int, string>
+     * @return array<string, string>
      */
     public function getStubFiles(): array
     {

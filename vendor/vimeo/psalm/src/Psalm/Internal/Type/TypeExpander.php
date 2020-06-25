@@ -1,40 +1,17 @@
 <?php
 namespace Psalm\Internal\Type;
 
-use PhpParser;
 use Psalm\Codebase;
-use Psalm\CodeLocation;
-use Psalm\Config;
-use Psalm\Context;
-use Psalm\FileSource;
-use Psalm\IssueBuffer;
-use Psalm\Storage\FunctionLikeParameter;
 use Psalm\Type;
-use Psalm\Type\Atomic\ObjectLike;
-use Psalm\Type\Atomic\Scalar;
-use Psalm\Type\Atomic\TArray;
-use Psalm\Type\Atomic\TFloat;
 use Psalm\Type\Atomic\TTemplateParam;
-use Psalm\Type\Atomic\TInt;
-use Psalm\Type\Atomic\TList;
-use Psalm\Type\Atomic\TMixed;
 use Psalm\Type\Atomic\TNamedObject;
-use Psalm\Type\Atomic\TNull;
-use Psalm\Type\Atomic\TObject;
-use Psalm\Type\Atomic\TString;
-use Psalm\Internal\Type\TypeCombination;
 use function strpos;
 use function is_string;
-use function in_array;
 use function strtolower;
-use function get_class;
 use function count;
-use function implode;
 use function is_array;
 use function array_merge;
 use function array_values;
-use function array_map;
-use function current;
 
 /**
  * @internal
@@ -90,8 +67,7 @@ class TypeExpander
         $fleshed_out_type->by_ref = $return_type->by_ref;
         $fleshed_out_type->initialized = $return_type->initialized;
         $fleshed_out_type->had_template = $return_type->had_template;
-        $fleshed_out_type->sources = $return_type->sources;
-        $fleshed_out_type->tainted = $return_type->tainted;
+        $fleshed_out_type->parent_nodes = $return_type->parent_nodes;
 
         return $fleshed_out_type;
     }
@@ -103,7 +79,7 @@ class TypeExpander
      *
      * @return Type\Atomic|non-empty-array<int, Type\Atomic>
      */
-    private static function expandAtomic(
+    public static function expandAtomic(
         Codebase $codebase,
         Type\Atomic &$return_type,
         ?string $self_class,
@@ -211,6 +187,19 @@ class TypeExpander
                 $return_type->as_type = $new_as_type;
                 $return_type->as = $return_type->as_type->value;
             }
+        } elseif ($return_type instanceof Type\Atomic\TTemplateParam) {
+            $new_as_type = self::expandUnion(
+                $codebase,
+                clone $return_type->as,
+                $self_class,
+                $static_class_type,
+                $parent_class,
+                $evaluate_class_constants,
+                $evaluate_conditional_types,
+                $final
+            );
+
+            $return_type->as = $new_as_type;
         }
 
         if ($return_type instanceof Type\Atomic\TScalarClassConstant) {
@@ -226,7 +215,14 @@ class TypeExpander
                 if (strpos($return_type->const_name, '*') !== false) {
                     $class_storage = $codebase->classlike_storage_provider->get($return_type->fq_classlike_name);
 
-                    $matching_constants = \array_keys($class_storage->class_constant_locations);
+                    $all_class_constants = $class_storage->public_class_constants
+                        + $class_storage->protected_class_constants
+                        + $class_storage->private_class_constants
+                        + $class_storage->public_class_constant_nodes
+                        + $class_storage->protected_class_constant_nodes
+                        + $class_storage->private_class_constant_nodes;
+
+                    $matching_constants = \array_keys($all_class_constants);
 
                     $const_name_part = \substr($return_type->const_name, 0, -1);
 
@@ -270,6 +266,55 @@ class TypeExpander
 
                 if ($matching_constant_types) {
                     return $matching_constant_types;
+                }
+            }
+
+            return $return_type;
+        }
+
+        if ($return_type instanceof Type\Atomic\TTypeAlias) {
+            $declaring_fq_classlike_name = $return_type->declaring_fq_classlike_name;
+
+            if ($declaring_fq_classlike_name === 'self' && $self_class) {
+                $declaring_fq_classlike_name = $self_class;
+            }
+
+            if ($evaluate_class_constants && $codebase->classOrInterfaceExists($declaring_fq_classlike_name)) {
+                $class_storage = $codebase->classlike_storage_provider->get($declaring_fq_classlike_name);
+
+                $type_alias_name = $return_type->alias_name;
+
+                if (isset($class_storage->type_aliases[$type_alias_name])) {
+                    $resolved_type_alias = $class_storage->type_aliases[$type_alias_name];
+
+                    if ($resolved_type_alias->replacement_atomic_types) {
+                        $replacement_atomic_types = $resolved_type_alias->replacement_atomic_types;
+
+                        $recursively_fleshed_out_types = [];
+
+                        foreach ($replacement_atomic_types as $replacement_atomic_type) {
+                            $recursively_fleshed_out_type = self::expandAtomic(
+                                $codebase,
+                                $replacement_atomic_type,
+                                $self_class,
+                                $static_class_type,
+                                $parent_class,
+                                $evaluate_class_constants,
+                                $evaluate_conditional_types
+                            );
+
+                            if (is_array($recursively_fleshed_out_type)) {
+                                $recursively_fleshed_out_types = array_merge(
+                                    $recursively_fleshed_out_type,
+                                    $recursively_fleshed_out_types
+                                );
+                            } else {
+                                $recursively_fleshed_out_types[] = $recursively_fleshed_out_type;
+                            }
+                        }
+
+                        return $recursively_fleshed_out_types;
+                    }
                 }
             }
 
@@ -320,8 +365,9 @@ class TypeExpander
             || $return_type instanceof Type\Atomic\TGenericObject
             || $return_type instanceof Type\Atomic\TIterable
         ) {
-            foreach ($return_type->type_params as &$type_param) {
-                $type_param = self::expandUnion(
+            foreach ($return_type->type_params as $k => $type_param) {
+                /** @psalm-suppress PropertyTypeCoercion */
+                $return_type->type_params[$k] = self::expandUnion(
                     $codebase,
                     $type_param,
                     $self_class,
@@ -358,7 +404,9 @@ class TypeExpander
             );
         }
 
-        if ($return_type instanceof Type\Atomic\TCallable) {
+        if ($return_type instanceof Type\Atomic\TCallable
+            || $return_type instanceof Type\Atomic\TFn
+        ) {
             if ($return_type->params) {
                 foreach ($return_type->params as $param) {
                     if ($param->type) {

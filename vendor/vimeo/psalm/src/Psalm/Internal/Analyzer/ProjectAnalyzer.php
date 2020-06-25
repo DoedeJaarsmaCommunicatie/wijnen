@@ -178,6 +178,11 @@ class ProjectAnalyzer
     private $project_files = [];
 
     /**
+     * @var array<string,string>
+     */
+    private $extra_files = [];
+
+    /**
      * @var array<string, string>
      */
     private $to_refactor = [];
@@ -256,6 +261,8 @@ class ProjectAnalyzer
         $this->threads = $threads;
         $this->config = $config;
 
+        $this->clearCacheDirectoryIfConfigOrComposerLockfileChanged();
+
         $this->codebase = new Codebase(
             $config,
             $providers,
@@ -265,9 +272,9 @@ class ProjectAnalyzer
         $this->stdout_report_options = $stdout_report_options;
         $this->generated_report_options = $generated_report_options;
 
-        foreach ($this->config->getProjectDirectories() as $dir_name) {
-            $file_extensions = $this->config->getFileExtensions();
+        $file_extensions = $this->config->getFileExtensions();
 
+        foreach ($this->config->getProjectDirectories() as $dir_name) {
             $file_paths = $this->file_provider->getFilesInDir($dir_name, $file_extensions);
 
             foreach ($file_paths as $file_path) {
@@ -277,21 +284,52 @@ class ProjectAnalyzer
             }
         }
 
+        foreach ($this->config->getExtraDirectories() as $dir_name) {
+            $file_paths = $this->file_provider->getFilesInDir($dir_name, $file_extensions);
+
+            foreach ($file_paths as $file_path) {
+                if ($this->config->isInExtraDirs($file_path)) {
+                    $this->addExtraFile($file_path);
+                }
+            }
+        }
+
         foreach ($this->config->getProjectFiles() as $file_path) {
             $this->addProjectFile($file_path);
         }
 
-        if ($this->project_cache_provider && $this->project_cache_provider->hasLockfileChanged()) {
+        self::$instance = $this;
+    }
+
+    private function clearCacheDirectoryIfConfigOrComposerLockfileChanged() : void
+    {
+        if ($this->project_cache_provider
+            && $this->project_cache_provider->hasLockfileChanged()
+        ) {
             $this->progress->debug(
                 'Composer lockfile change detected, clearing cache' . "\n"
             );
 
-            Config::removeCacheDirectory($config->getCacheDirectory());
+            Config::removeCacheDirectory($this->config->getCacheDirectory());
+
+            if ($this->file_reference_provider->cache) {
+                $this->file_reference_provider->cache->hasConfigChanged();
+            }
 
             $this->project_cache_provider->updateComposerLockHash();
-        }
+        } elseif ($this->file_reference_provider->cache
+            && $this->file_reference_provider->cache->hasConfigChanged()
+        ) {
+            $this->progress->debug(
+                'Config change detected, clearing cache' . "\n"
+            );
 
-        self::$instance = $this;
+            Config::removeCacheDirectory($this->config->getCacheDirectory());
+
+            if ($this->project_cache_provider) {
+                $this->project_cache_provider->hasLockfileChanged();
+            }
+        }
     }
 
     /**
@@ -525,6 +563,7 @@ class ProjectAnalyzer
         ) {
             $this->visitAutoloadFiles();
 
+            $this->codebase->scanner->addFilesToShallowScan($this->extra_files);
             $this->codebase->scanner->addFilesToDeepScan($this->project_files);
             $this->codebase->analyzer->addFilesToAnalyze($this->project_files);
 
@@ -1027,6 +1066,10 @@ class ProjectAnalyzer
         $this->project_files[$file_path] = $file_path;
     }
 
+    public function addExtraFile(string $file_path) : void
+    {
+        $this->extra_files[$file_path] = $file_path;
+    }
 
     /**
      * @param  string $dir_name

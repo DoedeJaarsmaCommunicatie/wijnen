@@ -3,7 +3,6 @@ namespace Psalm\Internal\Analyzer;
 
 use Psalm\Codebase;
 use Psalm\CodeLocation;
-use Psalm\Internal\Analyzer\Statements\ExpressionAnalyzer;
 use Psalm\Internal\MethodIdentifier;
 use Psalm\Issue\ImplementedParamTypeMismatch;
 use Psalm\Issue\ImplementedReturnTypeMismatch;
@@ -586,6 +585,18 @@ class MethodComparator
 
                 foreach ($t->as->getAtomicTypes() as $as_t) {
                     $implementer_method_storage_param_type->addType($as_t);
+                }
+            }
+        }
+
+        foreach ($guide_method_storage_param_type->getAtomicTypes() as $k => $t) {
+            if ($t instanceof Type\Atomic\TTemplateParam
+                && \strpos($t->defining_class, 'fn-') === 0
+            ) {
+                $guide_method_storage_param_type->removeType($k);
+
+                foreach ($t->as->getAtomicTypes() as $as_t) {
+                    $guide_method_storage_param_type->addType($as_t);
                 }
             }
         }

@@ -5,12 +5,16 @@ use function array_pop;
 use function array_search;
 use function array_splice;
 use function count;
+use function debug_print_backtrace;
 use function explode;
 use function file_put_contents;
+use function fwrite;
 use function get_class;
 use function memory_get_peak_usage;
 use function microtime;
 use function number_format;
+use function ob_get_clean;
+use function ob_start;
 use Psalm\Internal\Analyzer\IssueData;
 use Psalm\Internal\Analyzer\ProjectAnalyzer;
 use Psalm\Issue\CodeIssue;
@@ -33,6 +37,8 @@ use function str_replace;
 use function usort;
 use function array_merge;
 use function array_values;
+use const DEBUG_BACKTRACE_IGNORE_ARGS;
+use const STDERR;
 
 class IssueBuffer
 {
@@ -206,6 +212,13 @@ class IssueBuffer
             return false;
         }
 
+        if ($config->debug_emitted_issues) {
+            ob_start();
+            debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+            $trace = ob_get_clean();
+            fwrite(STDERR, "\nEmitting {$e->getShortLocation()} $issue_type {$e->getMessage()}\n$trace\n");
+        }
+
         $emitted_key = $issue_type . '-' . $e->getShortLocation() . ':' . $e->getLocation()->getColumn();
 
         if ($reporting_level === Config::REPORT_INFO) {
@@ -253,7 +266,11 @@ class IssueBuffer
             }
         }
 
-        self::$issues_data[$file_path] = $filtered_issues;
+        if (empty($filtered_issues)) {
+            unset(self::$issues_data[$file_path]);
+        } else {
+            self::$issues_data[$file_path] = $filtered_issues;
+        }
     }
 
     public static function addFixableIssue(string $issue_type) : void

@@ -176,6 +176,14 @@ class Reconciler
                         } else {
                             $new_types[$key_parts[2]] = [['=in-array-' . $key_parts[0]]];
                         }
+
+                        if ($key_parts[0][0] === '$') {
+                            if (isset($new_types[$key_parts[0]])) {
+                                $new_types[$key_parts[0]][] = ['=has-array-key-' . $key_parts[2]];
+                            } else {
+                                $new_types[$key_parts[0]] = [['=has-array-key-' . $key_parts[2]]];
+                            }
+                        }
                     }
                 }
             }
@@ -472,6 +480,10 @@ class Reconciler
         if (!isset($existing_keys[$base_key])) {
             if (strpos($base_key, '::')) {
                 list($fq_class_name, $const_name) = explode('::', $base_key);
+
+                if (!$codebase->classlikes->classOrInterfaceExists($fq_class_name)) {
+                    return null;
+                }
 
                 $class_constant = $codebase->classlikes->getConstantForClass(
                     $fq_class_name,

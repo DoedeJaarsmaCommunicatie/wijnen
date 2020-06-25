@@ -36,7 +36,7 @@ class FileStorage
     public $file_path;
 
     /**
-     * @var array<string, FunctionLikeStorage>
+     * @var array<string, FunctionStorage>
      */
     public $functions = [];
 
@@ -82,7 +82,7 @@ class FileStorage
     public $docblock_issues = [];
 
     /**
-     * @var array<string, array<int, array{0: string, 1: int}>>
+     * @var array<string, \Psalm\Internal\Type\TypeAlias>
      */
     public $type_aliases = [];
 

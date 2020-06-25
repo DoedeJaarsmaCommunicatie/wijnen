@@ -7,6 +7,7 @@ use Psalm\Internal\Analyzer\ClassLikeAnalyzer;
 use Psalm\Internal\Analyzer\NamespaceAnalyzer;
 use Psalm\Internal\Analyzer\Statements\ExpressionAnalyzer;
 use Psalm\Internal\Analyzer\StatementsAnalyzer;
+use Psalm\Internal\Taint\TaintNode;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\Issue\AbstractInstantiation;
@@ -32,18 +33,11 @@ use function is_string;
  */
 class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAnalyzer
 {
-    /**
-     * @param   StatementsAnalyzer           $statements_analyzer
-     * @param   PhpParser\Node\Expr\New_    $stmt
-     * @param   Context                     $context
-     *
-     * @return  false|null
-     */
     public static function analyze(
         StatementsAnalyzer $statements_analyzer,
         PhpParser\Node\Expr\New_ $stmt,
         Context $context
-    ) {
+    ) : bool {
         $fq_class_name = null;
 
         $codebase = $statements_analyzer->getCodebase();
@@ -288,7 +282,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                         $statements_analyzer->node_data->setType($stmt, $new_type);
                     }
 
-                    self::checkFunctionArguments(
+                    ArgumentsAnalyzer::analyze(
                         $statements_analyzer,
                         $stmt->args,
                         null,
@@ -296,10 +290,10 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                         $context
                     );
 
-                    return null;
+                    return true;
                 }
             } else {
-                self::checkFunctionArguments(
+                ArgumentsAnalyzer::analyze(
                     $statements_analyzer,
                     $stmt->args,
                     null,
@@ -307,7 +301,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                     $context
                 );
 
-                return null;
+                return true;
             }
         }
 
@@ -327,7 +321,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
 
             if ($context->check_classes) {
                 if ($context->isPhantomClass($fq_class_name)) {
-                    self::checkFunctionArguments(
+                    ArgumentsAnalyzer::analyze(
                         $statements_analyzer,
                         $stmt->args,
                         null,
@@ -335,7 +329,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                         $context
                     );
 
-                    return null;
+                    return true;
                 }
 
                 if (ClassLikeAnalyzer::checkFullyQualifiedClassLikeName(
@@ -347,7 +341,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                     $statements_analyzer->getSuppressedIssues(),
                     false
                 ) === false) {
-                    self::checkFunctionArguments(
+                    ArgumentsAnalyzer::analyze(
                         $statements_analyzer,
                         $stmt->args,
                         null,
@@ -355,7 +349,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                         $context
                     );
 
-                    return;
+                    return true;
                 }
 
                 if ($codebase->interfaceExists($fq_class_name)) {
@@ -368,7 +362,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                     )) {
                     }
 
-                    return null;
+                    return true;
                 }
             }
 
@@ -398,7 +392,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                         ),
                         $statements_analyzer->getSuppressedIssues()
                     )) {
-                        return;
+                        return true;
                     }
                 }
 
@@ -480,7 +474,7 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                         return false;
                     }
 
-                    if (MethodVisibilityAnalyzer::analyze(
+                    if (Method\MethodVisibilityAnalyzer::analyze(
                         $method_id,
                         $context,
                         $statements_analyzer->getSource(),
@@ -575,8 +569,34 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
                         $stmt_type->reference_free = true;
                     }
                 }
+
+                if ($codebase->taint
+                    && $codebase->config->trackTaintsInPath($statements_analyzer->getFilePath())
+                    && ($stmt_type = $statements_analyzer->node_data->getType($stmt))
+                ) {
+                    $code_location = new CodeLocation($statements_analyzer->getSource(), $stmt);
+
+                    if ($storage->external_mutation_free) {
+                        $method_source = TaintNode::getForMethodReturn(
+                            (string) $method_id,
+                            $fq_class_name . '::__construct',
+                            $storage->location,
+                            $code_location
+                        );
+                    } else {
+                        $method_source = TaintNode::getForMethodReturn(
+                            (string) $method_id,
+                            $fq_class_name . '::__construct',
+                            $storage->location
+                        );
+                    }
+
+                    $codebase->taint->addTaintNode($method_source);
+
+                    $stmt_type->parent_nodes = [$method_source];
+                }
             } else {
-                self::checkFunctionArguments(
+                ArgumentsAnalyzer::analyze(
                     $statements_analyzer,
                     $stmt->args,
                     null,
@@ -586,11 +606,13 @@ class NewAnalyzer extends \Psalm\Internal\Analyzer\Statements\Expression\CallAna
             }
         }
 
+
+
         if (!$config->remember_property_assignments_after_call && !$context->collect_initializations) {
             $context->removeAllObjectVars();
         }
 
-        return null;
+        return true;
     }
 
     /**

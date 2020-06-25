@@ -103,6 +103,11 @@ class ClassLikeStorage
     public $mixin = null;
 
     /**
+     * @var ?string
+     */
+    public $mixin_declaring_fqcln = null;
+
+    /**
      * @var array<string, bool>
      */
     public $deprecated_constants = [];
@@ -245,6 +250,11 @@ class ClassLikeStorage
      * @var bool
      */
     public $mutation_free = false;
+
+    /**
+     * @var bool
+     */
+    public $specialize_instance = false;
 
     /**
      * @var array<lowercase-string, MethodStorage>
@@ -392,6 +402,11 @@ class ClassLikeStorage
      * @var list<\Psalm\Issue\CodeIssue>
      */
     public $docblock_issues = [];
+
+    /**
+     * @var array<string, \Psalm\Internal\Type\TypeAlias\ClassTypeAlias>
+     */
+    public $type_aliases = [];
 
     /**
      * @param string $name

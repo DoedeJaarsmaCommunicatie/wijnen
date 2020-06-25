@@ -7,7 +7,7 @@ use Psalm\CodeLocation;
 use Psalm\Internal\Analyzer\ClassLikeAnalyzer;
 use Psalm\Type;
 
-class FunctionLikeStorage
+abstract class FunctionLikeStorage
 {
     use CustomMetadataTrait;
 
@@ -182,9 +182,32 @@ class FunctionLikeStorage
     public $pure = false;
 
     /**
+     * Whether or not the function output is dependent solely on input - a function can be
+     * impure but still have this property (e.g. var_export). Useful for taint analysis.
+     *
      * @var bool
      */
-    public $remove_taint = false;
+    public $specialize_call = false;
+
+    /**
+     * @var array<string>
+     */
+    public $taint_source_types = [];
+
+    /**
+     * @var array<string>
+     */
+    public $added_taints = [];
+
+    /**
+     * @var array<string>
+     */
+    public $removed_taints = [];
+
+    /**
+     * @var array<int, string>
+     */
+    public $return_source_params = [];
 
     public function __toString()
     {

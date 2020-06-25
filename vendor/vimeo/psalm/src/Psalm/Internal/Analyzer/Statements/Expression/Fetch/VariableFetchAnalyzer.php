@@ -3,8 +3,10 @@ namespace Psalm\Internal\Analyzer\Statements\Expression\Fetch;
 
 use PhpParser;
 use Psalm\Internal\Analyzer\FunctionLikeAnalyzer;
+use Psalm\Internal\Analyzer\Statements\Expression\AssignmentAnalyzer;
 use Psalm\Internal\Analyzer\Statements\ExpressionAnalyzer;
 use Psalm\Internal\Analyzer\StatementsAnalyzer;
+use Psalm\Internal\Taint\Source;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\Issue\InvalidScope;
@@ -15,12 +17,26 @@ use Psalm\Issue\UndefinedVariable;
 use Psalm\IssueBuffer;
 use Psalm\Type;
 use function is_string;
+use function in_array;
 
 /**
  * @internal
  */
 class VariableFetchAnalyzer
 {
+    const SUPER_GLOBALS = [
+        '$GLOBALS',
+        '$_SERVER',
+        '$_GET',
+        '$_POST',
+        '$_FILES',
+        '$_COOKIE',
+        '$_SESSION',
+        '$_REQUEST',
+        '$_ENV',
+        '$http_response_header',
+    ];
+
     /**
      * @param   StatementsAnalyzer               $statements_analyzer
      * @param   PhpParser\Node\Expr\Variable    $stmt
@@ -29,8 +45,6 @@ class VariableFetchAnalyzer
      * @param   Type\Union|null                 $by_ref_type
      * @param   bool                            $array_assignment
      * @param   bool                            $from_global - when used in a global keyword
-     *
-     * @return  false|null
      */
     public static function analyze(
         StatementsAnalyzer $statements_analyzer,
@@ -40,7 +54,7 @@ class VariableFetchAnalyzer
         Type\Union $by_ref_type = null,
         $array_assignment = false,
         $from_global = false
-    ) {
+    ) : bool {
         $project_analyzer = $statements_analyzer->getFileAnalyzer()->project_analyzer;
         $codebase = $statements_analyzer->getCodebase();
 
@@ -56,7 +70,7 @@ class VariableFetchAnalyzer
                     return false;
                 }
 
-                return null;
+                return true;
             }
 
             if (!isset($context->vars_in_scope['$this'])) {
@@ -73,7 +87,7 @@ class VariableFetchAnalyzer
                 $context->vars_in_scope['$this'] = Type::getMixed();
                 $context->vars_possibly_in_scope['$this'] = true;
 
-                return null;
+                return true;
             }
 
             $statements_analyzer->node_data->setType($stmt, clone $context->vars_in_scope['$this']);
@@ -90,7 +104,7 @@ class VariableFetchAnalyzer
                 );
             }
 
-            return null;
+            return true;
         }
 
         if (!$context->check_variables) {
@@ -108,25 +122,31 @@ class VariableFetchAnalyzer
                 $statements_analyzer->node_data->setType($stmt, Type::getMixed());
             }
 
-            return null;
+            return true;
         }
 
-        if (is_string($stmt->name) && $statements_analyzer->isSuperGlobal('$' . $stmt->name)) {
+        if (is_string($stmt->name) && self::isSuperGlobal('$' . $stmt->name)) {
             $var_name = '$' . $stmt->name;
 
             if (isset($context->vars_in_scope[$var_name])) {
-                $statements_analyzer->node_data->setType($stmt, clone $context->vars_in_scope[$var_name]);
+                $type = clone $context->vars_in_scope[$var_name];
 
-                return null;
+                self::taintVariable($statements_analyzer, $var_name, $type, $stmt);
+
+                $statements_analyzer->node_data->setType($stmt, $type);
+
+                return true;
             }
 
-            $type = $statements_analyzer->getGlobalType($var_name);
+            $type = self::getGlobalType($var_name);
+
+            self::taintVariable($statements_analyzer, $var_name, $type, $stmt);
 
             $statements_analyzer->node_data->setType($stmt, $type);
             $context->vars_in_scope[$var_name] = clone $type;
             $context->vars_possibly_in_scope[$var_name] = true;
 
-            return null;
+            return true;
         }
 
         if (!is_string($stmt->name)) {
@@ -134,7 +154,7 @@ class VariableFetchAnalyzer
         }
 
         if ($passed_by_reference && $by_ref_type) {
-            ExpressionAnalyzer::assignByRefParam(
+            AssignmentAnalyzer::assignByRefParam(
                 $statements_analyzer,
                 $stmt,
                 $by_ref_type,
@@ -142,7 +162,7 @@ class VariableFetchAnalyzer
                 $context
             );
 
-            return null;
+            return true;
         }
 
         $var_name = '$' . $stmt->name;
@@ -177,12 +197,12 @@ class VariableFetchAnalyzer
                             ),
                             $statements_analyzer->getSuppressedIssues()
                         )) {
-                            return false;
+                            // fall through
                         }
 
                         $statements_analyzer->node_data->setType($stmt, Type::getMixed());
 
-                        return null;
+                        return true;
                     }
 
                     if (IssueBuffer::accepts(
@@ -197,7 +217,7 @@ class VariableFetchAnalyzer
 
                     $statements_analyzer->node_data->setType($stmt, Type::getMixed());
 
-                    return false;
+                    return true;
                 }
             }
 
@@ -207,7 +227,7 @@ class VariableFetchAnalyzer
                 if ($context->is_global) {
                     if ($codebase->alter_code) {
                         if (!isset($project_analyzer->getIssuesToFix()['PossiblyUndefinedGlobalVariable'])) {
-                            return;
+                            return true;
                         }
 
                         $branch_point = $statements_analyzer->getBranchPoint($var_name);
@@ -216,7 +236,7 @@ class VariableFetchAnalyzer
                             $statements_analyzer->addVariableInitialization($var_name, $branch_point);
                         }
 
-                        return;
+                        return true;
                     }
 
                     if (IssueBuffer::accepts(
@@ -228,12 +248,12 @@ class VariableFetchAnalyzer
                         $statements_analyzer->getSuppressedIssues(),
                         (bool) $statements_analyzer->getBranchPoint($var_name)
                     )) {
-                        return false;
+                        return true;
                     }
                 } else {
                     if ($codebase->alter_code) {
                         if (!isset($project_analyzer->getIssuesToFix()['PossiblyUndefinedVariable'])) {
-                            return;
+                            return true;
                         }
 
                         $branch_point = $statements_analyzer->getBranchPoint($var_name);
@@ -242,7 +262,7 @@ class VariableFetchAnalyzer
                             $statements_analyzer->addVariableInitialization($var_name, $branch_point);
                         }
 
-                        return;
+                        return true;
                     }
 
                     if (IssueBuffer::accepts(
@@ -329,6 +349,75 @@ class VariableFetchAnalyzer
             }
         }
 
-        return null;
+        return true;
+    }
+
+    private static function taintVariable(
+        StatementsAnalyzer $statements_analyzer,
+        string $var_name,
+        Type\Union $type,
+        PhpParser\Node\Expr\Variable $stmt
+    ) : void {
+        $codebase = $statements_analyzer->getCodebase();
+
+        if ($codebase->taint && $codebase->config->trackTaintsInPath($statements_analyzer->getFilePath())) {
+            if ($var_name === '$_GET'
+                || $var_name === '$_POST'
+                || $var_name === '$_COOKIE'
+                || $var_name === '$_REQUEST'
+            ) {
+                $taint_location = new CodeLocation($statements_analyzer->getSource(), $stmt);
+
+                $server_taint_source = new Source(
+                    $var_name . ':' . $taint_location->file_name . ':' . $taint_location->raw_file_start,
+                    $var_name,
+                    null,
+                    null,
+                    Type\TaintKindGroup::ALL_INPUT
+                );
+
+                $codebase->taint->addSource($server_taint_source);
+
+                $type->parent_nodes = [
+                    $server_taint_source
+                ];
+            }
+        }
+    }
+
+    public static function isSuperGlobal(string $var_id) : bool
+    {
+        return in_array(
+            $var_id,
+            self::SUPER_GLOBALS,
+            true
+        );
+    }
+
+    public static function getGlobalType(string $var_id) : Type\Union
+    {
+        $config = \Psalm\Config::getInstance();
+
+        if (isset($config->globals[$var_id])) {
+            return Type::parseString($config->globals[$var_id]);
+        }
+
+        if ($var_id === '$argv') {
+            return new Type\Union([
+                new Type\Atomic\TArray([Type::getInt(), Type::getString()]),
+            ]);
+        }
+
+        if ($var_id === '$argc') {
+            return Type::getInt();
+        }
+
+        if (self::isSuperGlobal($var_id)) {
+            $type = Type::getArray();
+
+            return $type;
+        }
+
+        return Type::getMixed();
     }
 }

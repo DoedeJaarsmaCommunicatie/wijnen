@@ -6,16 +6,19 @@ use Psalm\Internal\Analyzer\FunctionAnalyzer;
 use Psalm\Internal\Analyzer\Statements\ExpressionAnalyzer;
 use Psalm\Internal\Analyzer\Statements\Expression\CallAnalyzer;
 use Psalm\Internal\Analyzer\Statements\Expression\AssertionFinder;
+use Psalm\Internal\Analyzer\Statements\Expression\ExpressionIdentifier;
+use Psalm\Internal\Analyzer\Statements\Expression\Fetch\ConstFetchAnalyzer;
 use Psalm\Internal\Analyzer\StatementsAnalyzer;
 use Psalm\Internal\Analyzer\TypeAnalyzer;
-use Psalm\Internal\Codebase\CallMap;
+use Psalm\Internal\Codebase\InternalCallMapHandler;
 use Psalm\CodeLocation;
 use Psalm\Context;
 use Psalm\Internal\FileManipulation\FileManipulationBuffer;
+use Psalm\Internal\Taint\Source;
+use Psalm\Internal\Taint\TaintNode;
 use Psalm\Issue\DeprecatedFunction;
 use Psalm\Issue\ForbiddenCode;
 use Psalm\Issue\MixedFunctionCall;
-use Psalm\Issue\InvalidArgument;
 use Psalm\Issue\InvalidFunctionCall;
 use Psalm\Issue\ImpureFunctionCall;
 use Psalm\Issue\NullFunctionCall;
@@ -54,18 +57,11 @@ use function explode;
  */
 class FunctionCallAnalyzer extends CallAnalyzer
 {
-    /**
-     * @param   StatementsAnalyzer               $statements_analyzer
-     * @param   PhpParser\Node\Expr\FuncCall    $stmt
-     * @param   Context                         $context
-     *
-     * @return  false|null
-     */
     public static function analyze(
         StatementsAnalyzer $statements_analyzer,
         PhpParser\Node\Expr\FuncCall $stmt,
         Context $context
-    ) {
+    ) : bool {
         $function_name = $stmt->name;
 
         $function_id = null;
@@ -117,18 +113,21 @@ class FunctionCallAnalyzer extends CallAnalyzer
             }
         }
 
+        $byref_uses = [];
+
         if ($function_name instanceof PhpParser\Node\Expr) {
-            list($expr_function_exists, $expr_function_name, $expr_function_params) = self::getAnalyzeNamedExpression(
-                $statements_analyzer,
-                $codebase,
-                $stmt,
-                $real_stmt,
-                $function_name,
-                $context
-            );
+            list($expr_function_exists, $expr_function_name, $expr_function_params, $byref_uses)
+                = self::getAnalyzeNamedExpression(
+                    $statements_analyzer,
+                    $codebase,
+                    $stmt,
+                    $real_stmt,
+                    $function_name,
+                    $context
+                );
 
             if ($expr_function_exists === false) {
-                return;
+                return true;
             }
 
             if ($expr_function_exists === true) {
@@ -162,14 +161,14 @@ class FunctionCallAnalyzer extends CallAnalyzer
             if (!$namespaced_function_exists
                 && !$function_name instanceof PhpParser\Node\Name\FullyQualified
             ) {
-                $in_call_map = CallMap::inCallMap($original_function_id);
+                $in_call_map = InternalCallMapHandler::inCallMap($original_function_id);
                 $is_stubbed = $codebase_functions->hasStubbedFunction($original_function_id);
 
                 if ($is_stubbed || $in_call_map) {
                     $function_id = $original_function_id;
                 }
             } else {
-                $in_call_map = CallMap::inCallMap($function_id);
+                $in_call_map = InternalCallMapHandler::inCallMap($function_id);
                 $is_stubbed = $codebase_functions->hasStubbedFunction($function_id);
             }
 
@@ -208,7 +207,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
                         $is_maybe_root_function
                     ) === false
                     ) {
-                        if (self::checkFunctionArguments(
+                        if (ArgumentsAnalyzer::analyze(
                             $statements_analyzer,
                             $stmt->args,
                             null,
@@ -218,7 +217,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
                             // fall through
                         }
 
-                        return;
+                        return true;
                     }
                 }
             } else {
@@ -256,7 +255,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
                             ];
                         }
                     } else {
-                        $function_callable = \Psalm\Internal\Codebase\CallMap::getCallableFromCallMapById(
+                        $function_callable = InternalCallMapHandler::getCallableFromCallMapById(
                             $codebase,
                             $function_id,
                             $stmt->args,
@@ -290,7 +289,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
             $set_inside_conditional = true;
         }
 
-        if (self::checkFunctionArguments(
+        if (ArgumentsAnalyzer::analyze(
             $statements_analyzer,
             $stmt->args,
             $function_params,
@@ -309,7 +308,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
         if ($function_exists) {
             if ($function_name instanceof PhpParser\Node\Name && $function_id) {
                 if (!$is_stubbed && $in_call_map) {
-                    $function_callable = \Psalm\Internal\Codebase\CallMap::getCallableFromCallMapById(
+                    $function_callable = \Psalm\Internal\Codebase\InternalCallMapHandler::getCallableFromCallMapById(
                         $codebase,
                         $function_id,
                         $stmt->args,
@@ -324,7 +323,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
 
             // do this here to allow closure param checks
             if ($function_params !== null
-                && self::checkFunctionLikeArgumentsMatch(
+                && ArgumentsAnalyzer::checkArgumentsMatch(
                     $statements_analyzer,
                     $stmt->args,
                     $function_id,
@@ -334,7 +333,8 @@ class FunctionCallAnalyzer extends CallAnalyzer
                     $template_result,
                     $code_location,
                     $context
-                ) === false) {
+                ) === false
+            ) {
                 // fall through
             }
 
@@ -477,6 +477,13 @@ class FunctionCallAnalyzer extends CallAnalyzer
             }
         }
 
+        if ($byref_uses) {
+            foreach ($byref_uses as $byref_use_var => $_) {
+                $context->vars_in_scope['$' . $byref_use_var] = Type::getMixed();
+                $context->vars_possibly_in_scope['$' . $byref_use_var] = true;
+            }
+        }
+
         if ($function_name instanceof PhpParser\Node\Name) {
             self::handleNamedFunction(
                 $statements_analyzer,
@@ -489,44 +496,20 @@ class FunctionCallAnalyzer extends CallAnalyzer
             );
         }
 
-        if ($codebase->taint
-            && $function_id
-            && $in_call_map
-            && $codebase->functions->isCallMapFunctionPure($codebase, $function_id, $stmt->args)
-            && ($stmt_type = $statements_analyzer->node_data->getType($real_stmt))
-        ) {
-            if ($function_id === 'substr'
-                && isset($stmt->args[0])
-                && ($first_arg_type = $statements_analyzer->node_data->getType($stmt->args[0]->value))
-            ) {
-                $stmt_type->sources = $first_arg_type->sources ?? null;
-                $stmt_type->tainted = $first_arg_type->tainted ?? null;
-            }
-
-            if (($function_id === 'str_replace' || $function_id === 'preg_replace')
-                && count($stmt->args) >= 3
-            ) {
-                $second_arg_type = $statements_analyzer->node_data->getType($stmt->args[1]->value);
-                $third_arg_type = $statements_analyzer->node_data->getType($stmt->args[2]->value);
-
-                $stmt_type->sources = array_merge(
-                    $second_arg_type->sources ?? [],
-                    $third_arg_type->sources ?? []
-                );
-
-                $stmt_type->tainted = ($second_arg_type->tainted ?? 0) | ($third_arg_type->tainted ?? 0);
-            }
-        }
-
         if (!$statements_analyzer->node_data->getType($real_stmt)) {
             $statements_analyzer->node_data->setType($real_stmt, Type::getMixed());
         }
 
-        return null;
+        return true;
     }
 
     /**
-     * @return  array{?bool, ?PhpParser\Node\Expr|PhpParser\Node\Name, array<int, FunctionLikeParameter>|null}
+     * @return  array{
+     *     ?bool,
+     *     ?PhpParser\Node\Expr|PhpParser\Node\Name,
+     *     array<int, FunctionLikeParameter>|null,
+     *     ?array<string, bool>
+     * }
      */
     private static function getAnalyzeNamedExpression(
         StatementsAnalyzer $statements_analyzer,
@@ -546,10 +529,12 @@ class FunctionCallAnalyzer extends CallAnalyzer
         if (ExpressionAnalyzer::analyze($statements_analyzer, $function_name, $context) === false) {
             $context->inside_call = $was_in_call;
 
-            return [false, null, null];
+            return [false, null, null, null];
         }
 
         $context->inside_call = $was_in_call;
+
+        $byref_uses = [];
 
         if ($stmt_name_type = $statements_analyzer->node_data->getType($function_name)) {
             if ($stmt_name_type->isNull()) {
@@ -563,7 +548,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
                     // fall through
                 }
 
-                return [false, null, null];
+                return [false, null, null, null];
             }
 
             if ($stmt_name_type->isNullable()) {
@@ -600,6 +585,10 @@ class FunctionCallAnalyzer extends CallAnalyzer
                             $real_stmt,
                             $var_type_part->return_type ?: Type::getMixed()
                         );
+                    }
+
+                    if ($var_type_part instanceof Type\Atomic\TFn) {
+                        $byref_uses += $var_type_part->byref_uses;
                     }
 
                     $function_exists = true;
@@ -646,9 +635,16 @@ class FunctionCallAnalyzer extends CallAnalyzer
                             $potential_method_id = null;
                         }
                     } elseif ($var_type_part instanceof Type\Atomic\TLiteralString) {
+                        if (!$var_type_part->value) {
+                            $invalid_function_call_types[] = '\'\'';
+                            continue;
+                        }
+
                         if (strpos($var_type_part->value, '::')) {
                             $parts = explode('::', strtolower($var_type_part->value));
-                            $potential_method_id = new \Psalm\Internal\MethodIdentifier($parts[0], $parts[1]);
+                            $fq_class_name = $parts[0];
+                            $fq_class_name = \preg_replace('/^\\\\/', '', $fq_class_name);
+                            $potential_method_id = new \Psalm\Internal\MethodIdentifier($fq_class_name, $parts[1]);
                         } else {
                             $explicit_function_name = new PhpParser\Node\Name\FullyQualified(
                                 $var_type_part->value,
@@ -717,7 +713,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
                     }
                 }
 
-                return [false, null, null];
+                return [false, null, null, null];
             }
         }
 
@@ -725,7 +721,12 @@ class FunctionCallAnalyzer extends CallAnalyzer
             $statements_analyzer->node_data->setType($real_stmt, Type::getMixed());
         }
 
-        return [$function_exists, $explicit_function_name ?: $function_name, $function_params];
+        return [
+            $function_exists,
+            $explicit_function_name ?: $function_name,
+            $function_params,
+            $byref_uses
+        ];
     }
 
     private static function analyzeInvokeCall(
@@ -882,6 +883,9 @@ class FunctionCallAnalyzer extends CallAnalyzer
         }
     }
 
+    /**
+     * @param non-empty-string $function_id
+     */
     private static function getFunctionCallReturnType(
         StatementsAnalyzer $statements_analyzer,
         \Psalm\Codebase $codebase,
@@ -1019,19 +1023,185 @@ class FunctionCallAnalyzer extends CallAnalyzer
                     $stmt->args,
                     $context
                 );
-
-                if ($codebase->taint) {
-                    FunctionAnalyzer::taintBuiltinFunctionReturn(
-                        $statements_analyzer,
-                        $function_id,
-                        $stmt->args,
-                        $stmt_type
-                    );
-                }
             }
         }
 
+        if ($function_storage && $stmt_type) {
+            self::taintReturnType($statements_analyzer, $stmt, $function_id, $function_storage, $stmt_type);
+        }
+
+
         return $stmt_type;
+    }
+
+    private static function taintReturnType(
+        StatementsAnalyzer $statements_analyzer,
+        PhpParser\Node\Expr\FuncCall $stmt,
+        string $function_id,
+        FunctionLikeStorage $function_storage,
+        Type\Union $stmt_type
+    ) : void {
+        $codebase = $statements_analyzer->getCodebase();
+
+        if (!$codebase->taint
+            || !$codebase->config->trackTaintsInPath($statements_analyzer->getFilePath())
+        ) {
+            return;
+        }
+
+        $return_location = new CodeLocation($statements_analyzer->getSource(), $stmt);
+
+        $function_return_sink = TaintNode::getForMethodReturn(
+            $function_id,
+            $function_id,
+            $return_location,
+            $function_storage->specialize_call ? $return_location : null
+        );
+
+        $codebase->taint->addTaintNode($function_return_sink);
+
+        $stmt_type->parent_nodes[] = $function_return_sink;
+
+        if ($function_storage->return_source_params) {
+            $removed_taints = $function_storage->removed_taints;
+
+            if ($function_id === 'preg_replace' && count($stmt->args) > 2) {
+                $first_stmt_type = $statements_analyzer->node_data->getType($stmt->args[0]->value);
+                $second_stmt_type = $statements_analyzer->node_data->getType($stmt->args[1]->value);
+
+                if ($first_stmt_type
+                    && $second_stmt_type
+                    && $first_stmt_type->isSingleStringLiteral()
+                    && $second_stmt_type->isSingleStringLiteral()
+                ) {
+                    $first_arg_value = $first_stmt_type->getSingleStringLiteral()->value;
+
+                    $pattern = \substr($first_arg_value, 1, -1);
+
+                    if ($pattern[0] === '['
+                        && $pattern[1] === '^'
+                        && \substr($pattern, -1) === ']'
+                    ) {
+                        $pattern = \substr($pattern, 2, -1);
+
+                        if (self::simpleExclusion($pattern, $first_arg_value[0])) {
+                            $removed_taints[] = 'html';
+                            $removed_taints[] = 'sql';
+                        }
+                    }
+                }
+            }
+
+            foreach ($function_storage->return_source_params as $i => $path_type) {
+                if (!isset($stmt->args[$i])) {
+                    continue;
+                }
+
+                $arg_location = new CodeLocation(
+                    $statements_analyzer->getSource(),
+                    $stmt->args[$i]->value
+                );
+
+                $function_param_sink = TaintNode::getForMethodArgument(
+                    $function_id,
+                    $function_id,
+                    $i,
+                    $arg_location,
+                    $function_storage->specialize_call ? $return_location : null
+                );
+
+                $codebase->taint->addTaintNode($function_param_sink);
+
+                $codebase->taint->addPath(
+                    $function_param_sink,
+                    $function_return_sink,
+                    $path_type,
+                    $function_storage->added_taints,
+                    $removed_taints
+                );
+            }
+        }
+
+        if ($function_storage->taint_source_types) {
+            $method_node = Source::getForMethodReturn(
+                $function_id,
+                $function_id,
+                $return_location
+            );
+
+            $method_node->taints = $function_storage->taint_source_types;
+
+            $codebase->taint->addSource($method_node);
+        }
+    }
+
+    private static function simpleExclusion(string $pattern, string $escape_char) : bool
+    {
+        $str_length = \strlen($pattern);
+
+        for ($i = 0; $i < $str_length; $i++) {
+            $current = $pattern[$i];
+            $next = $pattern[$i + 1] ?? null;
+
+            if ($current === '\\') {
+                if ($next == null
+                    || $next === 'x'
+                    || $next === 'u'
+                ) {
+                    return false;
+                }
+
+                if ($next === '.'
+                    || $next === '('
+                    || $next === ')'
+                    || $next === '['
+                    || $next === ']'
+                    || $next === 's'
+                    || $next === 'w'
+                    || $next === $escape_char
+                ) {
+                    $i++;
+                    continue;
+                }
+
+                return false;
+            }
+
+            if ($next !== '-') {
+                if ($current === '_'
+                    || $current === '-'
+                    || $current === '|'
+                    || $current === ':'
+                    || $current === '#'
+                    || $current === ' '
+                ) {
+                    continue;
+                }
+
+                return false;
+            }
+
+            if ($current === ']') {
+                return false;
+            }
+
+            if (!isset($pattern[$i + 2]) || $next !== '-') {
+                return false;
+            }
+
+            if (($current === 'a' && $pattern[$i + 2] === 'z')
+                || ($current === 'a' && $pattern[$i + 2] === 'Z')
+                || ($current === 'A' && $pattern[$i + 2] === 'Z')
+                || ($current === '0' && $pattern[$i + 2] === '9')
+            ) {
+                $i += 2;
+                continue;
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     private static function checkFunctionCallPurity(
@@ -1056,7 +1226,13 @@ class FunctionCallAnalyzer extends CallAnalyzer
             $must_use = true;
 
             $callmap_function_pure = $function_id && $in_call_map
-                ? $codebase->functions->isCallMapFunctionPure($codebase, $function_id, $stmt->args, $must_use)
+                ? $codebase->functions->isCallMapFunctionPure(
+                    $codebase,
+                    $statements_analyzer->node_data,
+                    $function_id,
+                    $stmt->args,
+                    $must_use
+                )
                 : null;
 
             if ((!$in_call_map
@@ -1235,7 +1411,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
                 }
             }
         } elseif ($function_name->parts === ['file_exists'] && $first_arg) {
-            $var_id = ExpressionAnalyzer::getArrayVarId($first_arg->value, null);
+            $var_id = ExpressionIdentifier::getArrayVarId($first_arg->value, null);
 
             if ($var_id) {
                 $context->phantom_files[$var_id] = true;
@@ -1282,7 +1458,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
             }
         } elseif ($function_name->parts === ['define']) {
             if ($first_arg) {
-                $fq_const_name = StatementsAnalyzer::getConstName(
+                $fq_const_name = ConstFetchAnalyzer::getConstName(
                     $first_arg->value,
                     $statements_analyzer->node_data,
                     $codebase,
@@ -1296,7 +1472,8 @@ class FunctionCallAnalyzer extends CallAnalyzer
                     ExpressionAnalyzer::analyze($statements_analyzer, $second_arg->value, $context);
                     $context->inside_call = $was_in_call;
 
-                    $statements_analyzer->setConstType(
+                    ConstFetchAnalyzer::setConstType(
+                        $statements_analyzer,
                         $fq_const_name,
                         $statements_analyzer->node_data->getType($second_arg->value) ?: Type::getMixed(),
                         $context
@@ -1307,7 +1484,7 @@ class FunctionCallAnalyzer extends CallAnalyzer
             }
         } elseif ($function_name->parts === ['constant']) {
             if ($first_arg) {
-                $fq_const_name = StatementsAnalyzer::getConstName(
+                $fq_const_name = ConstFetchAnalyzer::getConstName(
                     $first_arg->value,
                     $statements_analyzer->node_data,
                     $codebase,
@@ -1315,7 +1492,8 @@ class FunctionCallAnalyzer extends CallAnalyzer
                 );
 
                 if ($fq_const_name !== null) {
-                    $const_type = $statements_analyzer->getConstType(
+                    $const_type = ConstFetchAnalyzer::getConstType(
+                        $statements_analyzer,
                         $fq_const_name,
                         true,
                         $context

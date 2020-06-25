@@ -25,6 +25,18 @@ use function strtolower;
 use function substr;
 
 /**
+ * @psalm-type  ThreadData = array{
+ *     0: array<string, string>,
+ *     1: array<string, string>,
+ *     2: array<string, string>,
+ *     3: array<string, bool>,
+ *     4: array<string, bool>,
+ *     5: array<string, string>,
+ *     6: array<string, bool>,
+ *     7: array<string, bool>,
+ *     8: array<string, bool>
+ * }
+ *
  * @psalm-type  PoolData = array{
  *     classlikes_data:array{
  *         0:array<lowercase-string, bool>,
@@ -35,24 +47,15 @@ use function substr;
  *         5:array<string, bool>,
  *         6:array<string, bool>
  *     },
- *     scanner_data:array{
- *         0:array<string, string>,
- *         1:array<string, string>,
- *         2:array<string, string>,
- *         3:array<string, bool>,
- *         4:array<string, bool>,
- *         5:array<string, string>,
- *         6:array<string, bool>,
- *         7:array<string, bool>,
- *         8:array<string, bool>
- *     },
+ *     scanner_data: ThreadData,
  *     issues:array<string, list<IssueData>>,
  *     changed_members:array<string, array<string, bool>>,
  *     unchanged_signature_members:array<string, array<string, bool>>,
  *     diff_map:array<string, array<int, array{0:int, 1:int, 2:int, 3:int}>>,
  *     classlike_storage:array<string, \Psalm\Storage\ClassLikeStorage>,
  *     file_storage:array<string, \Psalm\Storage\FileStorage>,
- *     new_file_content_hashes: array<string, string>
+ *     new_file_content_hashes: array<string, string>,
+ *     taint_data: ?\Psalm\Internal\Codebase\Taint
  * }
  */
 
@@ -428,6 +431,7 @@ class Scanner
                         'new_file_content_hashes' => $statements_provider->parser_cache_provider
                             ? $statements_provider->parser_cache_provider->getNewFileContentHashes()
                             : [],
+                        'taint_data' => $codebase->taint,
                     ];
                 }
             );
@@ -450,6 +454,9 @@ class Scanner
                 $this->codebase->statements_provider->addDiffMap(
                     $pool_data['diff_map']
                 );
+                if ($this->codebase->taint && $pool_data['taint_data']) {
+                    $this->codebase->taint->addThreadData($pool_data['taint_data']);
+                }
 
                 $this->codebase->file_storage_provider->addMore($pool_data['file_storage']);
                 $this->codebase->classlike_storage_provider->addMore($pool_data['classlike_storage']);
@@ -479,6 +486,27 @@ class Scanner
 
         if ($this->codebase->statements_provider->parser_cache_provider) {
             $this->codebase->statements_provider->parser_cache_provider->saveFileContentHashes();
+        }
+
+        foreach ($files_to_scan as $scanned_file) {
+            if ($this->config->hasStubFile($scanned_file)) {
+                $file_storage = $this->file_storage_provider->get($scanned_file);
+
+                foreach ($file_storage->functions as $function_storage) {
+                    if ($function_storage->cased_name
+                        && !$this->codebase->functions->hasStubbedFunction($function_storage->cased_name)
+                    ) {
+                        $this->codebase->functions->addGlobalFunction(
+                            $function_storage->cased_name,
+                            $function_storage
+                        );
+                    }
+                }
+
+                foreach ($file_storage->constants as $name => $type) {
+                    $this->codebase->addGlobalConstantType($name, $type);
+                }
+            }
         }
 
         $this->file_reference_provider->addClassLikeFiles($this->classlike_files);
@@ -761,17 +789,7 @@ class Scanner
     }
 
     /**
-     * @return array{
-     *     0: array<string, string>,
-     *     1: array<string, string>,
-     *     2: array<string, string>,
-     *     3: array<string, bool>,
-     *     4: array<string, bool>,
-     *     5: array<string, string>,
-     *     6: array<string, bool>,
-     *     7: array<string, bool>,
-     *     8: array<string, bool>
-     * }
+     * @return ThreadData
      */
     public function getThreadData()
     {
@@ -789,17 +807,7 @@ class Scanner
     }
 
     /**
-     * @param array{
-     *     0: array<string, string>,
-     *     1: array<string, string>,
-     *     2: array<string, string>,
-     *     3: array<string, bool>,
-     *     4: array<string, bool>,
-     *     5: array<string, string>,
-     *     6: array<string, bool>,
-     *     7: array<string, bool>,
-     *     8: array<string, bool>
-     * } $thread_data
+     * @param ThreadData $thread_data
      *
      * @return void
      */
