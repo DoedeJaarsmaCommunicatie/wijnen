@@ -1,0 +1,11 @@
+<p class="woocommerce-result-count">
+    {% if total is same as(1) %}
+        {{ _e('Showing the single result', 'woocommerce') }}
+    {% elseif total <= per_page or per_page is same as(-1)  %}
+        Alle {{ total }} resultaten
+    {% else %}
+        {% set _first = (per_page * current ) - per_page + 1 %}
+        {% set _last = fn('min', total, (per_page * current)) %}
+        Alle {{ _first }} - {{ _last }} van de {{ total }} worden getoond
+    {% endif %}
+</p>

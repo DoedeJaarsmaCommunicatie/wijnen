@@ -1,0 +1,22 @@
+{% set _name = product.get_name %}
+{% set _permalink = product.get_permalink %}
+{% from 'macro/add-to-cart.twig' import add_to_cart %}
+{% from 'macro/products/images.macro.twig' import tease_thumbnail %}
+{% from 'macro/products/price.macro.twig' import tease_price %}
+
+<article class="product-card-large">
+    {% if product.special %}
+        <span class="product-label">{{ product.special }}</span>
+    {% endif %}
+    <a href="{{ _permalink }}" class="product-large-image-wrapper" title="Bekijk {{ _name }}">
+        {{ tease_thumbnail(product) }}
+    </a>
+    <h2 class="product-large-title">
+        <a href="{{ _permalink }}" title="Bekijk {{ _name }}">
+            {{ _name }}
+        </a>
+    </h2>
+    {{ tease_price(product) }}
+
+    {{ add_to_cart(product.ID, 'mx-auto product-large-add-to-cart', 'qty', 'small') }}
+</article>

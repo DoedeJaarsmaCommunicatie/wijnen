@@ -1,0 +1,7 @@
+{% set img = Image(theme.link ~ '/dist/images/nix18.png')|apply_filters('winc/footer/nix/logo') %}
+
+{% do action('winc/footer/nix/pre') %}
+<strong>{{ '&lt; 18 geen alcohol'|apply_filters('winc/footer/nix/title') }}</strong>
+<img src="{{ img.src|resize(150, 43) }}" alt="NIX18" class="nix-18-logo">
+
+{% do action('winc/footer/nix/post') %}

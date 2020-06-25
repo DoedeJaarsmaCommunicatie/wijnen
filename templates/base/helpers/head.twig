@@ -1,0 +1,53 @@
+<meta charset="{{ site.charset }}">
+
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>{{ wp_title }}</title>
+
+<meta name="base_assets" content="{{ theme.link }}/">
+
+<script src="https://kit.fontawesome.com/945889d7f9.js" async></script>
+
+<link rel="stylesheet" type="text/css" href="{{ theme.link }}/dist/styles/app.css">
+
+<!-- start custom theme code -->
+<script>
+    {{ theme.theme_mod('code_header_js')|raw }}
+</script>
+
+<style type="text/css">
+    {{ theme.theme_mod('code_header_css')|raw }}
+</style>
+
+{{ theme.theme_mod('code_header_html')|raw }}
+<!-- end custom theme code -->
+<script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "@id": "#website",
+        "url": "https://wijnclubamsterdam.nl/",
+        "name": "Wijnclub Amsterdam - Online wijnwinkel",
+        "alternateName": "Online wijnwinkel Wijnclub Amsterdam",
+        "potentialAction":
+        [
+            {
+                "@type": "SearchAction",
+                "target": "https://wijnclubamsterdam.nl/?s={search_term_string}&post_type=product",
+                "query-input": "required name=search_term_string"
+            }
+        ],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ fn('get_option', 'cdelk_kiyoh_score') }}",
+            "reviewCount": "{{ fn('get_option', 'cdelk_kiyoh_reviews_count') }}",
+            "bestRating": "10",
+            "itemReviewed": {
+                "@type": "LocalBusiness",
+                "image": "https://wijnclubamsterdam.nl/wp-content/uploads/sites/20/2020/01/cropped-wijnclub_logo_vierkant-350x0-c-default.png",
+                "name": "Wijnclub Amsterdam"
+            }
+        }
+    }
+</script>

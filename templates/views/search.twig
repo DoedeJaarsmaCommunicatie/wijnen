@@ -1,0 +1,41 @@
+{% extends 'base/app.twig' %}
+{% from "macro/add-to-cart.twig" import add_to_cart %}
+
+{% set _product = false %}
+
+{% block content %}
+    <main class="products container mx-auto px-4 lg:px-0 pb-4">
+        {% for post in posts %}
+            <article class="product-card">
+                {% if post.post_type is same as('product') %}
+                    {% set _product = fn('wc_get_product', post.ID) %}
+                    <span class="product-label">&euro; {{ _product.get_price }}</span>
+                {% endif %}
+
+                <a href="{{ post.link }}" class="product-image-wrapper">
+                    <img src="{{ post.thumbnail.src('medium') }}" alt="{{ post.thumbnail.alt }}" class="product-image">
+                </a>
+                <h2 class="product-title">
+                    <a href="{{ post.link }}" title="{{ post.title }}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                <div class="product-content content">
+                    {% if post.post_type is same as('product') %}
+                        <p class="product-content_attributes">
+                            <span>Streek: {{ _product.get_attribute('pa_streek') }}</span>
+                            <span>Jaargang: {{ _product.get_attribute('pa_jaar') }}</span>
+                            <span>Druiven: {{ _product.get_attribute('pa_druif') }}</span>
+                        </p>
+                    {% endif %}
+                    {{ post.content|excerpt(15) }} <a href="{{ post.link }}">Lees meer</a>
+                </div>
+                {% if post.post_type is same as ('product') %}
+                    {{ add_to_cart(product.ID, 'ml-auto mt-auto product-add-to-cart', 'qty', 'small') }}
+                {% endif %}
+            </article>
+        {% else %}
+            Er is niks met deze zoekterm gevonden.
+        {% endfor %}
+    </main>
+{% endblock %}

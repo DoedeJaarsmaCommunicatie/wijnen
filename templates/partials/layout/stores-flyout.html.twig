@@ -1,0 +1,13 @@
+{% from "macro/sites.twig" import sites_list %}
+
+<!-- All stores flyout menu -->
+<nav class="shop-container-slider">
+    <div class="shops-wrapper">
+        <div class="content">
+            {{ theme.theme_mod('seo_store_flyout')|wpautop }}
+        </div>
+        <div class="flex flex-col">
+            {{ sites_list(sites) }}
+        </div>
+    </div>
+</nav>

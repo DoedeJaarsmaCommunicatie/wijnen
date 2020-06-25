@@ -1,0 +1,28 @@
+<section class="product-attributes">
+    <span class="content">
+        <h3 class="mb-2">Kenmerken</h3>
+    </span>
+    <table class="w-full">
+        <tr class="product-attributes_category">
+            <td>
+                Categorie:
+            </td>
+            <td>
+                {{ fn('wc_get_product_category_list', post.ID) }}
+            </td>
+        </tr>
+        {% for attribute in product.get_attributes %}
+            {% if attribute.get_visible %}
+                {% set _attributes = fn('get_the_terms', post.ID, attribute.get_name) %}
+                <tr class="product-attributes_{{ attribute.get_name|replace({'pa_': ''}) }}">
+                    <td> {{ attribute.get_name|replace({'pa_': ''})|capitalize }}:</td>
+                    <td>
+                        {% for _attribute in _attributes %}
+                            <span data-attribute="{{ attribute.get_name|replace({'pa_': ''}) }}" data-value="{{ _attribute.slug }}">{{ _attribute.name }}{% if not loop.last %},{% endif %} </span>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+</section>

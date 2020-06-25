@@ -1,0 +1,19 @@
+{% from 'macro/typography/titles.macro.twig' import footer_heading %}
+<div role="group" class="lg:flex seo_small px-4 lg:px-0 mb-4">
+    <section class="lg:w-1/4 shortened-list">
+        {{ footer_heading(theme.theme_mod('shop_list_title', 'Onze winkels')) }}
+        {{ theme.theme_mod('shop_list') }}
+    </section>
+    <section class="lg:w-1/4 shortened-list">
+        {{ footer_heading(theme.theme_mod('domain_list_title', 'Onze wijnhuizen')) }}
+        {{ theme.theme_mod('domain_list') }}
+    </section>
+    <section class="lg:w-1/4 shortened-list">
+        {{ footer_heading(theme.theme_mod('grapes_list_title', 'Druiven')) }}
+        {{ theme.theme_mod('grapes_list') }}
+    </section>
+    <section class="lg:w-1/4 shortened-list">
+        {{ footer_heading(theme.theme_mod('regions_list_titel', 'Al onze regio\'s')) }}
+        {{ theme.theme_mod('regions_list') }}
+    </section>
+</div>

@@ -1,0 +1,21 @@
+{% if title %}
+    <h2 class="bg-primary text-2xl text-white py-2 text-center md:hidden">{{ title }}</h2>
+{% endif %}
+<section class="products-large container mx-auto p-4 lg:px-0 {{ attributes.className }}">
+    {% if kiyoh %}
+        {{ include('partials/blocks/kiyoh-card.html.twig', { kiyoh: kiyoh }) }}
+        {% for product in posts|slice(0, -1) %}
+            {{ include('partials/tease/product-large.html.twig', { product: product }) }}
+        {% endfor %}
+    {% else %}
+        {% for product in posts %}
+            {{ include('partials/tease/product-large.html.twig', { product: product }) }}
+        {% endfor %}
+    {% endif %}
+
+    {% if title and link %}
+        <a href="{{ link }}" class="products-large-cta">
+            <h3>{{ title }} <i class="fas fa-chevron-right"></i></h3>
+        </a>
+    {% endif %}
+</section>

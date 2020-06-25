@@ -1,0 +1,12 @@
+{% macro sites_list(sites, classes) %}
+    {% for site in sites %}
+        {% if site.domain is not same as('casadelvino.nl') and site.domain is not same as('magasinduvin.nl') and site.domain is not same as('wijnenvantom.nl') %}
+            <a href="//{{ site.domain }}" class="{{ classes }} site-nav-item" rel="nofollow">{{ site.domain }}</a>
+        {% endif %}
+
+    {% else %}
+        <a class="site-nav-item">
+            {{ __('Er zijn geen andere sites gevonden.', 'winc') }}
+        </a>
+    {% endfor %}
+{% endmacro %}

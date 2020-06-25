@@ -1,0 +1,18 @@
+{% macro anchor(to, title, name, classes = []) %}
+    <a class="{{ classes|join(' ') }}" href="{{ to }}" title="{{ title }}">
+        {{ name }}
+    </a>
+{% endmacro %}
+
+{% macro nav_item(item, classes) %}
+    {% from _self import anchor %}
+    {% set class = item.classes|merge(classes) %}
+
+    <a class="{{ class|join(' ') }}" href="{{ item.link }}" title="{{ item.title }}">
+        <button class="mr-4 js-submenu-button">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        {{ item.title }}
+    </a>
+{% endmacro %}
+

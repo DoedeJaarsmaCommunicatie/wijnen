@@ -1,0 +1,39 @@
+<section class="lg:flex mc-form-wrapper">
+    <form class="mc-form js-mc-form lg:w-1/2">
+        <section class="content pb-2">
+            <h3>
+                {{ theme.theme_mod('mailchimp_form_title')}}
+            </h3>
+            <p>
+                {{ theme.theme_mod('mailchimp_form_context')}}
+            </p>
+        </section>
+
+        {% for field in theme.theme_mod('mailchimp_fields') %}
+            <section class='form-group'>
+                {% if field.label %}
+                    <label class="mc-label mc-label-for-{{ field.id }}" for='{{ field.id }}'>{{ field.label }}</label>
+                {% endif %}
+                <input
+                        class="mc-input mc-control mc-control-{{field.type}} mc-control-{{field.id}}"
+                        type="{{ field.type }}"
+                        id='{{ field.id }}'
+                        name='{{ field.id }}'
+                        placeholder='{{ field.placeholder }}'
+                        {% if field.required %} required {% endif %} />
+            </section>
+        {% endfor %}
+
+        <button type="submit" class="btn round animated shaded primary large">Aanmelden</button>
+    </form>
+    <aside class="lg:w-1/2 lg:ml-8">
+        {% if theme.theme_mod('mailchimp_form_image') %}
+            {% set _mcIMG = Image(theme.theme_mod('mailchimp_form_image')) %}
+        {% else %}
+            {% set _mcIMG = Image('https://picsum.photos/500/500') %}
+        {% endif %}
+        <figure>
+            <img src="{{ _mcIMG.src('large') }}" alt="{{ _mcIMG.alt ?? 'Meld je aan voor de nieuwe nieuwsbrief!' }}">
+        </figure>
+    </aside>
+</section>

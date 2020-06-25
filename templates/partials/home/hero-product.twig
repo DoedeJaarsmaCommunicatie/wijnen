@@ -1,0 +1,27 @@
+{% set _product = fn('wc_get_product', product.ID) %}
+
+<article class="card w-4/5 lg:w-1/4">
+    <div class="flex">
+        <section class="w-1/2">
+            <h3 class="product-payoff">{{ title }}</h3>
+            <h4 class="product-title"><a href="{{ product.link }}">{{ product.title }}</a></h4>
+        </section>
+
+        <aside class="w-1/2">
+            <figure class="product-card-floating-price">
+                <img
+                    class="product-card-floating-image"
+                    src="{{ product.thumbnail.src }}"
+                    alt="{{ product.thumbnail.alt }}">
+                <figcaption class="price">
+                    &euro; {{ _product.get_price }}
+                </figcaption>
+            </figure>
+        </aside>
+    </div>
+
+    <a href="{{ product.link }}" class="btn outline round secondary block centered shaded animated my-2">Bekijk nu!</a>
+
+    <small class="block lg:hidden"><i class="fas fa-truck"></i> Voor 15:00 besteld, vandaag verzonden</small>
+    <small class="block lg:hidden"><i class="fas fa-dolly"></i> Afhalen mogelijk</small>
+</article>

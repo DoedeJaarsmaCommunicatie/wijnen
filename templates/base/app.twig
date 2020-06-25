@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+<!--suppress HtmlRequiredTitleElement -->
+<head>
+    {% block head %}{% include 'base/helpers/head.twig' %}{% endblock %}
+
+    {{ fn('wp_head') }}
+</head>
+<body {{ fn('body_class') }}>
+{% do action('winc/html/body/pre') %}
+{{ theme.theme_mod('code_body_html')|raw }}
+
+{% do action('winc/html/body/header/pre') %}
+{% block header %}{{ include('base/helpers/header.twig') }}{% endblock %}
+{% do action('winc/html/body/header/post') %}
+
+{% do action('winc/html/body/content/pre') %}
+{% block content %}{{ post.content }}{% endblock %}
+{% do action('winc/html/body/content/post') %}
+
+{% do action('winc/html/body/footer/pre') %}
+{% block footer %}{{ include('base/helpers/footer.twig') }}{% endblock footer %}
+{% do action('winc/html/body/footer/post') %}
+
+{{ fn('wp_footer') }}
+{% block preBodyClose %}{% endblock %}
+</body>
+</html>

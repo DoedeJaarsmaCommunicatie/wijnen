@@ -1,0 +1,11 @@
+{% macro footer_heading(content, class) %}
+    <h4 class="footer-title {{ class }}">
+        {{ content }}
+    </h4>
+{% endmacro footer_heading %}
+
+{% macro footer_heading_small(content, class) %}
+    <strong class="{{ class }}">
+        {{ content }}
+    </strong>
+{% endmacro footer_heading_small %}

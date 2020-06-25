@@ -1,0 +1,14 @@
+<strong>{{ 'Voordelen'|apply_filters('winc/footer/benefits-list/title') }}</strong>
+{% do action('winc/footer/benefits-list/pre') %}
+<ul class="list-disc">
+    {% do action('winc/footer/benefits-list/list/pre') %}
+    <li>Groot assortiment wijnen op voorraad</li>
+    <li>Per fles te bestellen</li>
+    <li>Gratis verzending vanaf €60,- (NL)</li>
+    <li>Gratis verzending vanaf € 100,- (BE)</li>
+    <li>Snel bezorgd via PostNL: Voor 15:00 uur besteld, zelfde werkdag verzonden</li>
+    <li>Persoonlijk advies</li>
+    <li>Ophalen in Amsterdam mogelijk</li>
+    {% do action('winc/footer/benefits-list/list/post') %}
+</ul>
+{% do action('winc/footer/benefits-list/post') %}

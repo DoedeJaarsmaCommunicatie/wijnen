@@ -1,0 +1,5 @@
+<section class="products-large products-large-list container mx-auto p-4 lg:px-0 {{ attributes.className }}">
+    {% for product in posts %}
+        {% include 'partials/tease/product-large.html.twig' with { product: product } only %}
+    {% endfor %}
+</section>

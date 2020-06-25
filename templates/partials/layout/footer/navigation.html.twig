@@ -1,0 +1,17 @@
+{% from 'macro/typography/titles.macro.twig' import footer_heading_small %}
+
+<nav role="navigation" class="lg:w-1/4 flex flex-col menu">
+    {{ footer_heading_small('Meer informatie') }}
+    {% do action('winc/footer/navigation/pre') %}
+    {% for item in footerMenu.items|apply_filters('winc/footer/navigation/items') %}
+        <a class="menuitem"
+           href="{{ item.link }}"
+           target="_self"
+           title="{{ item.title }}"
+           role="navigation"
+        >
+            {{ item.title }}
+        </a>
+    {% endfor %}
+    {% do action('winc/footer/navigation/post') %}
+</nav>

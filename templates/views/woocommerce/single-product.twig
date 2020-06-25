@@ -1,0 +1,71 @@
+{% extends 'base/app.twig' %}
+{% from "macro/add-to-cart.twig" import add_to_cart %}
+{% from "macro/std.macro.twig" import productSTD as std %}
+{% from "macro/products/images.macro.twig" import product_image as thumbnail %}
+
+{% block content %}
+    {% do action('woocommerce_before_single_product') %}
+    <main class="product container mx-auto">
+        {% do action('winc/single/product/content/pre') %}
+        {{ thumbnail(post) }}
+
+        <h1 class="product-title">{{ post.title }}</h1>
+
+        {{ include('partials/woocommerce/product/attributes.html.twig') }}
+
+        <aside class="product_sidebar">
+            <span class="product-price">
+                {{ post.get_price_html }}
+                <small class="product-price_small" hidden>per fles</small>
+                {{ add_to_cart(post.get_id, 'product-form') }}
+            </span>
+            {{ include('partials/woocommerce/product/usp.html.twig', { product: product }) }}
+        </aside>
+
+        <section class="product-content">{{ post.content }}</section>
+        {% do action('winc/single/product/content/post') %}
+    </main>
+
+    <section class="mt-4">
+        <div class="container mx-auto">
+            <h4 class="text-xl">Gerelateerde producten</h4>
+        </div>
+        {% include 'partials/blocks/products.twig' with { posts: related_products } only %}
+    </section>
+    {{ std(product, post) }}
+
+    {{ add_to_cart(product.get_id, 'product-add-to-cart-container', 'qty-mob') }}
+
+{% endblock %}
+
+{% block preBodyClose %}
+    <link rel="stylesheet" href="{{ theme.link }}/dist/vendor/owl-carousel/owl.carousel.min.css" />
+    <script src="{{ theme.link }}/dist/vendor/owl-carousel/owl.carousel.min.js"></script>
+    <style>
+        @media screen and (max-width: 769px) {
+            .owl-carousel {
+                width: 380px;
+            }
+        }
+
+        @media screen and (max-width: 415px) {
+            .owl-carousel {
+                width: 203px;
+            }
+        }
+
+        @media screen and (max-width: 375px) {
+            .owl-carousel {
+                width: 183px;
+            }
+        }
+    </style>
+    <script>
+        jQuery('.owl-carousel').owlCarousel({
+            items: 1,
+            dots: false,
+            loop: true,
+            autoplay: true
+        });
+    </script>
+{% endblock %}
