@@ -6,6 +6,8 @@ abstract class Action
 {
     abstract public function action();
 
+    abstract public function hook();
+
     public function priority(): int
     {
         return 10;
