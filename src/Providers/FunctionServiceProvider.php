@@ -11,7 +11,7 @@ class FunctionServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->functions = apply_filters('THEME_SLUG/providers/functions', []);
+        $this->functions = apply_filters('wijnen/providers/functions', []);
 
         add_filter('timber/twig', [$this, 'registerFunctions']);
     }
