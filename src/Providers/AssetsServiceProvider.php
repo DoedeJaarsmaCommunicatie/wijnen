@@ -66,17 +66,45 @@ class AssetsServiceProvider extends ServiceProvider
 
     public function dequeueAssets(): void
     {
-        if (!is_admin() || !is_cart() || !is_checkout()) {
-//            WP::removeScript('jquery');
-            WP::removeScript('wp-embed');
-            WP::removeScript('hoverintent-js');
-        }
+	    WP::removeStyle('wc-block-style');
+	    WP::removeStyle('wp-block-library');
+
+	    if (is_product() || !(is_cart() || is_checkout() || is_woocommerce() || is_account_page())) {
+		    WP::removeStyle('woocommerce_frontend_styles');
+		    WP::removeStyle('woocommerce-general');
+		    WP::removeStyle('woocommerce-layout');
+		    WP::removeStyle('woocommerce-smallscreen');
+		    WP::removeStyle('woocommerce_prettyPhoto_css');
+
+		    WP::removeStyle('wooajaxcart');
+		    WP::removeStyle('wcpf-plugin-style');
+		    WP::removeStyle('wpgdprc.css');
+
+		    WP::removeScript('selectWoo');
+		    WP::removeScript('wc-add-payment-method');
+		    WP::removeScript('wc_price_slider');
+		    WP::removeScript('wc-single-product');
+		    WP::removeScript('wc-credit-card-form');
+		    WP::removeScript('wc-chosen');
+		    WP::removeScript('wc-cart');
+		    WP::removeScript('jqueryui');
+		    WP::removeScript('fancybox');
+		    WP::removeScript('prettyPhoto');
+		    WP::removeScript('prettyPhoto-init');
+		    WP::removeScript('woocommerce');
+		    WP::removeScript('jquery-blockui');
+		    WP::removeScript('jquery-placeholder');
+		    WP::removeScript('jquery-payment');
+
+		    WP::removeScript('wcpf-plugin-polyfills-script');
+		    WP::removeScript('wcpf-plugin-vendor-script');
+	    }
+	    // Remove jQuery.
+	    WP::removeScript('jquery');
+	    WP::addScript('jquery', get_stylesheet_directory_uri() . '/dist/jquery.min.js', [], false, false);
 
         if (!is_admin_bar_showing()) {
             WP::removeStyle('dashicons');
         }
-
-        WP::removeStyle('wp-block-library');
-        WP::removeStyle('wc-block-style');
     }
 }
