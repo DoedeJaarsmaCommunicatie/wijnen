@@ -22,41 +22,47 @@ class HookServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->filters = apply_filters('THEME_SLUG/providers/filters', []);
+        $this->filters = apply_filters('wijnen/providers/filters', []);
 
-        $this->actions = apply_filters('THEME_SLUG/providers/actions', []);
+        $this->actions = apply_filters('wijnen/providers/actions', []);
 
-        $this->filters_unhook = apply_filters('THEME_SLUG/providers/filters/unhook', []);
+        $this->filters_unhook = apply_filters('wijnen/providers/filters/unhook', [
+        	[
+        		'hook' => 'the_content',
+        		'name' => 'wpautop',
+		        'priority' => 10
+	        ]
+        ]);
 
-        $this->actions_unhook = apply_filters('THEME_SLUG/providers/actions/unhook', []);
+        $this->actions_unhook = apply_filters('wijnen/providers/actions/unhook', []);
     }
 
     public function register(): void
     {
-        foreach ($this->actions as $hookName => $action) {
+        foreach ($this->actions as $action) {
             if (class_exists($action) && is_subclass_of($action, Action::class)) {
                 $called = Container::get($action);
-                add_action($hookName, [$called, 'action'], $called->priority(), $called->parameterCount());
+                add_action($called->hook(), [$called, 'action'], $called->priority(), $called->parameterCount());
             } else {
-                add_action($hookName, $action);
+                add_action($action['hook'], $action['action']);
             }
         }
 
-        foreach ($this->filters as $hookName => $filter) {
+        foreach ($this->filters as $filter) {
             if (class_exists($filter) && is_subclass_of($filter, Filter::class)) {
                 $called = Container::get($filter);
-                add_filter($hookName, [$called, 'filter'], $called->priority(), $called->parameterCount());
+                add_filter($called->hook(), [$called, 'filter'], $called->priority(), $called->parameterCount());
             } else {
-                add_filter($hookName, $filter);
+                add_filter($filter['hook'], $filter['action']);
             }
         }
 
-        foreach ($this->actions_unhook as $hook => $item) {
-            remove_action($hook, $item['name'], $item['priority']);
+        foreach ($this->actions_unhook as $item) {
+            remove_action($item['hook'], $item['name'], $item['priority']);
         }
 
         foreach ($this->filters_unhook as $hook => $item) {
-            remove_filter($hook, $item['name'], $item['priority']);
+            remove_filter($item['hook'], $item['name'], $item['priority']);
         }
     }
 }
