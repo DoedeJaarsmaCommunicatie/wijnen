@@ -2,6 +2,7 @@ import './bootstrap';
 import Ready from './tools/Ready';
 import Router from './tools/Router';
 
+// Import routes
 const common = async () =>
     (await import(/* webpackChunkName: "dist/scripts/routes/common" */'./routes/Common')).default;
 const home = async () =>
