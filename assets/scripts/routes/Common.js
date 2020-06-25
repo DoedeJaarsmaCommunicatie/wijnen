@@ -1,6 +1,9 @@
+import { addToCart } from '../lib/cart/add-to-cart';
+
 export default {
   init() {
     // Javascript that fires on all pages.
+    addToCart();
   },
 
   finalize() {
