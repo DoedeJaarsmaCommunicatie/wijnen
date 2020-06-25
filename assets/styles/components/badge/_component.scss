@@ -1,0 +1,49 @@
+.has-badge {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  font-size: $badge-font-size;
+  width: $badge-width;
+  height: $badge-height;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $badge-border-radius;
+
+  &.right {
+    right: -$badge-width/2;
+  }
+
+  &.top {
+    top: -$badge-height/2;
+  }
+
+  &.left {
+    left: -$badge-width/2;
+  }
+
+  &.bottom {
+    bottom: -$badge-height/2;
+  }
+
+  @each $name, $map in $colors {
+    &.#{$name} {
+      background: nth($map, 1);
+      @if ($name == 'white') {
+        color: $primary;
+      }
+      @else {
+        color: nth($map, 2);
+      }
+
+      @include outlined {
+        background: transparent;
+        color: nth($map, 1);
+        border: 1px solid nth($map, 1);
+      }
+    }
+  }
+}

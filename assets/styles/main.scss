@@ -1,10 +1,12 @@
-@use "~tailwindcss/base";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
 
-@use "~tailwindcss/components";
+@import "abstracts/all";
+@import "./vendor/all";
+@import "base/all";
+@import "components/all";
+@import "layout/all";
+@import "pages/all";
+@import "partials/all";
 
-@use "base" as *;
-@use "components" as *;
-@use "layout" as *;
-@use "pages" as *;
-
-@use '~tailwindcss/utilities';
+@import "tailwindcss/utilities";

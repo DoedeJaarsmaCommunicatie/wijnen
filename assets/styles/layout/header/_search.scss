@@ -1,0 +1,31 @@
+$search-form-color: $black !default;
+$search-form-background-color: $white !default;
+$search-form-padding: $padding_small !default;
+
+$search-form-border-width: 1px !default;
+$search-form-border-color: $search-form-color !default;
+
+.search-form {
+  background: $search-form-background-color;
+  display: flex;
+  padding: $search-form-padding;
+  border: $search-form-border-width solid $search-form-border-color;
+
+  & .search-form-input {
+    color: $black;
+    width: 100%;
+    &:focus {
+      outline: none;
+    }
+  }
+
+  & .search-button {
+    color: $search-form-color;
+  }
+
+  @include radii;
+
+  @media screen and (min-width: get-breakpoint('md')) {
+    min-width: 350px;
+  }
+}

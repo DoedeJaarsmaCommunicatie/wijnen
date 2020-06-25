@@ -1,0 +1,26 @@
+// Base colors
+@import "variables/colors";
+
+$radius: .25rem !default;
+$padding: 1rem !default;
+$padding_small: $padding / 2 !default;
+
+$fontFamily: "Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
+$fontSizeLarge: 1.25rem !default;
+$fontSizeXLarge: 1.5rem !default;
+$fontSizeXXLarge: 1.875rem !default;
+
+$WP_ADMIN_BAR_HEIGHT: 32px;
+$breakpoints: (
+  'sm': 415px,
+  'md': 768px,
+  'lg': 1024px,
+  'xl': 1200px
+);
+
+
+/*
+ Product cards.
+ */
+$product_price_background: $secondary;
+$product_price_color: $white;

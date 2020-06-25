@@ -1,0 +1,18 @@
+$product-card-sm-grid-areas: "thumb title title" "thumb content content" "thumb price button" !default;
+$product-card-sm-grid-gap: .75rem !default;
+$product-card-sm-height: 100% !default;
+
+$product-card-sm-label-background: $secondary !default;
+$product-card-sm-label-color: $white !default;
+$product-card-sm-label-radius: $radius !default;
+$product-card-sm-label-padding: .25rem $padding !default;
+
+$product-card-sm-title-fontsize: $fontSizeLarge !default;
+$product-card-sm-title-fontweight: 500 !default;
+
+$product-card-sm-image-height: (180px, 300px) !default;
+
+$product-card-sm-price-color: $primary !default;
+$product-card-sm-price-fontsize: $product-card-sm-title-fontsize !default;
+
+$product-card-sm-margin-bottom: $padding !default;

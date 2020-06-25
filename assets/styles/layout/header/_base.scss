@@ -1,0 +1,94 @@
+$header-background: #f4f4f4 !default;
+$header-color: $white !default;
+$header-padding: $padding !default;
+$header-shadow: true !default;
+$header-sticky: true !default;
+$topnav-spacing: $padding_small !default;
+
+header.header {
+  background: $header-background;
+  color: $header-color;
+  padding: $header-padding;
+
+  & > .container {
+    display: grid;
+    grid-template-areas:
+            "logo . nav nav nav"
+            "logo . . . ."
+            "logo . search search cart"
+            "logo . . . .";
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, minmax(min-content, 1rem));
+    grid-gap: 5px 20px;
+
+    @media screen and (max-width: get-breakpoint('md')) {
+      grid-template-areas:
+              "logo . . . ."
+              "logo . . . ."
+              "logo . . . cart"
+              "logo . . . ."
+              "search search search search menubutton";
+    }
+  }
+
+  & .menu-button {
+    grid-area: menubutton;
+  }
+
+  & .search-form {
+    grid-area: search;
+  }
+
+  & .custom_logo_wrapper {
+    grid-area: logo;
+  }
+
+  & .top-navigation {
+    grid-area: nav;
+  }
+
+  & .to-cart-button {
+    grid-area: cart;
+  }
+
+  @if $header-sticky {
+    @include sticky(0, 20);
+
+    .admin-bar & {
+      @media screen and (min-width: get-breakpoint('sm')) {
+        @include sticky($WP_ADMIN_BAR_HEIGHT, 20);
+      }
+    }
+  }
+}
+
+.top-navigation {
+  margin-left: auto;
+
+  @if ($topnav-spacing) {
+    & > .top-nav-item:not(:last-of-type) {
+      margin-right: $topnav-spacing;
+    }
+  }
+}
+
+.top-nav-item.menu-item {
+  color: $black;
+  display: inline-block;
+  width: unset;
+}
+
+.bulbed {
+  background: $header-color;
+  color: $header-background;
+  width: 2rem;
+  height: 2rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+.js-menu-open {
+  display: block;
+}

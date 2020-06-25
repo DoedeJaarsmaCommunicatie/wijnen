@@ -1,0 +1,12 @@
+@function get-breakpoint($size) {
+  @if not $size {
+    @error 'No Size passed for breakpoint';
+  }
+
+  @if not map-has-key($breakpoints, $size) {
+    @error 'Breakpoint #{$size} not in map: ' + map-keys($breakpoints);
+  }
+
+  @return map-get($breakpoints, $size);
+}
+

@@ -1,0 +1,209 @@
+.product {
+    display: grid;
+    grid-template-areas: "thumb . title title"
+                         "thumb . sidebar sidebar"
+                         "thumb . sidebar sidebar"
+                         "thumb . . ."
+                         "attributes attributes attributes attributes"
+                         "main main main main";
+
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: 1fr;
+    grid-gap: 0.5rem;
+    padding: $padding 0;
+    position: relative;
+
+    @media screen and (min-width: 1024px) {
+        padding: 2.25rem 0 0;
+        grid-template-areas: "thumb thumb . title title title title title . sidebar sidebar sidebar"
+                             "thumb thumb . attributes attributes attributes attributes attributes . sidebar sidebar sidebar"
+                             "thumb thumb . attributes attributes attributes attributes attributes . sidebar sidebar sidebar"
+                             "thumb thumb . main main main main main . sidebar sidebar sidebar"
+                             ". . . main main main main main . . . .";
+
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: minmax(2rem, max-content) minmax(1rem, 2rem) ;
+    }
+
+    & .product-image, & picture {
+        grid-area: thumb;
+        padding-left: $padding;
+    }
+
+    & .product-title {
+        grid-area: title;
+        font-size: $fontSizeLarge;
+        font-weight: 500;
+        padding-right: $padding;
+
+        @screen lg {
+            font-size: 2rem;
+        }
+    }
+
+    & .product-attributes {
+        grid-area: attributes;
+        font-size: 1rem;
+        font-weight: 400;
+        padding: $padding;
+        border: 1px solid scale-color($primary, $lightness: 40%);
+
+        & a {
+            @include transition;
+            text-decoration: underline;
+
+            &:hover {
+                color: $primary;
+            }
+        }
+    }
+
+    & .product-price {
+        color: $black;
+        font-size: $fontSizeXXLarge;
+        & small {
+            display: none;
+            font-size: 0.75rem;
+        }
+
+        padding-right: $padding;
+    }
+
+    & .product-content {
+        @extend %content;
+
+        padding: $padding;
+        grid-area: main;
+        margin-top: $padding;
+        background: scale-color($grey, $lightness: 90%);
+        color: $black;
+
+        @for $i from 1 through 6 {
+            h#{$i} {
+                margin-top: 0.5rem;
+            }
+        }
+
+        @media screen and (min-width: 1024px) {
+            padding: 0;
+            background: transparent;
+            color: $black;
+            margin-top: 0;
+        }
+    }
+
+    .product_sidebar {
+        grid-area: sidebar;
+        background: transparent;
+        @media screen and (min-width: 1023px) {
+            padding: $padding;
+            background: scale-color($grey, $lightness: 90%);
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+    }
+
+    .product-form {
+        display: none;
+
+        @media screen and (min-width: 1024px) {
+            display: flex;
+            flex-wrap: wrap;
+
+            & #quantity {
+                appearance: textfield;
+                height: 45px;
+                border: 1px solid $black;
+                text-align: center;
+                width: 70%;
+            }
+
+            button {
+                font-size: 1rem;
+            }
+        }
+    }
+}
+
+@include not-home {
+    .kiyoh-banner {
+        display: none;
+    }
+
+    .seo_large {
+        display: none;
+    }
+}
+
+.product-add-to-cart-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: $white;
+    padding: $padding_small $padding;
+    display: flex;
+    @include inverse-shadow;
+    justify-content: space-between;
+
+    #qty,
+    #qty-mob {
+        max-width: 3rem;
+        border: 1px solid $black;
+        @include radii;
+        text-align: center;
+        appearance: textfield;
+    }
+
+    @media screen and (min-width: 1024px) {
+        display: none;
+    }
+}
+
+.product-attributes {
+    & table {
+        & tr {
+            border-bottom: 1px solid $white;
+        }
+    }
+
+    @media screen and (min-width: 1023px) {
+        & table {
+
+            td {
+                display: table-cell;
+
+                &:last-of-type {
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+}
+
+.product-usp {
+    & th {
+        padding: 0 10px 0;
+    }
+
+    @media screen and (max-width: 1024px) {
+        & tr {
+            border-bottom: 2px solid scale-color($primary, $alpha: -45%);
+
+            &:nth-of-type(n+5) {
+                display: none;
+            }
+        }
+
+        & th {
+            display: none;
+        }
+    }
+}
+
+.product-usp-stock {
+    &.stock-instock {
+        color: $secondary;
+    }
+}

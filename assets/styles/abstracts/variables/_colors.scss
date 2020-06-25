@@ -1,0 +1,27 @@
+@import "color-functions";
+
+$orange: hsl(30, 100%, 60%) !default;
+$green: hsl(157, 100%, 38%) !default;
+
+$primary: hsl(0,48%,59%) !default;
+$primary-invert: hsl(0, 0%, 100%) !default;
+$secondary: hsl(177,40%,73%) !default;
+$secondary-invert: hsl(173,58%,39%) !default;
+$white: hsl(0, 0%, 100%) !default;
+$white-invert: findColorInvert($white);
+$grey: hsl(0, 0%, 58%) !default;
+$grey-invert: findColorInvert($grey);
+$black: hsl(0, 0%, 0%) !default;
+$black-invert: findColorInvert($black);
+
+$colors: () !default;
+$colors: map-merge(
+    (
+        'primary': ($primary, $primary-invert),
+        'secondary': ($secondary, $secondary-invert),
+        'white': ($white, $white-invert),
+        'black': ($black, $black-invert),
+        'grey': ($grey, $grey-invert)
+    ),
+    $colors
+);

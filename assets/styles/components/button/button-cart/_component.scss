@@ -1,0 +1,7 @@
+.to-cart-button {
+  background: $primary;
+  padding: 0.5rem;
+  width: min-content;
+  margin-left: auto;
+  @include radii;
+}

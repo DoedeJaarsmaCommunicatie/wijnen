@@ -1,0 +1,15 @@
+%sticky {
+  position: sticky;
+}
+
+%default-transition {
+  transition: all 225ms cubic-bezier(0.2, 0.4, 0.2, 1.0);
+}
+
+%default-radius {
+  border-radius: $radius;
+}
+
+%default-shadow {
+  box-shadow: 0px 3px 6px adjust-color($black, $alpha: -0.9%);
+}

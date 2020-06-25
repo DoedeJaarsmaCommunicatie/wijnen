@@ -1,0 +1,50 @@
+%btn {
+  padding:$btn-padding-normal;
+  display: flex;
+  align-items: center;
+
+  &.round { @extend %default-radius; }
+
+  &.centered { text-align: center; }
+
+  &.shaded {
+    @extend %default-shadow;
+
+    &.animated {
+      &:hover {
+        box-shadow: none;
+      }
+    }
+  }
+
+  &.animated { @extend %default-transition; }
+
+  @each $name, $map in $colors {
+    &.#{$name} {
+      &.outline {
+        border: $btn-border-width $btn-border-style nth($map, 1);
+        color: nth($map, 1);
+      }
+
+      &:not(.outline) {
+        background: nth($map, 1);
+        color: nth($map, 2);
+        border: $btn-border-width $btn-border-style nth($map, 1);
+      }
+    }
+  }
+
+  &.small { padding: $btn-padding-small; }
+
+  &.large { padding: $btn-padding-large; }
+}
+
+%floating-button {
+  @extend %btn;
+
+  position: fixed;
+}
+
+.btn { @extend %btn; }
+
+

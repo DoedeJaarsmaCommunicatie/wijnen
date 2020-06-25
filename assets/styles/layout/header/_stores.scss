@@ -1,0 +1,85 @@
+$shop-container-slider-background-color: adjust-color($grey, $alpha: -0.4%) !default;
+
+$shops-wrapper-width: ('desktop': 75vw, 'mobile': 25vw) !default;
+$shops-wrapper-background-color: adjust-color($white) !default;
+
+$shops-wrapper-has-border: true !default;
+$shops-wrapper-border: 5px solid adjust-color($primary) !default;
+
+$sites-border-color: adjust-color($primary) !default;
+$sites-border-height: 2px !default;
+$sites-border-animation: ('speed': 0.6s, 'timing': cubic-bezier(0.175, 0.885, 0.32, 1.275)) !default;
+$sites-border-fullwidth: 0.8 !default;
+
+.shop-container-slider {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: $shop-container-slider-background-color;
+  z-index: 3;
+  transform: scale(0, 1);
+  transform-origin: left;
+
+  &.active { transform: scale(1); }
+
+  .shops-wrapper {
+    height: 100vh;
+    width: map-get($shops-wrapper-width, 'desktop');
+    background: $shops-wrapper-background-color;
+    padding: $padding;
+    @if $shops-wrapper-has-border {
+      border-right: $shops-wrapper-border;
+    }
+
+    @media screen and (min-width: get-breakpoint('md')) {
+      max-width: map-get($shops-wrapper-width, 'mobile');
+      @include shadow;
+    }
+  }
+
+  .admin-bar & {
+    height: calc(100vh - #{$WP_ADMIN_BAR_HEIGHT});
+    top: $WP_ADMIN_BAR_HEIGHT;
+  }
+
+  @include transition;
+}
+
+@media screen and (min-width: get-breakpoint('md')) {
+  .site-nav-item {
+    margin-bottom: $padding_small;
+    position: relative;
+
+    &::after {
+      transition: all map-get($sites-border-animation, 'speed') map-get($sites-border-animation, 'timing');
+
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      left: 0;
+      height: $sites-border-height;
+      transform: scale(0, 1);
+      transform-origin: left center;
+      content: ' ';
+      background: $sites-border-color;
+    }
+
+    &:hover {
+      &::after {
+        transform: scale($sites-border-fullwidth);
+      }
+    }
+  }
+}
+
+.shop-container {
+  @extend %content;
+}
+
+@media screen and (max-width: get-breakpoint('md')) {
+  .shop-container {
+    display: none;
+  }
+}

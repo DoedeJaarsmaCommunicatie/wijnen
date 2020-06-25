@@ -1,0 +1,14 @@
+$product-card-lg-price-color: $primary !default;
+$product-card-lg-price-fontsize: $fontSizeLarge !default;
+$product-card-lg-price-margin: 1.125rem 0 !default;
+
+$product-card-lg-title-color: $black !default;
+$product-card-lg-title-fontsize: $fontSizeLarge !default;
+$product-card-lg-title-fontweight: 400 !default;
+$product-card-lg-title-margin: 1.125rem 0 0 0 !default;
+$product-card-lg-title-height: ($fontSizeLarge * 1.5) * 3;
+
+$product-card-lg-hor-grid-gap: .75rem !default;
+$product-card-lg-hor-margin: 0 0 $product-card-lg-hor-grid-gap  0 !default;
+
+$product-card-lg-hor-image-height: 150px;

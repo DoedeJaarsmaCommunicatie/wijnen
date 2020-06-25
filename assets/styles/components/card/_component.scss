@@ -1,0 +1,17 @@
+%card {
+  background: $card_background;
+  color: $card_color;
+  padding: $padding;
+
+  @if $shadow {
+    @include shadow;
+  }
+
+  @if $card_radius {
+    @include radii;
+  }
+}
+
+.card {
+  @extend %card;
+}

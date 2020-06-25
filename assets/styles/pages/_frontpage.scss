@@ -1,0 +1,18 @@
+@import "frontpage/hero";
+@import "frontpage/large-hero";
+@import "frontpage/products";
+
+.kiyoh-reviews {
+    display: flex;
+    align-content: center;
+
+    & .kiyoh-score {
+        font-size: $fontSizeLarge;
+    }
+}
+
+@media screen and (max-width: 414px) {
+    .homepage-filter {
+        display: none;
+    }
+}

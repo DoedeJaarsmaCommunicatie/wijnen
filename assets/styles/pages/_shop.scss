@@ -1,0 +1,37 @@
+.products-large-store {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: $padding_small;
+  padding: $padding 0;
+
+  @include below-screen('md') {
+    grid-template-columns: 1fr;
+  }
+}
+
+@include below-screen('md') {
+  .filter-container {
+    padding: 1rem;
+    transform: scale(1, 0);
+    transform-origin: top;
+    transition: all 225ms linear;
+    position: absolute;
+    &.active {
+      transform: scale(1);
+      position: static;
+    }
+  }
+}
+
+label[for^="payment_method_"] {
+  & img {
+    display: inline;
+  }
+}
+
+.woocommerce-ordering {
+  .orderby {
+    padding: .5rem;
+    box-shaddow: 0 3px 6px rgba(51, 51, 51, .2);
+  }
+}

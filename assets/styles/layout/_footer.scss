@@ -1,0 +1,52 @@
+$footer-background-color: scale-color($grey, $lightness: 90%) !default;
+$footer-padding: $padding 0 0 !default;
+
+$nix18-margins: $padding_small auto $padding_small 0 !default;
+$nix18-width: 150px !default;
+
+.footer {
+  background: $footer-background-color;
+  padding: $footer-padding;
+
+  & .nix-18-logo {
+    width: $nix18-width;
+    margin: $nix18-margins;
+  }
+
+  & .menuitem {
+    @media screen and (max-width: 1023px) {
+      padding: 0.5rem 0;
+    }
+  }
+}
+
+@media screen and (max-width: 1023px) {
+  .shortened-list {
+    &:not(.active) {
+      cursor: pointer;
+      max-height: 8rem;
+      overflow: hidden;
+      position: relative;
+
+      &::after {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        content: ' ';
+
+        background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 1));
+      }
+    }
+  }
+}
+
+.secure-pay-icon {
+  margin: 0 2% 2% 0;
+  min-height: 30px;
+
+  &:last-of-type {
+    height: 31px;
+  }
+}

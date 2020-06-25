@@ -1,0 +1,52 @@
+html {
+  font-family: $fontFamily;
+}
+
+%content {
+  & h1 {
+    font-size: $fontSizeXXLarge;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+  }
+
+  & h2 {
+    font-size: $fontSizeXLarge;
+    font-weight: bold;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  & p {
+    margin-bottom: 1rem;
+  }
+
+  & h3 {
+    font-size: $fontSizeLarge;
+    font-weight: bold;
+    line-height: 1.25;
+    margin-bottom: 1rem;
+  }
+
+  & h4 {
+    font-weight: bold;
+  }
+
+  & a {
+    @include transition;
+    text-decoration: underline;
+
+    &:hover {
+      color: $primary;
+    }
+  }
+
+  & ul {
+    padding-left: 2rem;
+    list-style-type: circle;
+  }
+}
+
+.content {
+  @extend %content;
+}

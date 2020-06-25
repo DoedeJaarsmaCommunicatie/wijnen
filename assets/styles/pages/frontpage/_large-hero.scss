@@ -1,0 +1,16 @@
+$fph-large-font-size: 37px !default;
+$fph-large-font-color: $white !default;
+$fph-large-font-shaded: 1px 1px $black !default;
+
+.frontpage-hero--large-title {
+  font-size: $fph-large-font-size;
+  font-weight: 600;
+  color: $fph-large-font-color;
+  text-shadow: $fph-large-font-shaded;
+}
+
+.frontpage-hero--large-subtitle {
+  font-size: $fph-large-font-size;
+  text-shadow: $fph-large-font-shaded;
+  color: $fph-large-font-color;
+}

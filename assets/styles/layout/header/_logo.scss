@@ -1,0 +1,35 @@
+$logo-height: 100px !default;
+
+.logo-header {
+  @if ($header-sticky) {
+    background: $primary;
+    @include sticky(145px, 10);
+
+    .admin-bar & {
+      @media screen and (min-width: 415px) {
+        @include sticky($WP_ADMIN_BAR_HEIGHT + 132px, 10);
+      }
+    }
+  }
+
+  @if $header_shadow {
+    @include shadow;
+  }
+
+  @media screen and (max-width: get-breakpoint('md')) {
+    position: unset;
+  }
+}
+
+.custom_logo {
+  max-height: $logo-height;
+  @media screen and (max-width: 1023px) {
+    max-width: 300px !important;
+    margin-bottom: .5rem;
+  }
+}
+
+.custom_logo_wrapper {
+  display: flex;
+  align-items: center;
+}

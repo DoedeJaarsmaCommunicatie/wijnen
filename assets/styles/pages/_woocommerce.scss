@@ -1,0 +1,13 @@
+.woocommerce form.checkout .form-row input.input-text, .woocommerce form.checkout .form-row textarea.input-text {
+    border: 1px solid $primary;
+    padding: $padding_small $padding;
+    @include radii;
+}
+
+.woocommerce #place_order {
+    background: $primary;
+}
+
+.wac-btn-inc, .wac-btn-sub {
+  text-decoration: none !important;
+}

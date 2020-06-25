@@ -1,0 +1,163 @@
+.menu-button {
+  color: $black;
+  @media screen and (min-width: get-breakpoint('md')) {
+    display: none;
+  }
+}
+
+.navbar {
+  align-self: center;
+  display: flex;
+  flex: 1 1 auto;
+  padding: 0;
+
+  @include transition;
+  @media screen and (max-width: get-breakpoint('md')) {
+    position: fixed;
+    background: $white;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    padding: $padding;
+    transform: scale(0, 1);
+    transform-origin: right;
+    display: flex;
+    flex-direction: column;
+    border-top: 5px solid $primary;
+    z-index: 20;
+    overflow-y: scroll;
+    @include shadow;
+
+    &.active {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    .admin-bar & {
+      top: 46px;
+    }
+  }
+}
+
+.menu-item {
+  color: $primary;
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid;
+  padding-bottom: .5rem;
+  margin-bottom: .5rem;
+
+  @media screen and (min-width: get-breakpoint('md')) {
+    color: $white;
+    width: unset;
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 0;
+
+    button.js-submenu-button {
+      display: none;
+    }
+  }
+}
+
+.menu-item-submenu {
+  &:first-of-type {
+    @media screen and (min-width: 768px) {
+      margin-left: -1rem;
+    }
+  }
+
+  &:last-of-type {
+    margin-left: auto;
+  }
+
+  &:hover {
+    .submenu {
+      transform: scale(1);
+    }
+  }
+
+  @media screen and (max-width: get-breakpoint('md')) {
+    position: relative;
+
+    &:last-of-type {
+      margin-left: unset;
+    }
+  }
+}
+
+.submenu {
+  @extend %default-shadow;
+  @extend %default-transition;
+  transition-delay: 100ms;
+  padding: $padding;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: $white;
+  transform: scale(1, 0);
+  transform-origin: top;
+  z-index: 10;
+
+  @media screen and (max-width: get-breakpoint('md')) {
+    &.active {
+      transform: scale(1);
+      position: static;
+      box-shadow: none;
+    }
+
+    & .submenu-title {
+      font-weight: 600;
+      text-transform: uppercase;
+      line-height: 2;
+    }
+  }
+}
+
+.submenu-button {
+  margin-left: auto;
+}
+
+@media screen and (min-width: get-breakpoint('md')) {
+  .navbar {
+    & .menu-item {
+      display: block;
+      padding: 1rem;
+      font-size: 1.3rem;
+    }
+  }
+
+  .mega-menu {
+    display: flex;
+    flex-wrap: wrap;
+
+    li {
+      flex: 1 1 auto;
+      line-height: 2;
+    }
+  }
+
+  .submenu-title {
+    font-weight: 600;
+    text-transform: uppercase;
+    line-height: 2;
+  }
+
+  .submenu-button {
+    display: none;
+  }
+
+  .menu-large-button {
+    background: $secondary;
+    color: $secondary-invert;
+  }
+}
+
+.top-navigation {
+  @media screen and (max-width: get-breakpoint('md')) {
+    display: none;
+  }
+}

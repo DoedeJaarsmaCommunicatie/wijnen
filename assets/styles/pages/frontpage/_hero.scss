@@ -1,0 +1,104 @@
+$hero-height: false !default;
+$hero-background-size: cover !default;
+$hero-background-color: $primary !default;
+$hero-hide-on-product: true !default;
+
+$hero-product-payoff-size: $fontSizeLarge !default;
+
+$hero-product-price-size: 75px !default;
+$hero-product-price-background: adjust-color($primary, $alpha: -0.15%) !default;
+$hero-product-price-position-top: 75px !default;
+$hero-product-price-position-left: 0 !default;
+$hero-product-price-radius: 50% !default;
+
+$hero-product-image-height: 300px !default;
+
+$hero-usp-banner-background: adjust-color($black, $alpha: -0.6%) !default;
+$hero-usp-banner-padding: $padding / 2 !default;
+$hero-usp-banner-color: $white !default;
+
+.frontpage-hero {
+  position: relative;
+  padding: $padding;
+
+  @if $hero-background-size {
+    background-size: $hero-background-size;
+  }
+
+  @if $hero-height {
+    height: $hero-height;
+  }
+
+  @if $hero-background-color {
+    background-color: $hero-background-color;
+  }
+
+  @media screen and (min-width: get-breakpoint('lg')) {
+    padding-bottom: $padding + 2.5rem;
+  }
+
+  & .product-title {
+    line-height: 1;
+    font-size: $fontSizeLarge;
+    font-weight: 300;
+    margin-bottom: $padding_small;
+    text-transform: uppercase;
+  }
+
+  @if $hero-hide-on-product {
+    .single-product & {
+      display: none;
+    }
+  }
+}
+
+.product-payoff {
+  font-size: $hero-product-payoff-size;
+  font-weight: bold;
+  margin-bottom: $padding_small;
+}
+
+
+.product-card-floating-price {
+  position: relative;
+
+  & .price {
+    position: absolute;
+    top: $hero-product-price-position-top;
+    left: $hero-product-price-position-left;
+    width: $hero-product-price-size;
+    height: $hero-product-price-size;
+    background: $hero-product-price-background;
+    border-radius: $hero-product-price-radius;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+@media screen and (min-width: get-breakpoint('lg')) {
+  .product-card-floating-image {
+      max-height: $hero-product-image-height;
+  }
+}
+
+
+.usp-banner {
+  display: none;
+
+  @media screen and (min-width: 1024px) {
+    display: block;
+    position: absolute;
+    background: $hero-usp-banner-background;
+    width: 100%;
+    bottom: 0;
+    left: 0;
+    padding: $hero-usp-banner-padding;
+    text-align: center;
+    color: $hero-usp-banner-color;
+  }
+}
+
+.usp-banner--item {
+  text-shadow: 1px 1px 6px $black;
+}

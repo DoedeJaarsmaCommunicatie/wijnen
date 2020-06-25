@@ -1,0 +1,43 @@
+@mixin shadow {
+  box-shadow: 0 3px 6px adjust-color($black, $alpha: -0.9%);
+}
+
+@mixin inverse-shadow {
+  box-shadow: 0 -3px 6px adjust-color($black, $alpha: -0.9%);
+}
+
+@mixin sticky($top: 0, $z: 1) { position: sticky; top: $top; z-index: $z; }
+
+@mixin radii { @extend %default-radius; }
+
+@mixin transition { @extend %default-transition; }
+
+@mixin outlined() {
+  &.outlined {
+    @content;
+  }
+}
+
+@mixin above-screen($breakpoint: 'md') {
+  @media screen and (min-width: get-breakpoint($breakpoint)) {
+    @content;
+  }
+}
+
+@mixin below-screen($breakpoint: 'md') {
+  @media screen and (max-width:get-breakpoint($breakpoint)) {
+    @content;
+  }
+}
+
+@mixin between-screens($breakpoint-lower: 'sm', $breakpoint-higher: 'md') {
+  @media screen and (min-width: get-breakpoint($breakpoint-lower)) and (max-width: get-breakpoint($breakpoin-higher)) {
+    @content;
+  }
+}
+
+@mixin not-home() {
+  body:not(.home) {
+    @content;
+  }
+}

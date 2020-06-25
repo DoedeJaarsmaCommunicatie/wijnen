@@ -1,0 +1,46 @@
+$faq-padding: 1rem 1rem 1rem 3rem !default;
+$faq-question-background: adjust-color($grey, $alpha: -0.7%) !default;
+$faq-question-color: $black !default;
+$faq-question-padding: $faq-padding !default;
+$faq-question-letter: 'Q' !default;
+$faq-question-letter-color: $primary !default;
+
+$faq-answer-background: adjust-color($white) !default;
+$faq-answer-color: $black !default;
+$faq-answer-padding: $faq-padding !default;
+$faq-answer-letter: 'A' !default;
+$faq-answer-letter-color: $primary !default;
+
+.content p.faq-question {
+    background: $faq-question-background;
+    color: $faq-question-color;
+    padding: $faq-question-padding;
+    margin: 0;
+
+    position: relative;
+
+    &::before {
+        content: $faq-question-letter;
+        color: $faq-question-letter-color;
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+    }
+}
+
+.content p.faq-answer {
+    background: $faq-answer-background;
+    margin-bottom: 1rem;
+
+    padding: $faq-answer-padding;
+
+    position: relative;
+
+    &::before {
+        content: $faq-answer-letter;
+        color: $faq-answer-letter-color;
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+    }
+}

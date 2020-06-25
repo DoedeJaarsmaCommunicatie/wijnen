@@ -1,0 +1,105 @@
+$frontpage-products-space-between: $padding !default;
+$frontpage-products-per-row: 2 !default;
+
+.products {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: $frontpage-products-space-between;
+
+  @media screen and (min-width: get-breakpoint('lg')) {
+    grid-template-columns: repeat($frontpage-products-per-row, 1fr);
+  }
+}
+
+.products-large {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  grid-gap: $frontpage-products-space-between;
+
+  @media screen and (min-width: get-breakpoint('lg')) {
+    grid-template-areas: ". . . . button";
+    grid-template-columns: 5fr 5fr 5fr 5fr 4fr;
+
+    .products-large-cta {
+      grid-area: button;
+    }
+  }
+}
+
+.products-large-list {
+  @media screen and (min-width: get-breakpoint('lg')) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.bg-grey-products {
+  background: scale-color($grey, $lightness: 90%);
+  padding: $frontpage-products-space-between 0;
+}
+
+.products-large--image-container {
+  display: grid;
+  grid-gap: $frontpage-products-space-between;
+
+  grid-template-areas: 'thumb' 'side';
+  grid-template-columns: 1fr;
+
+  @media screen and (min-width: get-breakpoint('lg')) {
+    &.image-left {
+      grid-template-areas: 'thumb side';
+      grid-template-columns: (5/12 * 1fr )  (7/12 * 1fr);
+    }
+
+    &.image-right {
+      grid-template-columns: (7/12 * 1fr )  (5/12 * 1fr);
+      grid-template-areas: 'side thumb';
+    }
+  }
+}
+
+.products-image--image-wrapper {
+  grid-area: thumb;
+  position: relative;
+
+  @include shadow;
+
+  .products-image--caption {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid $white;
+    text-shadow: 1px 1px $black;
+    padding: $padding;
+    color: $white;
+    font-size: $fontSizeXLarge;
+    font-weight: 600;
+  }
+}
+
+.products-image--products-wrapper {
+  grid-area: side;
+  display: grid;
+
+  @media screen and (min-width: get-breakpoint('lg')) {
+    grid-template-areas: ". products products ."
+                         ". products products ."
+                         "button button button button";
+    grid-template-rows: 2fr 2fr .5fr;
+
+    .products-image--products {
+      grid-area: products;
+    }
+
+    .products-large-cta {
+      grid-area: button;
+    }
+  }
+}
+
+.products-image--image {
+  height: 100%;
+  object-fit: cover;
+}
