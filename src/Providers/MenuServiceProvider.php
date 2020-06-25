@@ -28,7 +28,7 @@ class MenuServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        register_nav_menus(apply_filters('THEME_SLUG/providers/menus', $this->menus));
+        register_nav_menus(apply_filters('wijnen/providers/menus', $this->menus));
 
         add_filter('timber/context', [ $this, 'registerContent' ]);
     }
