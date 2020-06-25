@@ -1,8 +1,60 @@
 <!doctype html>
 <html lang="{{ site.language }}">
-<!--suppress HtmlRequiredTitleElement -->
 <head>
-    {% block head %}{% include 'base/helpers/head.twig' %}{% endblock %}
+    {% block head %}
+        <meta charset="{{ site.charset }}">
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>{{ wp_title }}</title>
+
+        <meta name="base_assets" content="{{ theme.link }}/">
+
+        <script src="https://kit.fontawesome.com/945889d7f9.js" async></script>
+
+        <!-- start custom theme code -->
+        <script>
+            {{ theme.theme_mod('code_header_js')|raw }}
+        </script>
+
+        <style type="text/css">
+            {{ theme.theme_mod('code_header_css')|raw }}
+        </style>
+
+        {{ theme.theme_mod('code_header_html')|raw }}
+        <!-- end custom theme code -->
+<script type="application/ld+json">
+    {
+        "@context": "http://schema.org",
+        "@type": "WebSite",
+        "@id": "#website",
+        "url": "https://wijnclubamsterdam.nl/",
+        "name": "Wijnen.nl - Online wijnwinkel",
+        "alternateName": "Online wijnwinkel Wijnen.nl",
+        "potentialAction":
+        [
+            {
+                "@type": "SearchAction",
+                "target": "https://wijnclubamsterdam.nl/?s={search_term_string}&post_type=product",
+                "query-input": "required name=search_term_string"
+            }
+        ],
+        "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "{{ fn('get_option', 'cdelk_kiyoh_score') }}",
+            "reviewCount": "{{ fn('get_option', 'cdelk_kiyoh_reviews_count') }}",
+            "bestRating": "10",
+            "itemReviewed": {
+                "@type": "LocalBusiness",
+                "image": "https://wijnclubamsterdam.nl/wp-content/uploads/sites/20/2020/01/cropped-wijnclub_logo_vierkant-350x0-c-default.png",
+                "name": "Wijnen.nl"
+            }
+        }
+    }
+</script>
+
+    {% endblock %}
 
     {{ fn('wp_head') }}
 </head>
@@ -11,17 +63,60 @@
 {{ theme.theme_mod('code_body_html')|raw }}
 
 {% do action('winc/html/body/header/pre') %}
-{% block header %}{{ include('base/helpers/header.twig') }}{% endblock %}
+{% block header %}
+    {% block header_topper %}
+        {% include 'partials/header/topper.html.twig' %}
+    {% endblock %}
+    {% block header_logobar %}
+        {% include 'partials/header/logobar.html.twig' %}
+    {% endblock %}
+{% endblock %}
 {% do action('winc/html/body/header/post') %}
 
 {% do action('winc/html/body/content/pre') %}
 {% block content %}{{ post.content }}{% endblock %}
 {% do action('winc/html/body/content/post') %}
 
+
 {% do action('winc/html/body/footer/pre') %}
-{% block footer %}{{ include('base/helpers/footer.twig') }}{% endblock footer %}
+{% block footer %}
+<footer role="group" class="footer">
+    {% block footer_topper %}
+    <div role="group" class="container content mx-auto my-4">
+        {% block footer_small_seo %}
+            {{ include('partials/layout/footer/small_seo.html.twig') }}
+        {% endblock %}
+
+        <section role="complementary" class="content px-4 lg:px-0 seo_large" id="seo_large_{{ post.ID }}">
+            {{ theme.theme_mod('seo_large')|wpautop }}
+        </section>
+
+        <section role="complementary" class="content px-4 lg:px-0">
+            {#            {{ include('partials/layout/form-mailchimp.html.twig')|apply_filters('winc/footer/banners/mailchimp') }}#}
+        </section>
+    </div>
+    {% endblock %}
+
+    <!-- Primary bar  -->
+    <div class="bg-primary text-white py-6 px-4 lg:px-0">
+        <div role="group" class="container mx-auto lg:flex">
+            {{ include('partials/layout/footer/address.html.twig') }}
+            {{ include('partials/layout/footer/navigation.html.twig') }}
+            <aside role="complementary" class="nix-block lg:w-1/4">
+                {{ include('partials/layout/footer/nix.html.twig') }}
+                {{ include('partials/layout/footer/secure_pay.twig') }}
+            </aside>
+            <aside role="complementary" class="benefits-block lg:w-1/4">
+                {{ include('partials/layout/footer/benefits-list.html.twig') }}
+            </aside>
+        </div>
+    </div>
+</footer>
+{% endblock footer %}
 {% do action('winc/html/body/footer/post') %}
 
+<div class="widget_shopping_cart_content"></div>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,600&display=swap" rel="stylesheet">
 {{ fn('wp_footer') }}
 {% block preBodyClose %}{% endblock %}
 </body>
