@@ -1,10 +1,33 @@
 <?php
 namespace App\Helpers;
 
-use Illuminate\Support\Str;
-
 class Template
 {
+    /**
+     * returns a view file from the emails directory
+     *
+     * @param string|array $name
+     * @param string       $extension
+     *
+     * @return array|string
+     */
+    public static function emailFile($name, $extension)
+    {
+        return static::getFile('emails/', $name, $extension);
+    }
+
+    /**
+     * Returns an email .html.twig file
+     *
+     * @param string|array $name
+     *
+     * @return array|string
+     */
+    public static function emailHtmlTwigFile($name)
+    {
+        return static::emailFile($name, '.html.twig');
+    }
+
     /**
      * returns view file
      *
@@ -82,7 +105,7 @@ class Template
     /**
      * Returns a file
      *
-     * Use only in this static class
+     * Used only in this class
      *
      * @param string        $dir_prefix
      * @param string|array  $name
