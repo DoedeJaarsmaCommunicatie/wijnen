@@ -1,0 +1,29 @@
+<script type="application/ld+json">
+{
+    "@context": "http://schema.org",
+    "@type": "WebSite",
+    "@id": "#website",
+    "url": "https://wijnclubamsterdam.nl/",
+    "name": "Wijnen.nl - Online wijnwinkel",
+    "alternateName": "Online wijnwinkel Wijnen.nl",
+    "potentialAction":
+    [
+        {
+            "@type": "SearchAction",
+            "target": "https://wijnclubamsterdam.nl/?s={search_term_string}&post_type=product",
+            "query-input": "required name=search_term_string"
+        }
+    ],
+    "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "{{ fn('get_option', 'cdelk_kiyoh_score') }}",
+        "reviewCount": "{{ fn('get_option', 'cdelk_kiyoh_reviews_count') }}",
+        "bestRating": "10",
+        "itemReviewed": {
+            "@type": "LocalBusiness",
+            "image": "https://wijnclubamsterdam.nl/wp-content/uploads/sites/20/2020/01/cropped-wijnclub_logo_vierkant-350x0-c-default.png",
+            "name": "Wijnen.nl"
+        }
+    }
+}
+</script>

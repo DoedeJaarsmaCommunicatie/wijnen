@@ -1,0 +1,50 @@
+{% from "macro/typography/links.macro.twig" import nav_item %}
+{% from "macro/search_form.twig" import search_form %}
+
+<!-- Header navbar -->
+<section class="logo-header">
+    <div class="container mx-auto px-4 lg:px-0 lg:flex">
+        {{ include('base/lib/logo.part.twig') }}
+        <nav class="navbar">
+            {% for item in primaryMenu.items %}
+                <div class="menu-item-submenu">
+                    {{ nav_item(item, [ 'menu-item', item.children? 'menu-w-submenu' : 'menu-no-submenu' ]) }}
+
+                    {% if item.children %}
+                        <div class="submenu">
+                            <ul class="mega-menu container mx-auto">
+                                {% for child in item.children %}
+                                    <li>
+                                        {% if child.link is same as('#') %}
+                                            <span title="{{ child.title }}" class="submenu-title">
+                                        {{ child.title }}
+                                    </span>
+                                        {% else %}
+                                            <a href="{{ child.link }}" title="{{ child.title }}">
+                                                {{ child.title }}
+                                            </a>
+                                        {% endif %}
+
+                                        {% if child.children %}
+                                            <ul>
+                                                {% for subchild in child.children %}
+                                                    <li>
+                                                        <a href="{{ subchild.link|apply_filters('winc/menu/submenu/link') }}" title="{{ subchild.title }}">
+                                                            {{ subchild.title }}
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </nav>
+
+        {{ search_form() }}
+    </div>
+</section>

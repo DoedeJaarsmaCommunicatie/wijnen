@@ -1,0 +1,51 @@
+{% from "macro/typography/links.macro.twig" import nav_item %}
+<!-- Header topper -->
+<header class="header" role="banner">
+    <div class="container mx-auto flex items-center">
+        <button class="menu-button">
+            <i class="fas fa-bars fa-2x"></i>
+            <small>Menu</small>
+        </button>
+
+        {{ include('base/lib/logo.part.twig') }}
+
+        <aside class="header-usps">
+            <span>
+                <i class="fas fa-truck"></i> Gratis verzending vanaf €50 in NL en €100 in BE.
+            </span>
+            <span>
+                <i class="far fa-clock"></i> Voor 15:00 besteld, vandaag verzonden.
+            </span>
+        </aside>
+
+        <nav class="top-navigation" role="navigation">
+            <a class="top-nav-item"
+               href="{{ get_account_url() }}">
+                <i class="fas fa-user"></i>
+                <small class="block lg:inline">
+                    Account
+                </small>
+            </a>
+
+            <a class="top-nav-item"
+               href="{{ get_cart_url() }}">
+                <i class="fas fa-shopping-cart"></i>
+                <small class="block lg:inline">
+                    Wijnmandje
+                </small>
+            </a>
+        </nav>
+
+        <div hidden>
+            <a class="btn to-cart-button has-badge" data-amount="{{ wc_cart_count }}" href="{{ fn('wc_get_cart_url') }}">
+                <i class="fas fa-shopping-cart mr-2"></i>
+                <span class="not-mobile mr-2">
+                {{ __('Wijnmandje') }}
+            </span>
+            <span class="badge top right black js-cart-amount" data-amount="{{ wc_cart_count }}">
+                {{ wc_cart_count }}
+            </span>
+            </a>
+        </div>
+    </div>
+</header>
