@@ -11,7 +11,7 @@
     "nesbot/carbon": "^2.34",
     "php-di/php-di": "^6.1",
     "symfony/finder": "^5.1",
-    "symfony/http-foundation": "^5.0",
+    "symfony/http-foundation": "^5.1",
     "timber/timber": "^1.16",
     "vlucas/phpdotenv": "^4.1",
     "yahnis-elsts/plugin-update-checker": "^4.9"
