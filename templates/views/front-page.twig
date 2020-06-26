@@ -1,11 +1,52 @@
 {% extends 'base/app.twig' %}
 
-{% block header %}
-    {{ parent() }}
-{#    {% include 'partials/home/herobanner.html.twig' %}#}
-{% endblock %}
+
 
 {% block content %}
+    <header class="page-hero container mx-auto">
+        {% if post.get_field('hero_img_mobile') or post.get_field('hero_img_desktop') %}
+            <a href="{{ post.get_field('hero_img_url') }}">
+                <picture>
+                    {% if post.get_field('hero_img_mobile') %}
+                        <source srcset="{{ Image(post.get_field('hero_img_mobile')).src }}" media="(max-width: 599px)" />
+                    {% endif %}
+
+                    {% if post.get_field('hero_img_desktop') %}
+                        <img src="{{ Image(post.get_field('hero_img_desktop')).src }}" />
+                    {% endif %}
+                </picture>
+            </a>
+        {% endif %}
+    </header>
+
+    <nav class="container mx-auto category-listing">
+        <a class="category-item" href="{{ get_shop_url }}/rood">
+            <img src="{{ get_bottle_img('red') }}" loading="lazy" />
+            Rood
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a class="category-item" href="{{ get_shop_url }}/wit">
+            <img src="{{ get_bottle_img('white') }}" loading="lazy" />
+            Wit
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a class="category-item" href="{{ get_shop_url }}/rose">
+            <img src="{{ get_bottle_img('rose') }}" loading="lazy" />
+            Rosé
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a class="category-item" href="{{ get_shop_url }}/mousserend">
+            <img src="{{ get_bottle_img('champagne') }}" loading="lazy" />
+            Mousserend
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a class="category-item" href="{{ get_shop_url }}/dessert">
+            <img src="{{ get_bottle_img('dessert') }}" loading="lazy" />
+            Dessert
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </nav>
+
     <div>
         {{ post.content }}
     </div>
