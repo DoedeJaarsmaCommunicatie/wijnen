@@ -1,6 +1,7 @@
 import { addToCart } from '../lib/cart/add-to-cart';
-import { navOpener } from '../lib/navigation/opener';
 import { filterOpener } from '../lib/navigation/filterOpener';
+import { navOpener } from '../lib/navigation/opener';
+import { renderSearchForm } from '../services/search-form';
 
 export default {
   init() {
@@ -8,6 +9,7 @@ export default {
     addToCart();
     navOpener();
     filterOpener();
+    renderSearchForm();
   },
 
   finalize() {
