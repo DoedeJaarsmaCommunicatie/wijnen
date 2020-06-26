@@ -1,0 +1,27 @@
+.category-listing {
+  @apply px-4 pt-4;
+  display: flex;
+  overflow: scroll;
+  scroll-snap-type: x proximity;
+
+  .category-item {
+    @apply p-2 mr-2;
+    flex: 1 0 200px;
+    border: 1px solid $secondary;
+    color: $primary;
+    scroll-snap-align: start;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  @screen lg {
+    @apply px-0;
+  }
+}
+
+.category-item {
+  img {
+    height: 57px;
+  }
+}
