@@ -100,8 +100,8 @@ class AssetsServiceProvider extends ServiceProvider
 		    WP::removeScript('wcpf-plugin-vendor-script');
 	    }
 	    // Remove jQuery.
-	    WP::removeScript('jquery');
-	    WP::addScript('jquery', get_stylesheet_directory_uri() . '/dist/jquery.min.js', [], false, false);
+//	    WP::removeScript('jquery');
+//	    WP::addScript('jquery', get_stylesheet_directory_uri() . '/dist/jquery.min.js', [], false, false);
 
         if (!is_admin_bar_showing()) {
             WP::removeStyle('dashicons');

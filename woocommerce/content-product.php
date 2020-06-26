@@ -23,7 +23,7 @@ $templates = [
 	Template::partialHtmlTwigFile('tease/product-large'),
 ];
 
-return Timber::render(
-	apply_filters('wijnen/view-composer/woo/content-product/templates', $templates),
-	apply_filters('wijnen/view-composer/woo/content-product/context', $context)
-);
+//return Timber::render(
+//	apply_filters('wijnen/view-composer/woo/content-product/templates', $templates),
+//	apply_filters('wijnen/view-composer/woo/content-product/context', $context)
+//);

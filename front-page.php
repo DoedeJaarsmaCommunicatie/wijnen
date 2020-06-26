@@ -8,7 +8,7 @@
  * @author Mitch Hijlkema
  */
 
-use Timber\Post;
+use App\Models\Post;
 use Timber\Timber;
 use App\Helpers\Template;
 

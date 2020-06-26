@@ -73,6 +73,6 @@ class SingleProductVertical extends Products
         $context = [];
         $context['product'] = $post;
 
-        print Timber::compile($this->template, $context);
+//        print Timber::compile($this->template, $context);
     }
 }

@@ -91,7 +91,7 @@ class Product extends Post
     {
         return (bool) $this->setProduct()->get_meta(static::VIVINO_PRICE_META);
     }
-    
+
     /**
      * @return string
      *
@@ -146,11 +146,15 @@ class Product extends Post
 
     public function setProduct(): \WC_Product
     {
+    	if (!$this->ID) {
+    		$this->ID = get_queried_object_id();
+	    }
+
         if ($this->product === null) {
-            if (isset(static::$product_cache[$this->id])) {
-                $this->product = static::$product_cache[$this->id];
+            if (isset(static::$product_cache[$this->ID])) {
+                $this->product = static::$product_cache[$this->ID];
             } else {
-                $this->product = static::$product_cache[$this->id] = wc_get_product($this->id);
+                $this->product = static::$product_cache[$this->ID] = wc_get_product($this->ID);
             }
         }
 

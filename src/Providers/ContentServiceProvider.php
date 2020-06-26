@@ -9,7 +9,7 @@ use Symfony\Component\Finder\Finder;
 class ContentServiceProvider extends ServiceProvider {
 	public function boot () {
 		add_filter('timber/context', [$this, 'basic_additional_content']);
-		add_filter('woocommerce_add_to_cart_fragments', [$this, '']);
+		add_filter('woocommerce_add_to_cart_fragments', [$this, 'cart_contents_count']);
 	}
 
 	public function basic_additional_content ($context)
