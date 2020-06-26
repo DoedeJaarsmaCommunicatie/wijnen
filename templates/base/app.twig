@@ -1,76 +1,40 @@
 <!doctype html>
 <html lang="{{ site.language }}">
 <head>
-    {% block head %}
+    {% block meta %}
         <meta charset="{{ site.charset }}">
-
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-
-        <title>{{ wp_title }}</title>
-
         <meta name="base_assets" content="{{ theme.link }}/">
+    {% endblock meta %}
 
-        <script src="https://kit.fontawesome.com/945889d7f9.js" async></script>
+    <title>{{ wp_title }}</title>
 
-        <!-- start custom theme code -->
+    <script src="https://kit.fontawesome.com/945889d7f9.js" async></script>
+
+    <!-- start custom theme code -->
+    <script>{{ theme.theme_mod('code_header_js')|raw }}</script>
+    <style type="text/css">{{ theme.theme_mod('code_header_css')|raw }}</style>
+    {{ theme.theme_mod('code_header_html')|raw }}
+    <!-- end custom theme code -->
+
+    {% block window_definitions %}
         <script>
-            {{ theme.theme_mod('code_header_js')|raw }}
+			window['ajax_url'] = "{{ fn('admin_url', 'admin-ajax.php') }}"
+			window['rest_url'] = "{{ fn('get_rest_url') }}"
+			window['shopping_cart_url'] = "{{ get_cart_url() }}"
         </script>
-
-        <style type="text/css">
-            {{ theme.theme_mod('code_header_css')|raw }}
-        </style>
-
-        {{ theme.theme_mod('code_header_html')|raw }}
-        <!-- end custom theme code -->
-<script type="application/ld+json">
-    {
-        "@context": "http://schema.org",
-        "@type": "WebSite",
-        "@id": "#website",
-        "url": "https://wijnclubamsterdam.nl/",
-        "name": "Wijnen.nl - Online wijnwinkel",
-        "alternateName": "Online wijnwinkel Wijnen.nl",
-        "potentialAction":
-        [
-            {
-                "@type": "SearchAction",
-                "target": "https://wijnclubamsterdam.nl/?s={search_term_string}&post_type=product",
-                "query-input": "required name=search_term_string"
-            }
-        ],
-        "aggregateRating": {
-            "@type": "AggregateRating",
-            "ratingValue": "{{ fn('get_option', 'cdelk_kiyoh_score') }}",
-            "reviewCount": "{{ fn('get_option', 'cdelk_kiyoh_reviews_count') }}",
-            "bestRating": "10",
-            "itemReviewed": {
-                "@type": "LocalBusiness",
-                "image": "https://wijnclubamsterdam.nl/wp-content/uploads/sites/20/2020/01/cropped-wijnclub_logo_vierkant-350x0-c-default.png",
-                "name": "Wijnen.nl"
-            }
-        }
-    }
-</script>
-
     {% endblock %}
 
+    {% block std %}{{ include('base/lib/std-website.part.twig') }}{% endblock %}
     {{ fn('wp_head') }}
 </head>
 <body {{ fn('body_class') }}>
 {% do action('winc/html/body/pre') %}
-{{ theme.theme_mod('code_body_html')|raw }}
 
 {% do action('winc/html/body/header/pre') %}
-{% block header %}
-    {% block header_topper %}
-        {% include 'partials/header/topper.html.twig' %}
-    {% endblock %}
-    {% block header_logobar %}
-        {% include 'partials/header/logobar.html.twig' %}
-    {% endblock %}
-{% endblock %}
+{% block header_topper %}{% include 'base/lib/header-top.part.twig' %}{% endblock %}
+{% block header_logobar %}{% include 'base/lib/header-nav.part.twig' %}{% endblock %}
 {% do action('winc/html/body/header/post') %}
 
 {% do action('winc/html/body/content/pre') %}
@@ -79,20 +43,18 @@
 
 
 {% do action('winc/html/body/footer/pre') %}
-{% block footer %}
 <footer role="group" class="footer">
     {% block footer_topper %}
     <div role="group" class="container content mx-auto my-4">
-        {% block footer_small_seo %}
-            {{ include('partials/layout/footer/small_seo.html.twig') }}
-        {% endblock %}
+        {% do action('wijnen') %}
+        {{ include('partials/layout/footer/small_seo.html.twig') }}
 
         <section role="complementary" class="content px-4 lg:px-0 seo_large" id="seo_large_{{ post.ID }}">
             {{ theme.theme_mod('seo_large')|wpautop }}
         </section>
 
         <section role="complementary" class="content px-4 lg:px-0">
-            {#            {{ include('partials/layout/form-mailchimp.html.twig')|apply_filters('winc/footer/banners/mailchimp') }}#}
+            {{ include('partials/layout/form-mailchimp.html.twig')|apply_filters('winc/footer/banners/mailchimp') }}
         </section>
     </div>
     {% endblock %}
@@ -112,7 +74,6 @@
         </div>
     </div>
 </footer>
-{% endblock footer %}
 {% do action('winc/html/body/footer/post') %}
 
 <div class="widget_shopping_cart_content"></div>
