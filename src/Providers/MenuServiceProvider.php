@@ -28,12 +28,19 @@ class MenuServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        register_nav_menus(apply_filters('wijnen/providers/menus', $this->menus));
-
-        add_filter('timber/context', [ $this, 'registerContent' ]);
+	    $this->menus ['top-menu'] = 'Top menu';
+	    $this->menus ['footer-menu'] = 'Footer menu';
     }
 
-    /**
+
+    public function register(): void
+    {
+	    register_nav_menus(apply_filters('wijnen/providers/menus', $this->menus));
+
+	    add_filter('timber/context', [ $this, 'registerContent' ]);
+    }
+
+	/**
      * Register nav menu's in twig.
      *
      * @param array $content
