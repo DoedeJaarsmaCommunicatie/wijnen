@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Bootstrap\Container;
 use App\Controllers\Hooks\Actions\Action;
 use App\Controllers\Hooks\Filters\Filter;
+use App\Controllers\Hooks\Actions\Views\General\BodyHTMLCode;
 
 class HookServiceProvider extends ServiceProvider
 {
@@ -24,7 +25,9 @@ class HookServiceProvider extends ServiceProvider
     {
         $this->filters = apply_filters('wijnen/providers/filters', []);
 
-        $this->actions = apply_filters('wijnen/providers/actions', []);
+        $this->actions = apply_filters('wijnen/providers/actions', [
+        	BodyHTMLCode::class
+        ]);
 
         $this->filters_unhook = apply_filters('wijnen/providers/filters/unhook', [
         	[
