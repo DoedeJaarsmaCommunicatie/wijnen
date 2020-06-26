@@ -1,63 +1,36 @@
-$header-background: #f4f4f4 !default;
-$header-color: $white !default;
+$header-background: $primary !default;
+$header-color: $black !default;
 $header-padding: $padding !default;
 $header-shadow: true !default;
 $header-sticky: true !default;
 $topnav-spacing: $padding_small !default;
 
 header.header {
-  background: $header-background;
+  background: $grey;
   color: $header-color;
   padding: $header-padding;
 
-  & > .container {
-    display: grid;
-    grid-template-areas:
-            "logo . nav nav nav"
-            "logo . . . ."
-            "logo . search search cart"
-            "logo . . . .";
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(4, minmax(min-content, 1rem));
-    grid-gap: 5px 20px;
+  @screen lg {
+    background: $header-background;
+  }
 
-    @media screen and (max-width: get-breakpoint('md')) {
-      grid-template-areas:
-              "logo . . . ."
-              "logo . . . ."
-              "logo . . . cart"
-              "logo . . . ."
-              "search search search search menubutton";
+  .custom_logo_wrapper {
+    margin-left: auto;
+
+    @screen lg {
+      display: none;
     }
   }
 
-  & .menu-button {
-    grid-area: menubutton;
+  .custom_logo {
+    max-height: 40px;
   }
 
-  & .search-form {
-    grid-area: search;
-  }
+  & .header-usps {
+    display: none;
 
-  & .custom_logo_wrapper {
-    grid-area: logo;
-  }
-
-  & .top-navigation {
-    grid-area: nav;
-  }
-
-  & .to-cart-button {
-    grid-area: cart;
-  }
-
-  @if $header-sticky {
-    @include sticky(0, 20);
-
-    .admin-bar & {
-      @media screen and (min-width: get-breakpoint('sm')) {
-        @include sticky($WP_ADMIN_BAR_HEIGHT, 20);
-      }
+    @screen lg {
+      display: flex;
     }
   }
 }

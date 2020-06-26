@@ -1,23 +1,20 @@
-$logo-height: 100px !default;
+$logo-height: 65px !default;
 
 .logo-header {
-  @if ($header-sticky) {
-    background: $primary;
-    @include sticky(145px, 10);
+  background: $primary;
+  padding: .5rem 0;
 
-    .admin-bar & {
-      @media screen and (min-width: 415px) {
-        @include sticky($WP_ADMIN_BAR_HEIGHT + 132px, 10);
-      }
+  .custom_logo_wrapper {
+    display: none;
+
+    @screen lg {
+      display: block;
     }
   }
 
-  @if $header_shadow {
-    @include shadow;
-  }
-
-  @media screen and (max-width: get-breakpoint('md')) {
-    position: unset;
+  @screen lg {
+    background: $grey;
+    padding: 1rem 0;
   }
 }
 
