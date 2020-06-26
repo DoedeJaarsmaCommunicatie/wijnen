@@ -1,19 +1,18 @@
 {% macro _image(post, class, size = 'medium') %}
     {% set thumbnail = post.thumbnail %}
     <picture>
-        <source srcset="#"
+        <source
                 class="lazy-load-me"
-                data-srcset="{{ thumbnail.src(size)|towebp }},
+                srcset="{{ thumbnail.src(size)|towebp }},
                              {{ thumbnail.src(size)|retina(2)|towebp }} 2x"
                 type="image/webp">
         <img
                 alt="{{ thumbnail.alt }}"
-                class="{{ class }} lazy-load-me"
-                src="#"
-                data-srcset="{{ thumbnail.src(size) }} 1x,
+                class="{{ class }}"
+                srcset="{{ thumbnail.src(size) }} 1x,
                          {{ thumbnail.src(size)|retina(2) }} 2x,
                          {{ thumbnail.src(size)|retina(4) }} 4x"
-                data-lazy="{{ thumbnail.src(size)  }}" />
+                src="{{ thumbnail.src(size)  }}" loading="lazy" />
     </picture>
 {% endmacro %}
 
