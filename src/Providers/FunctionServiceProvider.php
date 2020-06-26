@@ -5,7 +5,8 @@ namespace App\Providers;
 use Twig\Environment;
 use Twig\TwigFunction;
 use App\Bootstrap\Container;
-use App\Controllers\Functions\ThemeOptions;
+use App\Controllers\Functions\General\BottleImages;
+use App\Controllers\Functions\WooCommerce\WooCommerceGeneral;
 
 class FunctionServiceProvider extends ServiceProvider
 {
@@ -39,8 +40,7 @@ class FunctionServiceProvider extends ServiceProvider
         		$twig->addFunction(new TwigFunction($name, $function));
 	        } else {
 		        try {
-			        $class = Container::get($function);
-			        $twig->addFunction(new TwigFunction($name, [$class, 'callback']));
+			        $twig->addFunction(new TwigFunction($name, $function));
 		        } catch (\Throwable $e) {
 			        // Do nothing. Class not found.
 		        }
