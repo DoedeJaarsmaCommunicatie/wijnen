@@ -16,11 +16,11 @@ export function navOpener() {
 	});
 
 	document.body.addEventListener('click', e => {
-		if ( e.target === this.menu || menu.contains(e.target) || e.target === button || button.contains(e.target) ) {
+		if (e.target === menu || menu.contains(e.target) || e.target === button || button.contains(e.target) ) {
 			return;
 		}
 
-		if (this.menu.classList.contains('active')) {
+		if (menu.classList.contains('active')) {
 			hideMenu(menu);
 			unblockBody();
 		}
@@ -34,8 +34,9 @@ function showMenu(menu = null) {
 		menu = getElements().menu;
 	}
 
-	menu.classList.add('active');
 	menu.style.top = `${header.getBoundingClientRect().bottom}px`;
+
+	menu.classList.add('active');
 
 	body.dispatchEvent(new Event('menu-opened'));
 }
@@ -73,7 +74,7 @@ function getElements() {
 	return {
 		menu: document.querySelector('.navbar'),
 		button: document.querySelector('.menu-button'),
-		header: document.querySelector('.header'),
+		header: document.querySelector('.logo-header'),
 		body: document.body,
 	};
 }
