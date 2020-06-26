@@ -14,7 +14,9 @@ class AjaxServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        $this->ajaxClasses = apply_filters('wijnen/providers/ajax', []);
+        $this->ajaxClasses = apply_filters('wijnen/providers/ajax', [
+        	SearchResults::class,
+        ]);
     }
 
     public function register()
