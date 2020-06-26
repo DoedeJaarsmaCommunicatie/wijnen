@@ -9,12 +9,19 @@ use App\Controllers\Functions\ThemeOptions;
 
 class FunctionServiceProvider extends ServiceProvider
 {
+	/**
+	 * @var string[]|callable[]
+	 */
     protected $functions = [];
 
     public function boot(): void
     {
         $this->functions = apply_filters('wijnen/providers/functions', [
         	'theme_option' => 'carbon_get_theme_option',
+	        'get_store_url' => [WooCommerceGeneral::class, 'getShopUrl'],
+	        'get_cart_url' => [WooCommerceGeneral::class, 'getCartUrl'],
+	        'get_account_url' => [WooCommerceGeneral::class, 'getAccountUrl'],
+	        'get_bottle_img' => [BottleImages::class, 'getBottleUrl'],
         ]);
 
         add_filter('timber/twig', [$this, 'registerFunctions']);
