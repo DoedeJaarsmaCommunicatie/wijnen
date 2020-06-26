@@ -1,7 +1,7 @@
 <?php
 namespace App;
 
-use App\Providers\{AjaxServiceProvider, ContentServiceProvider, CustomizerServiceProvider, ElementorServiceProvider, MenuServiceProvider, FunctionServiceProvider, HookServiceProvider, AssetsServiceProvider, RestServiceProvider};
+use App\Providers\{AjaxServiceProvider, CarbonServiceProvider, ContentServiceProvider, CustomizerServiceProvider, ElementorServiceProvider, MenuServiceProvider, FunctionServiceProvider, HookServiceProvider, AssetsServiceProvider, RestServiceProvider};
 
 return [
 	'providers'     => [
@@ -13,6 +13,7 @@ return [
 		AjaxServiceProvider::class,
 		CustomizerServiceProvider::class,
 		RestServiceProvider::class,
-		ElementorServiceProvider::class
+		ElementorServiceProvider::class,
+		CarbonServiceProvider::class,
     ]
 ];
