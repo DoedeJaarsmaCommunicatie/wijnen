@@ -2,11 +2,11 @@
 
 {% block content %}
     <main class="container mx-auto px-4 lg:px-0 py-4 content">
-        <h1>{{ __('Alles over %s', 'winc')|format(term.name) }}</h1>
+        <h1>{{ __('Alles over %s', 'wijnen')|format(term.name) }}</h1>
 
-        {% do action('winc/taxonomy/country/'~term.slug~'/content/pre') %}
+        {% do action('wijnen/taxonomy/country/'~term.slug~'/content/pre') %}
         {{ term.description|wpautop }}
-        {% do action('winc/taxonomy/country/'~term.slug~'/content/post') %}
+        {% do action('wijnen/taxonomy/country/'~term.slug~'/content/post') %}
     </main>
 
     {{ include('partials/taxonomies/country/regions.html.twig', { term: term }) }}
@@ -16,11 +16,11 @@
     <section class="container mx-auto content mb-5">
         <h2>{{ __('Bekijk ons aanbod wijnen uit %s')|format(term.name) }}</h2>
         <div class="products px-4 lg:px-0 py-4">
-            {% do action('winc/taxonomy/country/'~term.slug~'/products/pre') %}
-            {% for product in products|apply_filters('winc/taxonomy/country/'~term.slug~'/products') %}
+            {% do action('wijnen/taxonomy/country/'~term.slug~'/products/pre') %}
+            {% for product in products|apply_filters('wijnen/taxonomy/country/'~term.slug~'/products') %}
                 {{ include('partials/tease/product.twig', { product: product }, with_context = false) }}
             {% endfor %}
-            {% do action('winc/taxonomy/country/'~term.slug~'/products/post') %}
+            {% do action('wijnen/taxonomy/country/'~term.slug~'/products/post') %}
         </div>
         <a class="btn primary rounded large no-underline inline-block" href="/winkel/?product-land={{ term.slug }}">
             Meer wijnen uit {{ term.name }} bekijken

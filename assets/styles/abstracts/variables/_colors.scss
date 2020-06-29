@@ -21,7 +21,8 @@ $colors: map-merge(
         'secondary': ($secondary, $secondary-invert),
         'white': ($white, $white-invert),
         'black': ($black, $black-invert),
-        'grey': ($grey, $grey-invert)
+        'grey': ($grey, $grey-invert),
+        'green': ($green, findColorInvert($green))
     ),
     $colors
 );

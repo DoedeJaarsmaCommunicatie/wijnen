@@ -207,3 +207,30 @@
         color: $secondary;
     }
 }
+
+.variations_form {
+    table.variations {
+        width: 100%;
+        text-align: left;
+        margin-bottom: 1rem;
+    }
+
+    select[data-attribute_name] {
+        appearance: none;
+        border: 1px solid $secondary;
+        border-radius: $radius;
+        padding: $padding_small $padding;
+        width: 100%;
+        color: $secondary;
+    }
+
+    .qty {
+        width: 100%;
+        appearance: textfield;
+        border: 1px solid $secondary;
+        border-radius: $radius;
+        padding: $padding_small $padding;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+}

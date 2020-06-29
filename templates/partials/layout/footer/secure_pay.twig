@@ -1,8 +1,8 @@
-<strong class="block mt-8">{{ 'Veilig betalen'|apply_filters('winc/footer/secure/title') }}</strong>
+<strong class="block mt-8">{{ 'Veilig betalen'|apply_filters('wijnen/footer/secure/title') }}</strong>
 <aside class="flex flex-wrap secure-pay-wrapper">
     {% for icon in secure_payment|apply_filters('') %}
         {% set _url = theme.link ~ '/dist/images/payment_methods/' ~ icon.getFileName %}
-        <img src="{{ _url|apply_filters('winc/footer/secure/icon/'~icon.getFileName|replace({'.svg': ''})~'/url') }}"
+        <img src="{{ _url|apply_filters('wijnen/footer/secure/icon/'~icon.getFileName|replace({'.svg': ''})~'/url') }}"
              alt="betaal veilig met {{ icon.getFileName | replace({'.svg': ''}) }}" class="secure-pay-icon" />
     {% endfor %}
 </aside>

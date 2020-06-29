@@ -19,7 +19,7 @@ class AppServiceProvider extends ServiceProvider
 	{
 		foreach ($this->providers as $provider) {
 			try {
-				do_action('wijnen/app/register-providers/register/' . (new \ReflectionClass($provider))->getShortName());
+				do_action('wijnen/app/register-options/' . (new \ReflectionClass($provider))->getShortName());
 			} catch (\ReflectionException $exception) {
 				Log::warning('Reflection error while registering providers', ['class' => $provider]);
 			}

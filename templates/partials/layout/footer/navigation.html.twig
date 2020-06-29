@@ -2,8 +2,8 @@
 
 <nav role="navigation" class="lg:w-1/4 flex flex-col menu">
     {{ footer_heading_small('Meer informatie') }}
-    {% do action('winc/footer/navigation/pre') %}
-    {% for item in footerMenu.items|apply_filters('winc/footer/navigation/items') %}
+    {% do action('wijnen/footer/navigation/pre') %}
+    {% for item in footerMenu.items|apply_filters('wijnen/footer/navigation/items') %}
         <a class="menuitem"
            href="{{ item.link }}"
            target="_self"
@@ -13,5 +13,5 @@
             {{ item.title }}
         </a>
     {% endfor %}
-    {% do action('winc/footer/navigation/post') %}
+    {% do action('wijnen/footer/navigation/post') %}
 </nav>

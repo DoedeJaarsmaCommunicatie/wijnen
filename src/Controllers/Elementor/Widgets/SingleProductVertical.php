@@ -61,10 +61,7 @@ class SingleProductVertical extends Products
 
         $settings = $this->get_settings();
 
-        if (empty($settings['query_posts_ids'])) {
-            // Maybe add query to support more types of products
-            return;
-        }
+        if (empty($settings['query_posts_ids'])) {return;}
 
         $id = (int) $settings['query_posts_ids'][0];
 
@@ -72,6 +69,7 @@ class SingleProductVertical extends Products
         $post->{'special'} = $settings['special'] ?? false;
         $context = [];
         $context['product'] = $post;
+        $context['special'] = $settings['special'] ?? false;
 
         print Timber::compile($this->template, $context);
     }

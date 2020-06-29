@@ -2,13 +2,13 @@
 
 {% block content %}
     <div class="container mx-auto px-4 lg:px-0 py-4 content">
-        {% do action('winc/archive/product/title/pre') %}
-        <h1>{{ title|apply_filters('winc/archive/product/title') }}</h1>
-        {% do action('winc/archive/product/title/post') %}
+        {% do action('wijnen/archive/product/title/pre') %}
+        <h1>{{ title|apply_filters('wijnen/archive/product/title') }}</h1>
+        {% do action('wijnen/archive/product/title/post') %}
     </div>
 
     <div class="container mx-auto">
-        {% do action('winc/archive/product/content/pre') %}
+        {% do action('wijnen/archive/product/content/pre') %}
         <section class="lg:ml-auto lg:w-3/4 clearfix mt-4 px-4 lg:px-0">
             {% do action('woocommerce_before_shop_loop') %}
             <button class="js-filter-opener filter-opener mx-auto">
@@ -33,7 +33,7 @@
         <section class="lg:ml-auto lg:w-3/4">
             {% do action('woocommerce_after_shop_loop') %}
         </section>
-        {% do action('winc/archive/product/content/post') %}
+        {% do action('wijnen/archive/product/content/post') %}
     </div>
 
     {% if category and category.description %}

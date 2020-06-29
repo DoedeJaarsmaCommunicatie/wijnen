@@ -1,0 +1,37 @@
+<form action="{{ add_to_cart_url }}"
+      class="variations_form cart"
+      data-product_id="{{ product.get_id }}"
+      data-product_variations="{{ variations_attr|raw }}"
+      method="post">
+    {% do action('woocommerce_before_variations_form') %}
+    {% if available_variations %}
+        <table class="variations">
+            <tbody>
+            {% for name, options in attributes %}
+                <tr>
+                    <th class="label">
+                        <label for="{{ name|e }}">
+                            {{ fn('wc_attribute_label', name) }}
+                        </label>
+                    </th>
+                    <td class="value">
+                        {% do fn('wc_dropdown_variation_attribute_options', {
+                            options: options,
+                            attribute: name,
+                            product: product
+                        }) %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="single_variation_wrap">
+            {% do action('woocommerce_before_single_variation') %}
+            {% do action('woocommerce_single_variation') %}
+            {% do action('woocommerce_after_single_variation') %}
+        </div>
+    {% endif %}
+
+    {% do action('woocommerce_after_variations_form') %}
+</form>

@@ -5,13 +5,14 @@ namespace App\Providers;
 use Twig\Environment;
 use Twig\TwigFunction;
 use App\Bootstrap\Container;
+use App\Controllers\Functions\General\Carbon;
 use App\Controllers\Functions\General\BottleImages;
 use App\Controllers\Functions\WooCommerce\WooCommerceGeneral;
 
 class FunctionServiceProvider extends ServiceProvider
 {
 	/**
-	 * @var string[]|callable[]
+	 * @var callable[]
 	 */
     protected $functions = [];
 
@@ -23,6 +24,9 @@ class FunctionServiceProvider extends ServiceProvider
 	        'get_cart_url' => [WooCommerceGeneral::class, 'getCartUrl'],
 	        'get_account_url' => [WooCommerceGeneral::class, 'getAccountUrl'],
 	        'get_bottle_img' => [BottleImages::class, 'getBottleUrl'],
+	        'get_theme_option' => [Carbon::class, 'get_theme_option'],
+	        'get_wine_of_the_month' => [Carbon::class, 'get_wine_of_the_month'],
+	        'get_custom_page_url' => [Carbon::class, 'get_custom_page'],
         ]);
 
         add_filter('timber/twig', [$this, 'registerFunctions']);

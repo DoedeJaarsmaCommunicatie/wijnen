@@ -77,27 +77,22 @@ class AssetsServiceProvider extends ServiceProvider
 		    WP::removeStyle('woocommerce_prettyPhoto_css');
 
 		    WP::removeStyle('wooajaxcart');
-		    WP::removeStyle('wcpf-plugin-style');
-		    WP::removeStyle('wpgdprc.css');
 
-		    WP::removeScript('selectWoo');
+//		    WP::removeScript('selectWoo');
 		    WP::removeScript('wc-add-payment-method');
 		    WP::removeScript('wc_price_slider');
-		    WP::removeScript('wc-single-product');
+//		    WP::removeScript('wc-single-product');
 		    WP::removeScript('wc-credit-card-form');
-		    WP::removeScript('wc-chosen');
+//		    WP::removeScript('wc-chosen');
 		    WP::removeScript('wc-cart');
 		    WP::removeScript('jqueryui');
 		    WP::removeScript('fancybox');
 		    WP::removeScript('prettyPhoto');
 		    WP::removeScript('prettyPhoto-init');
-		    WP::removeScript('woocommerce');
+//		    WP::removeScript('woocommerce');
 		    WP::removeScript('jquery-blockui');
 		    WP::removeScript('jquery-placeholder');
 		    WP::removeScript('jquery-payment');
-
-		    WP::removeScript('wcpf-plugin-polyfills-script');
-		    WP::removeScript('wcpf-plugin-vendor-script');
 	    }
 	    // Remove jQuery.
 //	    WP::removeScript('jquery');
