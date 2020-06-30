@@ -1,6 +1,8 @@
 const mix = require('laravel-mix');
+
 mix
     .js('assets/scripts/main.js', 'dist/scripts/main.js')
+    .copyDirectory('assets/vendor', 'dist/vendor')
     .extract()
     .webpackConfig({
         output: {

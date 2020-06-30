@@ -17,6 +17,9 @@
         </a>
     </h2>
     {{ tease_price(product) }}
-
-    {{ add_to_cart(product.ID, 'mx-auto product-large-add-to-cart', 'qty', 'small') }}
+    {% if product.get_type is same as('variable') %}
+        <a class="btn primary rounded large" href="{{ product.get_link }}">Bekijken</a>
+    {% else %}
+        {{ add_to_cart(product.ID, 'mx-auto product-large-add-to-cart', 'qty', 'small') }}
+    {% endif %}
 </article>

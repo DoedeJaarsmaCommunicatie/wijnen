@@ -40,7 +40,8 @@ function createAddToCartEvent(element)
 
 		if (res.data.fragments) {
 			refreshCartTotals(res.data.fragments['cart_contents_count']);
-		} else {
+			injectMiniCart(res.data.fragments['div.widget_shopping_cart_content']);
+
 			const cart = document.querySelector('div.widget_shopping_cart_content'),
 				close_btn = document.querySelector('.js-close-cart');
 
@@ -48,11 +49,15 @@ function createAddToCartEvent(element)
 			document.body.dispatchEvent(new Event('mini-cart-opened'));
 
 			cart.addEventListener('click', function(e) {
-				if (e.target !== this) {
-					return;
-				}
+				if (e.target !== this) {return;}
 
-				e.target.classList.remove('active');
+				cart.classList.remove('active');
+				document.body.dispatchEvent(new Event('mini-cart-closed'));
+			});
+
+			close_btn.addEventListener('click', function (e) {
+				cart.classList.remove('active');
+
 				document.body.dispatchEvent(new Event('mini-cart-closed'));
 			});
 		}
@@ -75,6 +80,13 @@ function refreshCartTotals(count) {
 
 	badge.dataset['amount'] = count.toString();
 	badge.innerHTML = count.toString();
+}
+
+function injectMiniCart(cart) {
+	const el = document.querySelector('div.widget_shopping_cart_content');
+	if (!el) { return; }
+
+	el.outerHTML = cart;
 }
 
 function queryStrings() {

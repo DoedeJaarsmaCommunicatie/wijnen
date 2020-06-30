@@ -5,7 +5,7 @@
 
 {% block content %}
     {% do action('woocommerce_before_single_product') %}
-    <main class="product container mx-auto">
+    <main class="product container mx-auto px-4 lg:px-0">
         {% do action('wijnen/single/product/content/pre') %}
         {{ thumbnail(post) }}
 
@@ -34,12 +34,9 @@
     </section>
     {{ std(product, post) }}
 
-
-    {{ add_to_cart(product.get_id, 'product-add-to-cart-container', 'qty-mob') }}
-
 {% endblock %}
 
-{% block none %}
+{% block preBodyClose %}
     <link rel="stylesheet" href="{{ theme.link }}/dist/vendor/owl-carousel/owl.carousel.min.css" />
     <script src="{{ theme.link }}/dist/vendor/owl-carousel/owl.carousel.min.js"></script>
     <style>

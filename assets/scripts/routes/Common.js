@@ -2,6 +2,7 @@ import { addToCart } from '../lib/cart/add-to-cart';
 import { filterOpener } from '../lib/navigation/filterOpener';
 import { navOpener } from '../lib/navigation/opener';
 import { renderSearchForm } from '../services/search-form';
+import { removeAllNotificationsOnBodyClick } from '../lib/WooCommerce/notifications'
 
 export default {
   init() {
@@ -10,6 +11,7 @@ export default {
     navOpener();
     filterOpener();
     renderSearchForm();
+    removeAllNotificationsOnBodyClick();
   },
 
   finalize() {
