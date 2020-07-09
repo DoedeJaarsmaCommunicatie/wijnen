@@ -8,6 +8,7 @@ use Carbon_Fields\Carbon_Fields;
 use App\Controllers\Meta\Pages\FrontPage;
 use App\Controllers\Options\OptionManager;
 use App\Controllers\Options\Pages\SpecialPages;
+use App\Controllers\Options\Pages\FooterSettings;
 use App\Controllers\Options\Pages\ProductOfTheMonth;
 use App\Controllers\Options\Pages\CompanyInformation;
 
@@ -41,6 +42,7 @@ class CarbonServiceProvider extends ServiceProvider
 			ProductOfTheMonth::class,
 			CompanyInformation::class,
 			SpecialPages::class,
+			FooterSettings::class,
 		]);
 	}
 

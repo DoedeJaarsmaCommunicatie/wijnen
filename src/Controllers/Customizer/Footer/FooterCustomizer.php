@@ -20,16 +20,5 @@ class FooterCustomizer extends Customize
         return 160;
     }
 
-    public function register(): void
-    {
-        $this->kirki::add_field(
-            CustomizerServiceProvider::CUS_CONF_ID,
-            [
-                'type' => CustomizerTypeManager::RICH_TEXT,
-                'section' => static::$section_name,
-                'label' => 'Over ' . get_bloginfo('name') . ' content',
-                'settings' => $this->getSettingID('About Store')
-            ]
-        );
-    }
+    public function register(): void {}
 }
