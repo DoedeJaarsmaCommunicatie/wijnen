@@ -15,6 +15,8 @@
  * @version 3.5.5
  */
 
+use Timber\Timber;
+
 defined( 'ABSPATH' ) || exit;
 
 global $product;
@@ -23,7 +25,7 @@ $attribute_keys  = array_keys( $attributes );
 $variations_json = wp_json_encode( $available_variations );
 $variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_json ) : _wp_specialchars( $variations_json, ENT_QUOTES, 'UTF-8', true );
 
-$context = \Timber\Timber::get_context();
+$context = Timber::get_context();
 $context['attributes'] = $attributes;
 $context['product'] = $product;
 $context['available_variations'] = $available_variations;
@@ -32,7 +34,7 @@ $context['add_to_cart_url'] = esc_url( apply_filters( 'woocommerce_add_to_cart_f
 
 do_action( 'woocommerce_before_add_to_cart_form' );
 
-return \Timber\Timber::render(
+return Timber::render(
     'partials/woocommerce/product/add-to-cart/variable.html.twig',
     $context
 );
