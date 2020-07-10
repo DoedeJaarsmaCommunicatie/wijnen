@@ -1,4 +1,4 @@
-import React, { Component, h } from 'preact';
+import React, { Component, createRef, h } from 'preact';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { AutoFill } from './AutoFill';
@@ -11,6 +11,8 @@ const SearchApp = styled.div`
 `;
 
 export class App extends Component {
+	form = createRef();
+
 	constructor() {
 		super();
 
@@ -33,7 +35,11 @@ export class App extends Component {
 		});
 	}
 
-	hideSearchFill() {
+	hideSearchFill(e) {
+		if (this.form.current.contains(e.target)) {
+			return;
+		}
+
 		this.setState({
 			show_results: false,
 		});
@@ -74,7 +80,7 @@ export class App extends Component {
 					autocomplete={'off'}
 					className={'search-form-input'}
 					onFocus={this.handleFocusEvent}
-					onblur={this.hideSearchFill}
+					onBlur={this.hideSearchFill}
 					onInput={this.handleSearchInput} />
 
 				<button type={'submit'} class={'search-button'}><FontAwesomeIcon icon={faSearch} /></button>

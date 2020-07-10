@@ -5,11 +5,13 @@ namespace App\Controllers\Options\Pages;
 use Carbon_Fields\Field;
 use Carbon_Fields\Container;
 use App\Controllers\Options\Option;
-use App\Controllers\Options\NoCustomParent;
+use App\Controllers\Options\Traits\InAdminBar;
+use App\Controllers\Options\Traits\NoCustomParent;
 
 class SpecialPages implements Option
 {
 	use NoCustomParent;
+	use InAdminBar;
 
 	public function register ()
 	{

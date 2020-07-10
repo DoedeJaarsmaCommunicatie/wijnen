@@ -4,6 +4,7 @@ import styled from 'styled-components';
 const AutoFillWrapper = styled.a`
 	display: block;
 	margin: .5rem 0;
+	pointer-events: all;
 	
 	.result-title {
 		font-weight: bold;

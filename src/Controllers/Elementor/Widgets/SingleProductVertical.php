@@ -16,6 +16,7 @@ class SingleProductVertical extends Products
         'partials/tease/product-large.html.twig',
     ];
 
+
     public function get_name()
     {
         return 'wineclub-vertical-products';
@@ -28,28 +29,36 @@ class SingleProductVertical extends Products
 
     protected function _register_controls()
     {
+    	parent::_register_controls();
+
         $this->start_controls_section(
-            'content',
+            'button',
             [
-                'label' => 'Content',
+                'label' => 'Button',
                 'tab' => Controls_Manager::TAB_CONTENT
             ]
         );
 
         $this->add_control(
-            'special',
+            'button_text',
             [
                 'label' => 'Label text',
                 'type' => Controls_Manager::TEXT,
             ]
         );
 
-        $this->end_controls_section();
+        $this->add_control(
+        	'button_link',
+	        [
+	        	'label' => 'Link',
+		        'type' => Controls_Manager::URL,
+	        ]
+        );
 
-        $this->register_query_controls();
+        $this->end_controls_section();
     }
 
-    protected function render()
+    protected function render(): void
     {
         if (WC()->session) {
             wc_print_notices();
@@ -61,16 +70,51 @@ class SingleProductVertical extends Products
 
         $settings = $this->get_settings();
 
-        if (empty($settings['query_posts_ids'])) {return;}
+	    if (!empty($settings['query_posts_ids'])) {
+        	if (count($settings['query_posts_ids']) === 1) {
+		        $this->renderSingleProduct(1);
+        		return;
+	        }
 
-        $id = (int) $settings['query_posts_ids'][0];
+        	print "<section class='{$this->getWrapperClass()}'>";
+	            foreach ($settings['query_posts_ids'] as $postsId) {
+	            	$this->renderSingleProduct($postsId);
+	            }
 
-        $post = new Product($id);
-        $post->{'special'} = $settings['special'] ?? false;
-        $context = [];
-        $context['product'] = $post;
-        $context['special'] = $settings['special'] ?? false;
+	            if ($settings['button_link'] && $settings['button_text']) {
+	            	printf(
+	            		'<a href="%s" class="products-large-cta"><h3>%s</h3> <i class="fas fa-chevron-right"></i></a>',
+			            $settings['button_link']['url'],
+			            $settings['button_text']
+		            );
+	            }
+        	print '</section>';
+            return;
+        }
 
-        print Timber::compile($this->template, $context);
+        // All specifically selected fields are rendered.
+	    var_dump($settings);
+    }
+
+	protected function getWrapperClass () {
+		return implode(' ', [
+			'vertical-products',
+			'products-large',
+			'container',
+			'mx-auto',
+			'p-4',
+			'lg:px-0',
+		]);
+    }
+
+	protected function renderSingleProduct(int $product_id): void
+	{
+		$post = new Product($product_id);
+		$context = Timber::get_context();
+		$context['product'] = $post;
+
+		Timber::render($this->template, $context);
+
+
     }
 }

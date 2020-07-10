@@ -20,6 +20,7 @@ class OptionManager
 				Field::make('footer_scripts', 'footer_scripts', __('Footer Scripts'))
 			]);
 
+		$this->addOptionsToAdminBar();
 		add_action('wijnen/app/theme-options/register/parent', $this->basic_options);
 	}
 
@@ -35,6 +36,20 @@ class OptionManager
 		}
 
 		return static::$_instance;
+	}
+
+	protected function addOptionsToAdminBar()
+	{
+		add_action('admin_bar_menu', function(\WP_Admin_Bar $admin_bar) {
+			$admin_bar->add_menu([
+				'id' => $this->basic_options->get_id(),
+				'title' => $this->basic_options->title,
+				'href' => \get_admin_url(get_current_blog_id(), 'admin.php?page=crb_' . $this->basic_options->get_id() . '.php'),
+				'meta' => [
+					'title' => $this->basic_options->title,
+				]
+			]);
+		}, 100);
 	}
 
 	public static function instance(): self
@@ -55,7 +70,21 @@ class OptionManager
 			return;
 		}
 
-		$option->register()
-		       ->set_page_parent($option->custom_parent()?: $self->basic_options);
+		$container = $option->register();
+		$container->set_page_parent($option->custom_parent()?: $self->basic_options);
+
+		if ($option->in_admin_bar()) {
+			add_action('admin_bar_menu', function(\WP_Admin_Bar $admin_bar) use ($container, $self) {
+				$admin_bar->add_menu([
+					'id' => $container->get_id(),
+					'title' => $container->title,
+					'parent' => $self->basic_options->get_id(),
+					'href' => \get_admin_url(get_current_blog_id(), 'admin.php?page=crb_' . $container->get_id() . '.php'),
+					'meta' => [
+						'title' => $container->title,
+					]
+				]);
+			}, 101);
+		}
 	}
 }

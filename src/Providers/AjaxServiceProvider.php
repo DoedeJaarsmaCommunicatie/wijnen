@@ -16,6 +16,7 @@ class AjaxServiceProvider extends ServiceProvider
     {
         $this->ajaxClasses = apply_filters('wijnen/providers/ajax', [
         	SearchResults::class,
+	        AddItemToCart::class
         ]);
     }
 

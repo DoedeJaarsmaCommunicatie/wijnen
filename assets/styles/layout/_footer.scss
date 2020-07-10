@@ -20,33 +20,51 @@ $nix18-width: 150px !default;
   }
 }
 
-@media screen and (max-width: 1023px) {
-  .shortened-list {
-    &:not(.active) {
-      cursor: pointer;
-      max-height: 8rem;
-      overflow: hidden;
-      position: relative;
-
-      &::after {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        content: ' ';
-
-        background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 1));
-      }
-    }
-  }
-}
-
 .secure-pay-icon {
   margin: 0 2% 2% 0;
   min-height: 30px;
 
   &:last-of-type {
     height: 31px;
+  }
+}
+
+.footer-list-button {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  padding: .5rem;
+  border-bottom: 1px solid $primary;
+
+  @screen lg {
+    border-bottom: none;
+    padding: .5rem 0;
+    cursor: default;
+    svg {
+      display: none;
+    }
+  }
+}
+
+.footer-list {
+  transform: scale(0, 1);
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+
+  @screen lg {
+    display: flex;
+    transform: scale(1);
+  }
+}
+
+.shortened-list {
+  &.active {
+    & .footer-list {
+      transform: scale(1);
+      transform-origin: top center;
+      display: flex;
+    }
   }
 }

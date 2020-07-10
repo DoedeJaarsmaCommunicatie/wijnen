@@ -1,4 +1,4 @@
-import React, { Component, render, h } from 'preact';
+import React, { render, h } from 'preact';
 import { App } from './lib/App';
 
 export function renderSearchForm() {
@@ -8,5 +8,5 @@ export function renderSearchForm() {
 		return;
 	}
 
-	render(h(App), target);
+	render(<App />, target);
 }

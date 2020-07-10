@@ -1,3 +1,7 @@
 {
-    "/dist/styles/main.css": "/dist/styles/main.css"
+    "/dist/scripts/vendor.js": "/dist/scripts/vendor.js?id=f05adbdc4f5de44fd3c3",
+    "/dist/scripts/main.js": "/dist/scripts/main.js?id=de7c2827e137d3655beb",
+    "/dist/scripts/manifest.js": "/dist/scripts/manifest.js",
+    "/dist/scripts/routes/common.js": "/dist/scripts/routes/common.js?id=9f0036c317c280ae830e",
+    "/dist/scripts/routes/home.js": "/dist/scripts/routes/home.js?id=9f2cf50b16deed9cc984"
 }

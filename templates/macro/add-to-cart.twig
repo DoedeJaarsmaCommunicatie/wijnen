@@ -24,26 +24,36 @@
 {% endif %}
 
 {% if size is same as('small') %}
-    <form method="GET" class="{{ classes }}" data-action="add-to-cart" data-product="{{ ID }}" data-size="{{ size }}" enctype="multipart/form-data">
+    <span class="pr-add-to-cart"
+          data-product="{{ ID }}"
+          data-label="Fles"
+          data-qty="1"></span>
+
+    <span class="pr-add-to-cart"
+          data-product="{{ ID }}"
+          data-label="Doos"
+          data-qty="6"></span>
+    <noscript>
+        <form method="GET" class="{{ classes }}" data-action="add-to-cart" data-product="{{ ID }}" data-size="{{ size }}" enctype="multipart/form-data">
             <input
-            type="hidden"
-            name="quantity"
-            value="1"
-            min="1"
-            id="{{ qty_id }}"
-            {% if max %}max="{{ max }}"{% endif %}
+                    type="hidden"
+                    name="quantity"
+                    value="1"
+                    min="1"
+                    id="{{ qty_id }}"
+                    {% if max %}max="{{ max }}"{% endif %}
             >
             <input type="hidden" name="product" id="product" value="{{ ID }}">
 
-        <section class="flex">
-            <button type="submit" class="btn primary rounded large">
-                <i class="fas fa-shopping-cart"></i>
-            </button>
-{#            {{ fn('get_favorites_button', ID) }}#}
-        </section>
+            <section class="flex">
+                <button type="submit" class="btn primary rounded large">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </section>
 
-        <input type="hidden" name="product" id="product" value={{ ID }}>
-    </form>
+            <input type="hidden" name="product" id="product" value={{ ID }}>
+        </form>
+    </noscript>
 {% endif %}
 
 {% endmacro %}

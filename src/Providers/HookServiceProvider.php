@@ -26,7 +26,7 @@ class HookServiceProvider extends ServiceProvider
         $this->filters = apply_filters('wijnen/providers/filters', []);
 
         $this->actions = apply_filters('wijnen/providers/actions', [
-        	BodyHTMLCode::class
+        	BodyHTMLCode::class,
         ]);
 
         $this->filters_unhook = apply_filters('wijnen/providers/filters/unhook', [

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Options;
+namespace App\Controllers\Options\Traits;
 
 trait NoCustomParent
 {

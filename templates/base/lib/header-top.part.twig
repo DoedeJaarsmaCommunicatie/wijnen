@@ -27,25 +27,20 @@
                 </small>
             </a>
 
-            <a class="top-nav-item"
+            <a class="top-nav-item pr-shopping-cart-button relative"
+               data-initial-count="{{ wc_cart_count }}"
                href="{{ get_cart_url() }}">
-                <i class="fas fa-shopping-cart"></i>
-                <small class="block lg:inline">
-                    Wijnmandje
-                </small>
             </a>
-        </nav>
 
-        <div hidden>
-            <a class="btn to-cart-button has-badge" data-amount="{{ wc_cart_count }}" href="{{ fn('wc_get_cart_url') }}">
-                <i class="fas fa-shopping-cart mr-2"></i>
-                <span class="not-mobile mr-2">
-                {{ __('Wijnmandje') }}
-            </span>
-            <span class="badge top right black js-cart-amount" data-amount="{{ wc_cart_count }}">
-                {{ wc_cart_count }}
-            </span>
-            </a>
-        </div>
+            <noscript>
+                <a class="top-nav-item"
+                   href="{{ get_cart_url() }}">
+                    <i class="fas fa-shopping-cart"></i>
+                    <small class="block lg:inline">
+                        Wijnmandje
+                    </small>
+                </a>
+            </noscript>
+        </nav>
     </div>
 </header>

@@ -4,11 +4,13 @@ namespace App\Controllers\Options\Pages;
 
 use Carbon_Fields\{Field, Container};
 use App\Controllers\Options\Option;
-use App\Controllers\Options\NoCustomParent;
+use App\Controllers\Options\Traits\InAdminBar;
+use App\Controllers\Options\Traits\NoCustomParent;
 
 class ProductOfTheMonth implements Option
 {
 	use NoCustomParent;
+	use InAdminBar;
 
 	public function register ()
 	{

@@ -1,24 +1,25 @@
-import { addToCart } from '../lib/cart/add-to-cart';
 import { filterOpener } from '../lib/navigation/filterOpener';
 import { navOpener } from '../lib/navigation/opener';
 import { renderSearchForm } from '../services/search-form';
 import { removeAllNotificationsOnBodyClick } from '../lib/WooCommerce/notifications'
+import { renderAddToCartButtons } from '../services/add-to-cart'
+import { renderMiniCartEventListener } from '../lib/cart/mini-cart-opener'
+import { renderShoppingCartButton } from '../services/cart/CartButton'
 
 export default {
   init() {
-    // Javascript that fires on all pages.
-    addToCart();
     navOpener();
-    filterOpener();
-    renderSearchForm();
     removeAllNotificationsOnBodyClick();
+    renderMiniCartEventListener();
+    renderAddToCartButtons();
   },
 
   finalize() {
-    // Javascript that fires on all pages. after page specific JS is fires.
+    filterOpener();
     openShortList();
     openMobileSubmenu();
-    focusSearchFix();
+    renderSearchForm();
+    renderShoppingCartButton();
   },
 };
 
@@ -29,7 +30,7 @@ const openShortList = () => {
   }
 
   for ( let i = 0; i < lists.length; i++ ) {
-    lists[i].addEventListener('click', () => lists[i].classList.add('active'));
+    lists[i].addEventListener('click', () => lists[i].classList.toggle('active'));
   }
 };
 
@@ -63,15 +64,4 @@ const openMobileSubmenu = () => {
       }
     });
   }
-};
-
-const focusSearchFix = () => {
-  const form = document.querySelector('.js-search-form');
-  if (!form) {
-    return;
-  }
-
-  form.addEventListener('click', () => {
-    form.querySelector('#s')?.focus();
-  });
 };

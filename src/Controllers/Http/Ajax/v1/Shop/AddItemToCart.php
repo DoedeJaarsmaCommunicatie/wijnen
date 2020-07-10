@@ -2,7 +2,8 @@
 
 namespace App\Controllers\Http\Ajax\v1\Shop;
 
-use App\Controllers\Resources\Api\Product;
+use Timber\Timber;
+use App\Helpers\Template;
 use App\Controllers\Http\Ajax\AjaxController;
 
 class AddItemToCart extends AjaxController
@@ -51,10 +52,32 @@ class AddItemToCart extends AjaxController
         wp_send_json_success([
             'message' => __('Product toegevoegd aan je winkelmandje!', 'wijnen'),
             'product' => $productID,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+	        'cart_count' => WC()->cart->get_cart_contents_count(),
+	        'mini_cart' => $this->compileMiniCart(),
         ]);
     }
 
+
+	protected function compileMiniCart(): string
+	{
+		$context = Timber::get_context();
+		$context ['WC'] = WC();
+		$context ['cart'] = WC()->cart;
+		$context ['args'] = [
+			'list_class' => 'from-ajax'
+		];
+
+		$templates = [
+			Template::partialTwigFile('woocommerce/cart/mini-cart'),
+		];
+
+		return Timber::compile(
+			apply_filters('wijnen/view-composer/woo/mini-cart/templates', $templates),
+			apply_filters('wijnen/view-composer/woo/mini-cart/context', $context)
+		);
+
+	}
 
     protected function validate($productID, $quantity)
     {

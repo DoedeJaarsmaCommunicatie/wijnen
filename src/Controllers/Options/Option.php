@@ -15,4 +15,9 @@ interface Option
 	 * @return Theme_Options_Container
 	 */
 	public function register();
+
+	/**
+	 * @return boolean
+	 */
+	public function in_admin_bar();
 }

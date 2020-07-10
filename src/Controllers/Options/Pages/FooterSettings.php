@@ -5,13 +5,13 @@ namespace App\Controllers\Options\Pages;
 use Carbon_Fields\Field\Field;
 use App\Controllers\Options\Option;
 use Carbon_Fields\Container\Container;
+use App\Controllers\Options\Traits\InAdminBar;
+use App\Controllers\Options\Traits\NoCustomParent;
 
 class FooterSettings implements Option
 {
-	public function custom_parent ()
-	{
-		return false;
-	}
+	use NoCustomParent;
+	use InAdminBar;
 
 	public function register ()
 	{
