@@ -7,6 +7,7 @@ use Timber\Timber;
 use App\Models\Product;
 use Elementor\Controls_Stack;
 use Elementor\Controls_Manager;
+use DusanKasan\Knapsack\Collection;
 use ElementorPro\Modules\Woocommerce\Widgets\Products;
 use ElementorPro\Modules\Woocommerce\Classes\Products_Renderer;
 
@@ -72,28 +73,51 @@ class SingleProductVertical extends Products
 
 	    if (!empty($settings['query_posts_ids'])) {
         	if (count($settings['query_posts_ids']) === 1) {
-		        $this->renderSingleProduct(1);
+		        $this->renderSingleProduct($settings['query_posts_ids']);
         		return;
 	        }
 
-        	print "<section class='{$this->getWrapperClass()}'>";
+        	$this->renderWrapperStart();
 	            foreach ($settings['query_posts_ids'] as $postsId) {
 	            	$this->renderSingleProduct($postsId);
 	            }
 
 	            if ($settings['button_link'] && $settings['button_text']) {
-	            	printf(
-	            		'<a href="%s" class="products-large-cta"><h3>%s</h3> <i class="fas fa-chevron-right"></i></a>',
-			            $settings['button_link']['url'],
-			            $settings['button_text']
-		            );
+		            $this->renderButton($settings);
 	            }
-        	print '</section>';
+		    $this->renderWrapperEnd();
             return;
         }
 
         // All specifically selected fields are rendered.
-	    var_dump($settings);
+	    $this->renderWrapperStart();
+	    foreach ($this->getProductsFromQuery($settings) as $product) {
+	      $this->renderSingleProduct($product->get_id());
+      }
+	    $this->renderButton($settings);
+	    $this->renderWrapperEnd();
+    }
+
+	protected function getProductsFromQuery(array $settings)
+	{
+		$limit = ($settings['rows']?? 1) * ($settings['columns']?? 1);
+		$includes = array_map(static function ($id) { return (int) $id; }, $settings['query_include_term_ids']);
+		$query = new \WC_Product_Query([
+			'limit' => $limit,
+			'category' => $includes,
+		]);
+
+		return $query->get_products();
+    }
+
+    protected function renderWrapperStart(): void
+    {
+	    print "<section class='{$this->getWrapperClass()}'>";
+    }
+
+	protected function renderWrapperEnd(): void
+	{
+		print '</section>';
     }
 
 	protected function getWrapperClass () {
@@ -114,7 +138,15 @@ class SingleProductVertical extends Products
 		$context['product'] = $post;
 
 		Timber::render($this->template, $context);
+    }
 
-
+	protected function renderButton(array $data): void
+	{
+		?>
+		<a href="<?= $data['button_link']['url']?? '#' ?>>" class="products-large-cta">
+			<h3><?= $data['button_text']?? '' ?></h3>
+			<i class="fas fa-chevron-right"></i>
+		</a>
+	<?php
     }
 }
