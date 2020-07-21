@@ -61,7 +61,6 @@ class AssetsServiceProvider extends ServiceProvider
         WP::enqueue();
 
         add_action('wp_enqueue_scripts', [$this, 'dequeueAssets'], 20);
-        add_filter('woocommerce_enqueue_styles', '__return_empty_array');
     }
 
     public function dequeueAssets(): void
@@ -70,6 +69,7 @@ class AssetsServiceProvider extends ServiceProvider
 	    WP::removeStyle('wp-block-library');
 
 	    if (is_product() || !(is_cart() || is_checkout() || is_woocommerce() || is_account_page())) {
+		    add_filter('woocommerce_enqueue_styles', '__return_empty_array');
 		    WP::removeStyle('woocommerce_frontend_styles');
 		    WP::removeStyle('woocommerce-general');
 		    WP::removeStyle('woocommerce-layout');

@@ -1,6 +1,6 @@
 {% set _name = product.get_name %}
 {% set _permalink = product.get_permalink %}
-{% from 'macro/add-to-cart.twig' import add_to_cart %}
+{% from 'macro/add-to-cart.twig' import mini_add_to_cart %}
 {% from 'macro/products/images.macro.twig' import tease_thumbnail %}
 {% from 'macro/products/price.macro.twig' import tease_price %}
 
@@ -20,6 +20,6 @@
     {% if product.get_type is same as('variable') %}
         <a class="btn primary rounded large" href="{{ product.get_link }}">Bekijken</a>
     {% else %}
-        {{ add_to_cart(product.ID, 'mx-auto product-large-add-to-cart', 'qty', 'small') }}
+        {{ mini_add_to_cart(product) }}
     {% endif %}
 </article>

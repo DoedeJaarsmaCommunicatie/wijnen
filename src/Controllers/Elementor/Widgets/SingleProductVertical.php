@@ -89,11 +89,17 @@ class SingleProductVertical extends Products
             return;
         }
 
-        // All specifically selected fields are rendered.
-	    $this->renderWrapperStart();
-	    foreach ($this->getProductsFromQuery($settings) as $product) {
-	      $this->renderSingleProduct($product->get_id());
+      $this->renderWrapperStart();
+	    if (empty($settings['query_include'])) {
+	      foreach ($this->getLatestProducts($settings) as $product) {
+		      $this->renderSingleProduct($product->get_id());
+	      }
+      } else {
+	      foreach ($this->getProductsFromQuery($settings) as $product) {
+		      $this->renderSingleProduct($product->get_id());
+	      }
       }
+
 	    $this->renderButton($settings);
 	    $this->renderWrapperEnd();
     }
@@ -108,6 +114,16 @@ class SingleProductVertical extends Products
 		]);
 
 		return $query->get_products();
+    }
+
+    protected function getLatestProducts(array $settings)
+    {
+      $limit = ($settings['rows']?? 1) * ($settings['columns']?? 1);
+      $query = new \WC_Product_Query([
+          'limit' => $limit,
+      ]);
+
+      return $query->get_products();
     }
 
     protected function renderWrapperStart(): void
@@ -129,7 +145,7 @@ class SingleProductVertical extends Products
 			'p-4',
 			'lg:px-0',
 		]);
-    }
+  }
 
 	protected function renderSingleProduct(int $product_id): void
 	{

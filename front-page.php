@@ -1,4 +1,5 @@
 <?php
+
 /**
  * The front-page view composer file. This handles the data to
  * show a nice front-page.
@@ -20,11 +21,11 @@ $post = new Post();
 $context['post'] = $post;
 
 $templates = [
-	Template::viewTwigFile('front-page'),
-	Template::viewTwigFile('index'),
+    Template::viewTwigFile('front-page'),
+    Template::viewTwigFile('index'),
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/front-page/templates', $templates),
-	apply_filters('wijnen/view-composer/front-page/context', $context)
+    apply_filters('wijnen/view-composer/front-page/templates', $templates),
+    apply_filters('wijnen/view-composer/front-page/context', $context)
 );

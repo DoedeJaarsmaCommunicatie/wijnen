@@ -7,7 +7,7 @@ top: 0;
 left: 0;
 background: white;
 border-radius: 50%;
-padding: .2rem;
+padding: 0.1rem .3rem;
 line-height: 1;
 font-size: 60%;
 

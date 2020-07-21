@@ -5,8 +5,10 @@
 
 {% block content %}
     {% do action('woocommerce_before_single_product') %}
+
     <main class="product container mx-auto px-4 lg:px-0">
         {% do action('wijnen/single/product/content/pre') %}
+
         {{ thumbnail(post) }}
 
         <h1 class="product-title">{{ post.title }}</h1>
@@ -27,6 +29,47 @@
     </main>
 
     <section class="mt-4">
+        <div class="container mx-auto">
+            {% if variations %}
+                <h4 class="text-xl">Alternatieven</h4>
+            {% endif %}
+            {% for variation in variations %}
+                <section class="product-variations product-variations-{{ variation.name|title|lower }}">
+                    <strong class="product-variations-title product-variations-title-{{ variation.name|title|lower }}">
+                        {{ variation.name }}
+                    </strong>
+
+                    <div class="product-variations-options product-variations-options-{{ variation.name|title|lower }}">
+                        {% for product in variation.products %}
+                            <article class="relative product-variations-variation product-variations-variation-{{ variation.name|title|lower }}">
+                                <a href="{{ product.link }}" class="overlap-link" title="{{ product.name }}">
+                                </a>
+                                <picture>
+                                    <img src="{{ product.thumbnail.src('thumbnail') }}"
+                                         class="product-variations-variation-img product-variations-variation-img-{{ variation.name|title|lower }}"
+                                         alt="Alternatief {{ product.name }}">
+                                </picture>
+
+                                <p class="overlay-caption">{{ product.name }}</p>
+                            </article>
+                        {% endfor %}
+                        {% for product in variation.products %}
+                            <article class="relative product-variations-variation product-variations-variation-{{ variation.name|title|lower }}">
+                                <a href="{{ product.link }}" class="overlap-link" title="{{ product.name }}">
+                                </a>
+                                <picture>
+                                    <img src="{{ product.thumbnail.src('thumbnail') }}"
+                                         class="product-variations-variation-img product-variations-variation-img-{{ variation.name|title|lower }}"
+                                         alt="Alternatief {{ product.name }}">
+                                </picture>
+
+                                <p class="overlay-caption">{{ product.name }}</p>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endfor %}
+        </div>
         <div class="container mx-auto">
             <h4 class="text-xl">Gerelateerde producten</h4>
         </div>

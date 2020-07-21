@@ -47,7 +47,12 @@
             <button type="button" class="mobile-only js-close-cart btn secondary outline round large shaded w-full lg:w-auto mb-4 lg:mb-0 lg:mr-4">
                 {{ __('Verder winkelen', 'ltfg') }}
             </button>
-            {% do action('woocommerce_widget_shopping_cart_buttons') %}
+            <a class="button wc-forward btn primary outline round large shaded w-full lg:w-auto mb-4 lg:mb-0 lg:mr-4" href="{{ get_cart_url() }}">
+                Wijnmandje bekijken
+            </a>
+            <a class="button wc-forward btn primary round large shaded w-full lg:w-auto mb-4 lg:mb-0 lg:mr-4" href="{{ get_checkout_url() }}">
+                Afrekenen
+            </a>
         </p>
         {% do action('woocommerce_widget_shopping_cart_after_buttons') %}
     </footer>

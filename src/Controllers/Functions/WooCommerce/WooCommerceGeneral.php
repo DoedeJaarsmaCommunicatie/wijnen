@@ -28,6 +28,11 @@ class WooCommerceGeneral
     	return static::getUrl('myaccount');
     }
 
+    public static function getCheckoutUrl(): string
+    {
+    	return static::getUrl('checkout');
+    }
+
     public static function getUrl(string $page): string
     {
         if (isset(static::$url_cache[$page])) {

@@ -48,8 +48,8 @@
   }
 
   & .woo-mini-cart-item {
-    background: adjust-color($secondary, $alpha: -.4%);
-    color: $white;
+    background: adjust-color($primary, $alpha: -.4%);
+    color: $black;
     border-radius: $radius;
     margin: $padding_small 0 !important;
     padding: $padding_small !important;

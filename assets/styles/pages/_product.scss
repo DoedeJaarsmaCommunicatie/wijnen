@@ -94,9 +94,9 @@
     .product_sidebar {
         grid-area: sidebar;
         background: transparent;
-        @media screen and (min-width: 1023px) {
+        @screen lg {
             padding: $padding;
-            background: scale-color($grey, $lightness: 90%);
+            background: scale-color($grey);
             position: absolute;
             top: 0;
             right: 0;
@@ -106,7 +106,7 @@
     .product-form {
         display: none;
 
-        @media screen and (min-width: 1024px) {
+        @screen lg {
             display: flex;
             flex-wrap: wrap;
 
@@ -159,7 +159,7 @@
         appearance: textfield;
     }
 
-    @media screen and (min-width: 1024px) {
+    @media lg {
         display: none;
     }
 }
@@ -171,12 +171,10 @@
         }
     }
 
-    @media screen and (min-width: 1023px) {
+    @media lg {
         & table {
-
             td {
                 display: table-cell;
-
                 &:last-of-type {
                     border-bottom: none;
                 }
@@ -253,6 +251,7 @@
     border-radius: 14px;
     text-align: center;
     padding: .5rem 1rem;
+    z-index: 999;
 
     a {
         display: block;
@@ -262,6 +261,11 @@
 
     p {
         margin-bottom: .5rem;
+    }
+
+
+    &::before, &::after {
+        display: none;
     }
 
     @screen md {
@@ -279,4 +283,78 @@
     @extend %toast;
     background: $green;
     color: $white;
+    border-top-color: $green;
+}
+
+.product-variations {
+    margin-bottom: 1rem;
+
+    .product-variations-title {
+        margin-bottom: .5rem;
+    }
+
+    .product-variations-options {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow: scroll;
+
+        @screen lg {
+            flex-wrap: wrap;
+        }
+    }
+
+    .product-variations-variation {
+        flex: 0 0 30%;
+        box-shadow: 0 3px 5px rgba(51, 51, 51, 0.2);
+        border-radius: 4px;
+        transition: all 225ms ease;
+        margin-bottom: 2%;
+        margin-right: 4%;
+
+        img {
+            border-radius: 4px;
+        }
+
+        @screen lg {
+            flex: 0 0 21%;
+            margin-right: 2%;
+        }
+
+        .overlap-link {
+            position: absolute;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .overlay-caption {
+            position: absolute;
+            transform: scale(1, 0);
+            transform-origin: bottom center;
+            transition: all 225ms ease;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            top: 0;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(2px);
+            padding: .5rem;
+
+            @screen lg {
+                transform: unset;
+                position: static;
+                text-align: center;
+                font-size: 1.25rem;
+            }
+        }
+
+        &:hover {
+            box-shadow: 0 3px 9px rgba(51, 51, 51, 0.4);
+            .overlay-caption {
+                transform: scale(1);
+            }
+        }
+    }
 }

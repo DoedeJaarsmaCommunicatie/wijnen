@@ -11,6 +11,7 @@ const StyledButton = styled.button`
 	color: #fff;
 	padding: .5rem;
 	border-radius: 4px;
+	width: 100%;
 `;
 
 export class Form extends Component {

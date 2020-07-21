@@ -24,15 +24,19 @@
 {% endif %}
 
 {% if size is same as('small') %}
-    <span class="pr-add-to-cart"
-          data-product="{{ ID }}"
-          data-label="Fles"
-          data-qty="1"></span>
+    <section class="flex w-full justify-between">
+        <span class="pr-add-to-cart"
+              data-product="{{ ID }}"
+              data-label="Fles"
+              data-qty="1">
+        </span>
+        <span class="pr-add-to-cart"
+              data-product="{{ ID }}"
+              data-label="Doos"
+              data-qty="6">
+        </span>
+    </section>
 
-    <span class="pr-add-to-cart"
-          data-product="{{ ID }}"
-          data-label="Doos"
-          data-qty="6"></span>
     <noscript>
         <form method="GET" class="{{ classes }}" data-action="add-to-cart" data-product="{{ ID }}" data-size="{{ size }}" enctype="multipart/form-data">
             <input
@@ -56,4 +60,42 @@
     </noscript>
 {% endif %}
 
+{% endmacro %}
+
+{% macro mini_add_to_cart(product) %}
+    <section class="flex w-full justify-between">
+        <span class="pr-add-to-cart"
+              data-product="{{ product.get_id }}"
+              data-label="Fles"
+              data-qty="1">
+        </span>
+        <span class="pr-add-to-cart"
+              data-product="{{ product.get_id }}"
+              data-label="Doos"
+              data-qty="6">
+        </span>
+    </section>
+    <noscript>
+        <form method="GET" class="mx-auto product-large-add-to-cart"
+              data-action="add-to-cart"
+              data-product="{{ product.get_id }}" enctype="multipart/form-data">
+            <input
+                    type="hidden"
+                    name="quantity"
+                    value="1"
+                    min="1"
+                    id="qty_{{ product.get_id }}"
+            >
+            <input type="hidden" name="product" id="product" value="{{ product.get_id }}">
+
+            <section class="flex">
+                <button type="submit" class="btn primary rounded large">
+                    <i class="fas fa-shopping-cart">
+                    </i>
+                </button>
+            </section>
+
+            <input type="hidden" name="product" id="product" value={{ product.get_id }}>
+        </form>
+    </noscript>
 {% endmacro %}
