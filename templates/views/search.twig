@@ -1,11 +1,16 @@
 {% extends 'base/app.twig' %}
 {% from "macro/add-to-cart.twig" import add_to_cart %}
 
-{% set _product = false %}
-
 {% block content %}
+    <header class="my-4 container mx-auto content">
+        <h1>
+            Je hebt gezocht naar: <em>{{ search_query }}</em>
+        </h1>
+    </header>
+
     <main class="products container mx-auto px-4 lg:px-0 pb-4">
         {% for post in posts %}
+        {% set _product = false %}
             <article class="product-card">
                 {% if post.post_type is same as('product') %}
                     {% set _product = fn('wc_get_product', post.ID) %}
@@ -31,7 +36,7 @@
                     {{ post.content|excerpt(15) }} <a href="{{ post.link }}">Lees meer</a>
                 </div>
                 {% if post.post_type is same as ('product') %}
-                    {{ add_to_cart(product.ID, 'ml-auto mt-auto product-add-to-cart', 'qty', 'small') }}
+                    {{ add_to_cart(_product.get_id, 'ml-auto mt-auto product-add-to-cart', 'qty', 'small') }}
                 {% endif %}
             </article>
         {% else %}
