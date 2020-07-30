@@ -1,11 +1,11 @@
 {% do action('woocommerce_before_mini_cart') %}
 
 <section class="mini-cart-contents">
-    <strong class='shopping-cart-title'>{{ __('Winkelmandje', 'ltfg')}}</strong>
+    <strong class='shopping-cart-title'>{{ __('Wijnmandje', 'wijn')}}</strong>
     {% do action('woocommerce_before_mini_cart_contents') %}
 
     {% if not WC.cart.is_empty %}
-        <ul class="mini-cart cart_list products_list {{ args.list_class }}">
+        <table class="mini-cart cart_list products_list {{ args.list_class }}">
             {% for cart_item_key, cart_item in WC.cart.get_cart %}
                 {% set _product = cart_item.data|apply_filters('woocommerce_cart_item_product', cart_item.data, cart_item, cart_item_key) %}
                 {% set _productID = cart_item.product_id|apply_filters('woocommerce_cart_item_product_id', cart_item.product_id, cart_item, cart_item_key) %}
@@ -15,21 +15,48 @@
                     {% set _productPrice = WC.cart.get_product_price(_product) %}
                     {% set _productLink  = _product.get_permalink(cart_item) %}
 
-                    <li class="woo-mini-cart-item">
-                        <a href="{{ _productLink }}" class="woo-mini-cart-item_product" title="{{ __('Bekijk %s', ltfg)|format(_productName) }}">
-                            <span class="woo-mini-cart-item_title">
+                    <tr class="woo-mini-cart-item">
+                        <td>
+                            <a href="{{ _productLink }}" class="woo-mini-cart-item_product" title="{{ __('Bekijk %s', ltfg)|format(_productName) }}">
+                            <span class="woo-mini-cart-item_title" style="font-weight: normal">
                                 {{ _productName }}
                             </span>
-                            <span class="quantity">
-                                {{ cart_item.quantity }} &times; {{ _productPrice }}
-                            </span>
-                        </a>
-
-                        <a href="{{ fn('wc_get_cart_remove_url', cart_item_key) }}" class="remove remove_from_cart_button" aria-label="{{ __('Delete', 'woocommerce') }}" data-product_id="{{ _productID }}" data-cart_item_key="{{ cart_item_key }}" data-product_sku="{{ _product.get_sku }}">&times;</a>
-                    </li>
+                            </a>
+                        </td>
+                        <td style="width: 25px;">
+                            <a href="{{ _productLink }}" class="woo-mini-cart-item_product" title="{{ __('Bekijk %s', ltfg)|format(_productName) }}">
+                                <span class="quantity" style="font-weight: normal">
+                                    {{ cart_item.quantity }}
+                                </span>
+                            </a>
+                        </td>
+                        <td style="text-align: right">
+                            <a href="{{ _productLink }}" class="woo-mini-cart-item_product" title="{{ __('Bekijk %s', ltfg)|format(_productName) }}">
+                                <span class="price" style="font-weight: normal">
+                                    {{ _productPrice }}
+                                </span>
+                            </a>
+                        </td>
+                        <td style="text-align: center">
+                            <a href="{{ fn('wc_get_cart_remove_url', cart_item_key) }}" class="remove remove_from_cart_button" aria-label="{{ __('Delete', 'woocommerce') }}" data-product_id="{{ _productID }}" data-cart_item_key="{{ cart_item_key }}" data-product_sku="{{ _product.get_sku }}">&times;</a>
+                        </td>
+                    </tr>
                 {% endif %}
             {% endfor %}
-        </ul>
+
+            <tfoot style="text-align: left">
+            <tr>
+                <th colspan="2" style="padding: .5rem">
+                    Subtotaal:
+                </th>
+                <td style="text-align: right; padding: .5rem">
+                    &euro;{{ WC.cart.subtotal|replace({ '.': ',' }) }}
+                </td>
+                <td>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
     {% else %}
         <p class="woocommerce-mini-cart__empty-message">
             {{ __('Er zitten geen producten in het winkelmandje', 'ltfg') }}
@@ -39,18 +66,15 @@
     {% do action('woocommerce_mini_cart_contents') %}
 
     <footer class="mini-cart-footer">
-        <p class="mini-cart_total total">
-            {% do action('woocommerce_widget_shopping_cart_total') %}
-        </p>
         {% do action('woocommerce_widget_shopping_cart_before_buttons') %}
         <p class="mini-cart_buttons">
-            <button type="button" class="mobile-only js-close-cart btn secondary outline round large shaded w-full lg:w-auto mb-4 lg:mb-0 lg:mr-4">
+            <button type="button" class="js-close-cart block large w-full lg:w-auto mb-4 lg:mb-0 lg:mr-4 text-left text-underline">
                 {{ __('Verder winkelen', 'ltfg') }}
             </button>
-            <a class="button wc-forward btn primary outline round large shaded w-full lg:w-auto mb-4 lg:mb-0 lg:mr-4" href="{{ get_cart_url() }}">
-                Wijnmandje bekijken
+            <a class="btn primary outline round large shaded mb-4 lg:mb-0 lg:mr-4" href="{{ get_cart_url() }}" id="mini-cart-goto-cart">
+                Wijnmandje
             </a>
-            <a class="button wc-forward btn primary round large shaded w-full lg:w-auto mb-4 lg:mb-0 lg:mr-4" href="{{ get_checkout_url() }}">
+            <a class="btn primary round large shaded mb-4 lg:mb-0 lg:mr-4" href="{{ get_checkout_url() }}" id="mini-cart-goto-checkout">
                 Afrekenen
             </a>
         </p>
