@@ -7,7 +7,7 @@
         {{ post.post_excerpt|wpautop }}
         {% do action('wijnen/single/druif/'~post.slug~'/excerpt/post') %}
 
-        <div class="products px-4 lg:px-0 py-4">
+        <div class="products-large horizontal-products-unbound px-4 lg:px-0 py-4">
         {% do action('wijnen/single/druif/'~post.slug~'/products/pre') %}
             {% for product in products|apply_filters('wijnen/single/druif/'~post.slug~'/products') %}
                 {{ include('partials/tease/product.twig', { product: product }, with_context = false) }}
