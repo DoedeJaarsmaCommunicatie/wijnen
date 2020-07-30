@@ -10,25 +10,27 @@ use App\Controllers\Options\Traits\NoCustomParent;
 
 class CompanyInformation implements Option
 {
-	use NoCustomParent;
-	use InAdminBar;
+    use NoCustomParent;
+    use InAdminBar;
 
-	public function register()
-	{
-		return Container::make('theme_options', 'Bedrijf informatie')
-			->add_fields($this->fields());
-	}
+    public function register()
+    {
+        return Container::make('theme_options', 'Bedrijf informatie')
+            ->add_fields($this->fields());
+    }
 
-	protected function fields(): array
-	{
-		$fields = [];
+    protected function fields(): array
+    {
+        $fields = [];
 
-		$fields []= Field::make('text', 'store_name', 'Bedrijfsnaam');
-		$fields []= Field::make('rich_text', 'store_address', 'Adres');
-		$fields []= Field::make('text', 'store_phone', 'Telefoonnummer');
-		$fields []= Field::make('text', 'store_email', 'E-mail')
-			->set_attribute('type', 'email');
+        $fields [] = Field::make('text', 'store_name', 'Bedrijfsnaam');
+        $fields [] = Field::make('rich_text', 'store_address', 'Adres');
+        $fields [] = Field::make('text', 'store_phone', 'Telefoonnummer');
+        $fields [] = Field::make('text', 'store_email', 'E-mail')
+            ->set_attribute('type', 'email');
 
-		return $fields;
-	}
+        $fields [] = Field::make('image', 'custom_mobile_logo', 'Logo Mobiel');
+
+        return $fields;
+    }
 }
