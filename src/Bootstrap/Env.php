@@ -50,7 +50,9 @@ class Env implements Bootstrapper
     public function __construct()
     {
         $this->env = Dotenv::createMutable(WP::getStylesheetDir());
-        $this->env->load();
+        try {
+            $this->env->load();
+        } catch (\Throwable $e) {}
     }
 
     public static function bootstrap(): self
