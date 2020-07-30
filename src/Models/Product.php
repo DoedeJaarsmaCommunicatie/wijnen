@@ -42,7 +42,13 @@ class Product extends Post
 
     public function get_title()
     {
-        return $this->title();
+        $year = $this->get_attribute('pa_jaar');
+
+        if (!$year) {
+            return $this->title();
+        }
+
+        return $this->title() . ' - ' . implode(', ', $year);
     }
 
     public function get_sale_price()
@@ -78,6 +84,24 @@ class Product extends Post
         }
 
         return static::$attributes_cache[$this->id];
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array|false
+     */
+    public function get_attribute(string $name)
+    {
+        if (!isset(static::$attributes_cache[$this->id])) {
+            $this->get_attributes();
+        }
+
+        if (isset(static::$attributes_cache[$this->id][$name])) {
+            return static::$attributes_cache[$this->id][$name]['options'];
+        }
+
+        return false;
     }
 
     public function is_on_sale()
@@ -146,9 +170,9 @@ class Product extends Post
 
     public function setProduct(): \WC_Product
     {
-    	if (!$this->ID) {
-    		$this->ID = get_queried_object_id();
-	    }
+        if (!$this->ID) {
+            $this->ID = get_queried_object_id();
+        }
 
         if ($this->product === null) {
             if (isset(static::$product_cache[$this->ID])) {
