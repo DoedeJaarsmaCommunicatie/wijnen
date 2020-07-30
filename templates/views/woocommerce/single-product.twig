@@ -9,19 +9,48 @@
     <main class="product container mx-auto px-4 lg:px-0">
         {% do action('wijnen/single/product/content/pre') %}
 
-        {{ thumbnail(post) }}
+        {{ thumbnail(post)|apply_filters('wijnen/single/product/content/thumbnail', post) }}
 
-        <h1 class="product-title">{{ post.title }}</h1>
+        <h1 class="product-title">{{ post.get_title }}</h1>
 
-        {{ include('partials/woocommerce/product/attributes.html.twig') }}
+        {% block attributes %}
+            {% do action('wijnen/single/product/content/attributes/pre') %}
+            {{ include('partials/woocommerce/product/attributes.html.twig') }}
+            {% do action('wijnen/single/product/content/attributes/post') %}
+        {% endblock %}
 
-        <aside class="product_sidebar">
-            <span class="product-price">
-                {{ post.get_price_html }}
-                <small class="product-price_small" hidden>per fles</small>
-            </span>
-            {% do fn('woocommerce_template_single_add_to_cart') %}
-            {{ include('partials/woocommerce/product/usp.html.twig', { product: product }) }}
+        <aside class="product_sidebar w-full p-4">
+            <header class="product_sidebar--header">
+                <span class="product-price">{{ post.get_price_html }}</span>
+
+                <span class="product-favorite">
+                    {{ fn('get_favorites_button', post.get_id, site.id) }}
+                </span>
+            </header>
+            {% if post %}
+                <div class="product-usp-stock stock-{{ post.get_stock_status }}">
+                    {% if post.is_in_stock and not post.is_on_backorder %}
+                        <span><i class="fas fa-check hidden lg:inline"></i></span>
+                        {% if not product.get_stock_quantity %}
+                            <span><i class="fas fa-check lg:hidden"></i> Op voorraad</span>
+                        {% elseif product.get_stock_quantity > 18 %}
+                            <span><i class="fas fa-check lg:hidden"></i> Op voorraad</span>
+                        {% else %}
+                            <span><i class="fas fa-check lg:hidden"></i> Nog {{ post.get_stock_quantity }} op voorraad.</span>
+                        {% endif %}
+                    {% elseif post.is_on_backorder %}
+                        <span class="mr-2"><i class="fas fa-exclamation-triangle"></i></span>
+                        <span>Nabestelling. Langere levertijd</span>
+                    {% else %}
+                        <span class="mr-2"><i class="fas fa-exclamation-triangle"></i></span>
+                        <span>Niet op voorraad</span>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <div class="my-4">
+                {{ add_to_cart(post.get_id,[], 'quantity', 'small') }}
+            </div>
+            {{ include('partials/woocommerce/product/usp.html.twig', { product: post }) }}
         </aside>
 
         <section class="product-content">{{ post.content }}</section>
@@ -31,82 +60,26 @@
     <section class="mt-4">
         <div class="container mx-auto">
             {% if variations %}
-                <h4 class="text-xl">Alternatieven</h4>
+                <h4 class="text-xl px-4 lg:px-0">Alternatieven</h4>
             {% endif %}
             {% for variation in variations %}
                 <section class="product-variations product-variations-{{ variation.name|title|lower }}">
-                    <strong class="product-variations-title product-variations-title-{{ variation.name|title|lower }}">
+                    <strong class="px-4 lg:px-0 product-variations-title product-variations-title-{{ variation.name|title|lower }}">
                         {{ variation.name }}
                     </strong>
 
                     <div class="product-variations-options product-variations-options-{{ variation.name|title|lower }}">
-                        {% for product in variation.products %}
-                            <article class="relative product-variations-variation product-variations-variation-{{ variation.name|title|lower }}">
-                                <a href="{{ product.link }}" class="overlap-link" title="{{ product.name }}">
-                                </a>
-                                <picture>
-                                    <img src="{{ product.thumbnail.src('thumbnail') }}"
-                                         class="product-variations-variation-img product-variations-variation-img-{{ variation.name|title|lower }}"
-                                         alt="Alternatief {{ product.name }}">
-                                </picture>
-
-                                <p class="overlay-caption">{{ product.name }}</p>
-                            </article>
-                        {% endfor %}
-                        {% for product in variation.products %}
-                            <article class="relative product-variations-variation product-variations-variation-{{ variation.name|title|lower }}">
-                                <a href="{{ product.link }}" class="overlap-link" title="{{ product.name }}">
-                                </a>
-                                <picture>
-                                    <img src="{{ product.thumbnail.src('thumbnail') }}"
-                                         class="product-variations-variation-img product-variations-variation-img-{{ variation.name|title|lower }}"
-                                         alt="Alternatief {{ product.name }}">
-                                </picture>
-
-                                <p class="overlay-caption">{{ product.name }}</p>
-                            </article>
-                        {% endfor %}
+                        {% include 'partials/blocks/products.twig' with { posts: variation.products } only %}
                     </div>
                 </section>
             {% endfor %}
         </div>
         <div class="container mx-auto">
-            <h4 class="text-xl">Gerelateerde producten</h4>
+            <h4 class="text-xl px-4 lg:px-0">Gerelateerde producten</h4>
         </div>
         {% include 'partials/blocks/products.twig' with { posts: related_products } only %}
     </section>
+
     {{ std(product, post) }}
 
-{% endblock %}
-
-{% block preBodyClose %}
-    <link rel="stylesheet" href="{{ theme.link }}/dist/vendor/owl-carousel/owl.carousel.min.css" />
-    <script src="{{ theme.link }}/dist/vendor/owl-carousel/owl.carousel.min.js"></script>
-    <style>
-        @media screen and (max-width: 769px) {
-            .owl-carousel {
-                width: 380px;
-            }
-        }
-
-        @media screen and (max-width: 415px) {
-            .owl-carousel {
-                width: 203px;
-            }
-        }
-
-        @media screen and (max-width: 375px) {
-            .owl-carousel {
-                width: 183px;
-            }
-        }
-    </style>
-    <script>
-        jQuery('.owl-carousel').owlCarousel({
-            items: 1,
-            dots: false,
-            loop: true,
-            autoplay: true
-        });
-    </script>
 {% endblock %}
