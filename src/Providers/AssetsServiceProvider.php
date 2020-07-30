@@ -16,6 +16,11 @@ class AssetsServiceProvider extends ServiceProvider
             filemtime(WP::getAssetLocation('dist/styles/main.css', false))
         );
 
+        WP::addStyle(
+            'tiny-slider',
+            'https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.2/tiny-slider.css',
+        );
+
         WP::addScript(
             'main-manifest',
             WP::getAssetLocation(['dist', 'scripts', 'manifest.js']),
@@ -47,13 +52,13 @@ class AssetsServiceProvider extends ServiceProvider
 //            filemtime(WP::getAssetLocation('dist/styles/admin.css', false))
 //        );
 
-        WP::addScript(
-            'updated-jquery',
-            'https://code.jquery.com/jquery-3.5.1.min.js',
-            [],
-            '3.5.1',
-            false
-        );
+//        WP::addScript(
+//            'updated-jquery',
+//            'https://code.jquery.com/jquery-3.5.1.min.js',
+//            [],
+//            '3.5.1',
+//            false
+//        );
     }
 
     public function register()
@@ -65,38 +70,40 @@ class AssetsServiceProvider extends ServiceProvider
 
     public function dequeueAssets(): void
     {
-	    WP::removeStyle('wc-block-style');
-	    WP::removeStyle('wp-block-library');
+        WP::removeStyle('wc-block-style');
+        WP::removeStyle('wp-block-library');
 
-	    if (is_product() || !(is_cart() || is_checkout() || is_woocommerce() || is_account_page())) {
-		    add_filter('woocommerce_enqueue_styles', '__return_empty_array');
-		    WP::removeStyle('woocommerce_frontend_styles');
-		    WP::removeStyle('woocommerce-general');
-		    WP::removeStyle('woocommerce-layout');
-		    WP::removeStyle('woocommerce-smallscreen');
-		    WP::removeStyle('woocommerce_prettyPhoto_css');
+        if (is_product() || !(is_cart() || is_checkout() || is_woocommerce() || is_account_page() || is_search())) {
+            add_filter('woocommerce_enqueue_styles', '__return_empty_array');
+            WP::removeStyle('woocommerce_frontend_styles');
+            WP::removeStyle('woocommerce-general');
+            WP::removeStyle('woocommerce-layout');
+            WP::removeStyle('woocommerce-smallscreen');
+            WP::removeStyle('woocommerce_prettyPhoto_css');
 
-		    WP::removeStyle('wooajaxcart');
 
-//		    WP::removeScript('selectWoo');
-		    WP::removeScript('wc-add-payment-method');
-		    WP::removeScript('wc_price_slider');
-//		    WP::removeScript('wc-single-product');
-		    WP::removeScript('wc-credit-card-form');
-//		    WP::removeScript('wc-chosen');
-		    WP::removeScript('wc-cart');
-		    WP::removeScript('jqueryui');
-		    WP::removeScript('fancybox');
-		    WP::removeScript('prettyPhoto');
-		    WP::removeScript('prettyPhoto-init');
-//		    WP::removeScript('woocommerce');
-		    WP::removeScript('jquery-blockui');
-		    WP::removeScript('jquery-placeholder');
-		    WP::removeScript('jquery-payment');
-	    }
-	    // Remove jQuery.
-//	    WP::removeScript('jquery');
-//	    WP::addScript('jquery', get_stylesheet_directory_uri() . '/dist/jquery.min.js', [], false, false);
+            WP::removeStyle('wooajaxcart');
+
+            //          WP::removeScript('selectWoo');
+            WP::removeScript('draggable');
+            WP::removeScript('wc-add-payment-method');
+            WP::removeScript('wc_price_slider');
+            //          WP::removeScript('wc-single-product');
+            WP::removeScript('wc-credit-card-form');
+            //          WP::removeScript('wc-chosen');
+            WP::removeScript('wc-cart');
+            WP::removeScript('jqueryui');
+            WP::removeScript('fancybox');
+            WP::removeScript('prettyPhoto');
+            WP::removeScript('prettyPhoto-init');
+            //          WP::removeScript('woocommerce');
+            WP::removeScript('jquery-blockui');
+            WP::removeScript('jquery-placeholder');
+            WP::removeScript('jquery-payment');
+        }
+        // Remove jQuery.
+        //      WP::removeScript('jquery');
+        //      WP::addScript('jquery', get_stylesheet_directory_uri() . '/dist/jquery.min.js', [], false, false);
 
         if (!is_admin_bar_showing()) {
             WP::removeStyle('dashicons');

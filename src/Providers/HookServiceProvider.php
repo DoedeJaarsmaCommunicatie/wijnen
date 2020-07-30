@@ -6,6 +6,7 @@ use App\Bootstrap\Container;
 use App\Controllers\Hooks\Actions\Action;
 use App\Controllers\Hooks\Filters\Filter;
 use App\Controllers\Hooks\Actions\Views\General\BodyHTMLCode;
+use App\Controllers\Hooks\Filters\Views\WooCommerce\ChangeDefaultOrderBy;
 
 class HookServiceProvider extends ServiceProvider
 {
@@ -23,18 +24,20 @@ class HookServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        $this->filters = apply_filters('wijnen/providers/filters', []);
+        $this->filters = apply_filters('wijnen/providers/filters', [
+        	ChangeDefaultOrderBy::class
+        ]);
 
         $this->actions = apply_filters('wijnen/providers/actions', [
-        	BodyHTMLCode::class,
+            BodyHTMLCode::class,
         ]);
 
         $this->filters_unhook = apply_filters('wijnen/providers/filters/unhook', [
-        	[
-        		'hook' => 'the_content',
-        		'name' => 'wpautop',
-		        'priority' => 10
-	        ]
+            [
+                'hook' => 'the_content',
+                'name' => 'wpautop',
+                'priority' => 10
+            ]
         ]);
 
         $this->actions_unhook = apply_filters('wijnen/providers/actions/unhook', []);

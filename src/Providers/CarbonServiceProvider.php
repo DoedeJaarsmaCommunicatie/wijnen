@@ -10,54 +10,56 @@ use App\Controllers\Options\OptionManager;
 use App\Controllers\Options\Pages\SpecialPages;
 use App\Controllers\Options\Pages\FooterSettings;
 use App\Controllers\Options\Pages\ProductOfTheMonth;
+use App\Controllers\Options\Pages\ShortcodeSettings;
 use App\Controllers\Options\Pages\CompanyInformation;
 
 class CarbonServiceProvider extends ServiceProvider
 {
-	protected $fields = [];
+    protected $fields = [];
 
-	/**
-	 * @var string[] A string of classnames.
-	 */
-	protected $options = [];
+    /**
+     * @var string[] A string of classnames.
+     */
+    protected $options = [];
 
-	public function __construct ()
-	{
-		add_action('after_setup_theme', static function () {
-			if (!Carbon_Fields::is_booted()) {
-				Carbon_Fields::boot();
-			}
-		});
+    public function __construct()
+    {
+        add_action('after_setup_theme', static function () {
+            if (!Carbon_Fields::is_booted()) {
+                Carbon_Fields::boot();
+            }
+        });
 
-		parent::__construct();
-	}
+        parent::__construct();
+    }
 
-	public function boot(): void
-	{
-		$this->fields = apply_filters('wijnen/providers/fields', [
-			FrontPage::class
-		]);
+    public function boot(): void
+    {
+        $this->fields = apply_filters('wijnen/providers/fields', [
+            FrontPage::class
+        ]);
 
-		$this->options = apply_filters('wijnen/providers/options', [
-			ProductOfTheMonth::class,
-			CompanyInformation::class,
-			SpecialPages::class,
-			FooterSettings::class,
-		]);
-	}
+        $this->options = apply_filters('wijnen/providers/options', [
+            ProductOfTheMonth::class,
+            CompanyInformation::class,
+            SpecialPages::class,
+            FooterSettings::class,
+            ShortcodeSettings::class,
+        ]);
+    }
 
-	public function register(): void
-	{
-		foreach ($this->fields as $field) {
-			/** @var Field $field */
-			$field = Container::get($field);
-			add_action('carbon_fields_register_fields', [$field, 'register']);
-		}
+    public function register(): void
+    {
+        foreach ($this->fields as $field) {
+            /** @var Field $field */
+            $field = Container::get($field);
+            add_action('carbon_fields_register_fields', [$field, 'register']);
+        }
 
-		foreach ($this->options as $option) {
-			add_action('carbon_fields_register_fields', static function () use ($option) {
-				OptionManager::register($option);
-			});
-		}
-	}
+        foreach ($this->options as $option) {
+            add_action('carbon_fields_register_fields', static function () use ($option) {
+                OptionManager::register($option);
+            });
+        }
+    }
 }
