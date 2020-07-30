@@ -8,25 +8,24 @@ use App\Controllers\Hooks\Actions\Action;
 
 class LoadMiniCart extends Action
 {
-	public function action()
-	{
-		$context = Timber::get_context();
-		$context ['WC'] = WC();
-		$context ['cart'] = WC()->cart;
+    public function action()
+    {
+        $context = Timber::get_context();
+        $context ['WC'] = WC();
+        $context ['cart'] = WC()->cart;
 
-		$templates = [
-			Template::partialTwigFile('woocommerce/cart/mini-cart'),
-		];
+        $templates = [
+            Template::partialTwigFile('woocommerce/cart/mini-cart'),
+        ];
 
-		Timber::render(
-			apply_filters('wijnen/view-composer/woo/mini-cart/templates', $templates),
-			apply_filters('wijnen/view-composer/woo/mini-cart/context', $context)
-		);
-	}
+        Timber::render(
+            apply_filters('wijnen/view-composer/woo/mini-cart/templates', $templates),
+            apply_filters('wijnen/view-composer/woo/mini-cart/context', $context)
+        );
+    }
 
-	public function hook()
-	{
-		return 'wijnen/html/woocommerce/mini-cart';
-	}
-
+    public function hook()
+    {
+        return 'wijnen/html/woocommerce/mini-cart';
+    }
 }
