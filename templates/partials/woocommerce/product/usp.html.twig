@@ -1,59 +1,26 @@
 <table class="product-usp hidden lg:block">
-    {% if product %}
-        <tr class="product-usp-stock stock-{{ product.get_stock_status }}">
-            {% if product.is_in_stock and not product.is_on_backorder %}
-                <th><i class="fas fa-check"></i></th>
-                {% if not product.get_stock_quantity %}
-                    <td><i class="fas fa-check lg:hidden"></i> Op voorraad</td>
-                {% elseif product.get_stock_quantity > 18 %}
-                    <td><i class="fas fa-check lg:hidden"></i> Op voorraad</td>
-                {% else %}
-                    <td><i class="fas fa-check lg:hidden"></i> Nog {{ product.get_stock_quantity }} op voorraad.</td>
-                {% endif %}
-            {% elseif product.is_on_backorder %}
-                <th><i class="fas fa-exclamation-triangle"></i></th>
-                <td>Nabestelling. Langere levertijd</td>
-            {% else %}
-                <th><i class="fas fa-exclamation-triangle"></i></th>
-                <td>Niet op voorraad</td>
-            {% endif %}
-        </tr>
-    {% endif %}
-
     <tr hidden>
         <th><i class="fas fa-store-alt"></i></th>
-        <td>{{ theme.theme_mod('more_shops', 'Bestellen bij meerdere webshops.') }}</td>
+        <td>{{ theme.theme_mod('more_shops', 'Bestellen bij meerdere webshops') }}</td>
     </tr>
 
     <tr>
         <th><i class="fas fa-truck"></i></th>
-        <td>{{ theme.theme_mod('shipping_fee', 'Gratis verzending vanaf € 50,-') }}</td>
+        <td>{{ theme.theme_mod('shipping_fee', 'Gratis verzending vanaf € 60,-') }}</td>
     </tr>
 
     <tr>
         <th><i class="fas fa-dolly"></i></th>
         <td>
-            {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden.') }}
+            {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
         </td>
     </tr>
 
     <tr>
         <th><i class="fas fa-wine-bottle"></i></th>
         <td>
-            Per fles te bestellen.
+            Per fles te bestellen
         </td>
-    </tr>
-
-    <tr>
-        <th><i class="fas fa-boxes"></i></th>
-        <td>
-            Wijn op voorraad = direct leverbaar.
-        </td>
-    </tr>
-
-    <tr>
-        <th><i class="fas fa-warehouse"></i></th>
-        <td>Uitgebreide selectie wijnen.</td>
     </tr>
 
     <tr>
@@ -65,39 +32,23 @@
         <td>Kies zelf de dag van bezorging.</td>
     </tr>
 </table>
+
 <section class="lg:hidden carousel-wrapper">
-    <div class="owl-carousel">
-        {% if product %}
-            <div class="product-usp-stock stock-{{ product.get_stock_status }}">
-                {% if product.is_in_stock and not product.is_on_backorder %}
-                    <i class="fas fa-check"></i> Op voorraad
-                {% elseif product.is_on_backorder %}
-                    <i class="fas fa-exclamation-triangle"></i> Nabestelling, langere levertijd
-                {% else %}
-                    <i class="fas fa- exclamation-triangle"></i> Niet op voorraad
-                {% endif %}
-            </div>
-        {% endif %}
+    <div class="product-usp-carousel">
         <div>
-            <i class="fas fa-truck"></i> {{ theme.theme_mod('shipping_fee', 'Gratis verzending vanaf € 50,-') }}
+            <i class="fas fa-truck"></i> {{ theme.theme_mod('shipping_fee', 'Gratis verzending vanaf € 60,-') }}
         </div>
         <div>
-            <i class="fas fa-dolly"></i> {{ theme.theme_mod('delivary_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden.') }}
+            <i class="fas fa-dolly"></i> {{ theme.theme_mod('delivary_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
         </div>
         <div>
             <i class="fas fa-wine-bottle"></i> Per fles te bestellen
         </div>
         <div>
-            <i class="fas fa-boxes"></i> Wijn op voorraad = direct leverbaar.
+            <i class="fas fa-credit-card"></i> Veilig betalen
         </div>
         <div>
-            <i class="fas fa-warehouse"></i> Uitgebreide selectie wijnen.
-        </div>
-        <div>
-            <i class="fas fa-credit-card"></i> Veilig betalen.
-        </div>
-        <div>
-            <i class="fas fa-calendar-day"></i> Kies zelf de dag van bezorging.
+            <i class="fas fa-calendar-day"></i> Kies zelf de dag van bezorging
         </div>
     </div>
 </section>
