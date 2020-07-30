@@ -1,6 +1,13 @@
 {% set _logo = Image(theme.theme_mod('custom_logo')) %}
+{% set _mobile_logo = Image(theme_option('custom_mobile_logo')) %}
 <a href="/" class="custom_logo_wrapper">
-    <img src="{{ _logo.src|resize(350) }}"
-         alt="{{ _logo.alt?? 'Logo ' ~ site.name }}"
-         class="custom_logo" id="logo_{{ post.ID }}" />
+    <picture>
+        {% if theme_option('custom_mobile_logo') %}
+            <source srcset="{{ _mobile_logo.src }}" media="(max-width: 599px)">
+        {% endif %}
+
+        <img src="{{ _logo.src|resize(350) }}"
+             alt="{{ _logo.alt?? 'Logo ' ~ site.name }}"
+             class="custom_logo" id="logo_{{ post.ID }}" />
+    </picture>
 </a>
