@@ -12,6 +12,8 @@
     "php-di/php-di": "^6.1",
     "symfony/finder": "^5.1",
     "symfony/http-foundation": "^5.1",
+    "symfony/mailer": "^5.0",
+    "symfony/mime": "^5.0",
     "timber/timber": "^1.16",
     "vlucas/phpdotenv": "^4.1",
     "yahnis-elsts/plugin-update-checker": "^4.9"
