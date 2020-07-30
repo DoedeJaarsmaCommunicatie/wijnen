@@ -15,6 +15,16 @@
             {{ _name }}
         </a>
     </h2>
+
+    <section class="product-origins">
+        {% if product.get_attribute('pa_land') %}
+            <span class="country">{{ product.get_attribute('pa_land')[0] }},</span>
+        {% endif %}
+        {% if product.get_attribute('pa_streek') %}
+            <span class="region">{{ product.get_attribute('pa_streek')[0] }}</span>
+        {% endif %}
+    </section>
+
     {{ tease_price(_product) }}
 
     {{ add_to_cart(product.ID, 'mx-auto product-large-add-to-cart', 'qty', 'small') }}
