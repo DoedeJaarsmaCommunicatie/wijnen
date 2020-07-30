@@ -15,7 +15,7 @@
 
     <section class="container mx-auto content mb-5">
         <h2>{{ __('Bekijk ons aanbod wijnen uit %s')|format(term.name) }}</h2>
-        <div class="products px-4 lg:px-0 py-4">
+        <div class="products-large horizontal-products-unbound px-4 lg:px-0 py-4">
             {% do action('wijnen/taxonomy/country/'~term.slug~'/products/pre') %}
             {% for product in products|apply_filters('wijnen/taxonomy/country/'~term.slug~'/products') %}
                 {{ include('partials/tease/product.twig', { product: product }, with_context = false) }}
@@ -26,5 +26,4 @@
             Meer wijnen uit {{ term.name }} bekijken
         </a>
     </section>
-
 {% endblock %}
