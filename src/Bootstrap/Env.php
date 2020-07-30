@@ -39,12 +39,12 @@ class Env implements Bootstrapper
 
     public static function getInt($name, $default = 0)
     {
-    	return static::get($name, $default, 'integer');
+        return static::get($name, $default, 'integer');
     }
 
     public static function getBool($name, $default = false)
     {
-    	return static::get($name, $default, 'boolean');
+        return static::get($name, $default, 'boolean');
     }
 
     public function __construct()
