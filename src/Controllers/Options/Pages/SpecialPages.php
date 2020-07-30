@@ -10,28 +10,36 @@ use App\Controllers\Options\Traits\NoCustomParent;
 
 class SpecialPages implements Option
 {
-	use NoCustomParent;
-	use InAdminBar;
+    use NoCustomParent;
+    use InAdminBar;
 
-	public function register ()
-	{
-		return Container::make('theme_options', 'Link informatie')
-			->add_fields($this->fields());
-	}
+    public function register()
+    {
+        return Container::make('theme_options', 'Link informatie')
+            ->add_fields($this->fields());
+    }
 
-	protected function fields(): array
-	{
-		$fields = [];
-		$fields []= Field::make_association('contact_page', 'Contact')
-			->set_max(1)
-			->set_types([
-				[
-					'type' => 'post',
-					'post_type' => 'page'
-				],
-			]);
+    protected function fields(): array
+    {
+        $fields = [];
+        $fields [] = Field::make_association('contact_page', 'Contact')
+            ->set_max(1)
+            ->set_types([
+                [
+                    'type' => 'post',
+                    'post_type' => 'page'
+                ],
+            ]);
 
-		return $fields;
-	}
+        $fields [] = Field::make_association('favorites_page', 'Favorieten')
+            ->set_max(1)
+            ->set_types([
+                [
+                    'type' => 'post',
+                    'post_type' => 'page'
+                ],
+            ]);
 
+        return $fields;
+    }
 }
