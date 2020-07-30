@@ -8,11 +8,11 @@
  */
 defined('ABSPATH') || exit;
 
-use App\Helpers\Template;
-use Timber\Helper;
 use Timber\Post;
 use Timber\Term;
+use Timber\Helper;
 use Timber\Timber;
+use App\Helpers\Template;
 
 $context = Timber::get_context();
 $post = new Post();
@@ -39,12 +39,12 @@ $context['products'] = Helper::transient(
 );
 
 $templates = [
-	Template::viewHtmlTwigFile("taxonomy/country/{$term->slug}"),
+    Template::viewHtmlTwigFile("taxonomy/country/{$term->slug}"),
     Template::viewHtmlTwigFile('taxonomy/country'),
     Template::viewHtmlTwigFile('taxonomy')
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/taxonomy-country/templates', $templates),
-	apply_filters('wijnen/view-composer/taxonomy-country/context', $context)
+    apply_filters('wijnen/view-composer/taxonomy-country/templates', $templates),
+    apply_filters('wijnen/view-composer/taxonomy-country/context', $context)
 );

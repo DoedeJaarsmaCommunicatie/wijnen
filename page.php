@@ -18,10 +18,10 @@ $context = Timber::get_context();
 $context['post'] = new Post();
 
 $templates = [
-	Template::viewTwigFile('page'),
+    Template::viewTwigFile('page'),
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/page/templates', $templates),
-	apply_filters('wijnen/view-composer/page/context', $context)
+    apply_filters('wijnen/view-composer/page/templates', $templates),
+    apply_filters('wijnen/view-composer/page/context', $context)
 );

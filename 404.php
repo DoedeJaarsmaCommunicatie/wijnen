@@ -9,8 +9,8 @@
  */
 
 use Timber\Post;
-use App\Helpers\Template;
 use Timber\Timber;
+use App\Helpers\Template;
 
 defined('ABSPATH') || exit;
 
@@ -18,10 +18,10 @@ $context = Timber::get_context();
 $context['post'] = new Post();
 
 $templates = [
-	Template::viewHtmlTwigFile('404'),
+    Template::viewHtmlTwigFile('404'),
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composers/404/templates', $templates),
-	apply_filters('wijnen/view-composers/404/context', $context)
+    apply_filters('wijnen/view-composers/404/templates', $templates),
+    apply_filters('wijnen/view-composers/404/context', $context)
 );

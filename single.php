@@ -7,9 +7,9 @@
  * @author Mitch Hijlkema
  */
 
-use App\Helpers\Template;
 use Timber\Post;
 use Timber\Timber;
+use App\Helpers\Template;
 
 defined('ABSPATH') || exit;
 
@@ -18,10 +18,10 @@ $post = new Post();
 $context['post'] = $post;
 
 $templates = [
-	Template::viewTwigFile("single/{$post->post_type}/{$post->slug}"),
-	Template::viewTwigFile("single/{$post->post_type}"),
-	Template::viewTwigFile('single'),
-	Template::viewTwigFile('index'),
+    Template::viewTwigFile("single/{$post->post_type}/{$post->slug}"),
+    Template::viewTwigFile("single/{$post->post_type}"),
+    Template::viewTwigFile('single'),
+    Template::viewTwigFile('index'),
 ];
 
 Timber::render($templates, $context);

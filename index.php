@@ -24,10 +24,10 @@ $context = Timber::get_context();
 $context['post'] = new Post();
 
 $templates = [
-	Template::viewTwigFile('index'),
+    Template::viewTwigFile('index'),
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/index/templates', $templates),
-	apply_filters('wijnen/view-composer/index/context', $context)
+    apply_filters('wijnen/view-composer/index/templates', $templates),
+    apply_filters('wijnen/view-composer/index/context', $context)
 );

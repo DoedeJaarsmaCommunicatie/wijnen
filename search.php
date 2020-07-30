@@ -19,10 +19,10 @@ $context['posts'] = new PostQuery();
 $context['search_query'] = get_search_query();
 
 $templates = [
-	Template::viewTwigFile('search'),
+    Template::viewTwigFile('search'),
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/search/templates', $templates),
-	apply_filters('wijnen/view-composer/search/context', $context)
+    apply_filters('wijnen/view-composer/search/templates', $templates),
+    apply_filters('wijnen/view-composer/search/context', $context)
 );
