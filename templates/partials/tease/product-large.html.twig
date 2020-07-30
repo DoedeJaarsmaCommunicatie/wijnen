@@ -16,10 +16,21 @@
             {{ _name }}
         </a>
     </h2>
+
+    <section class="product-origins lg:text-center">
+        {% if product.get_attribute('pa_land') %}
+            <span class="country">{{ product.get_attribute('pa_land')[0] }},</span>
+        {% endif %}
+        {% if product.get_attribute('pa_streek') %}
+            <span class="region">{{ product.get_attribute('pa_streek')[0] }}</span>
+        {% endif %}
+    </section>
     {{ tease_price(product) }}
-    {% if product.get_type is same as('variable') %}
-        <a class="btn primary rounded large" href="{{ product.get_link }}">Bekijken</a>
-    {% else %}
-        {{ mini_add_to_cart(product) }}
-    {% endif %}
+    <div class="product-add-to-cart w-full">
+        {% if product.get_type is same as('variable') %}
+            <a class="btn primary rounded large" href="{{ product.get_link }}">Bekijken</a>
+        {% else %}
+            {{ mini_add_to_cart(product) }}
+        {% endif %}
+    </div>
 </article>
