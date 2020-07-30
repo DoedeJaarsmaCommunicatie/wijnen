@@ -546,7 +546,6 @@ class ComposerStaticInit3968452acb9f297a841454cfcf4de9ae
         'App\\Helpers\\Woo' => __DIR__ . '/../..' . '/src/Helpers/Woo.php',
         'App\\Mail\\Mailable' => __DIR__ . '/../..' . '/src/Mail/Mailable.php',
         'App\\Mail\\Mailer' => __DIR__ . '/../..' . '/src/Mail/Mailer.php',
-        'App\\Mail\\Order\\Status\\PaymentReceived' => __DIR__ . '/../..' . '/src/Mail/Order/Status/PaymentReceived.php',
         'App\\Models\\Menu\\Menu' => __DIR__ . '/../..' . '/src/Models/Menu/Menu.php',
         'App\\Models\\Menu\\MenuItem' => __DIR__ . '/../..' . '/src/Models/Menu/MenuItem.php',
         'App\\Models\\Post' => __DIR__ . '/../..' . '/src/Models/Post.php',

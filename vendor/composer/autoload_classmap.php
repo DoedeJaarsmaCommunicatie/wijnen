@@ -137,7 +137,6 @@ return array(
     'App\\Helpers\\Woo' => $baseDir . '/src/Helpers/Woo.php',
     'App\\Mail\\Mailable' => $baseDir . '/src/Mail/Mailable.php',
     'App\\Mail\\Mailer' => $baseDir . '/src/Mail/Mailer.php',
-    'App\\Mail\\Order\\Status\\PaymentReceived' => $baseDir . '/src/Mail/Order/Status/PaymentReceived.php',
     'App\\Models\\Menu\\Menu' => $baseDir . '/src/Models/Menu/Menu.php',
     'App\\Models\\Menu\\MenuItem' => $baseDir . '/src/Models/Menu/MenuItem.php',
     'App\\Models\\Post' => $baseDir . '/src/Models/Post.php',
