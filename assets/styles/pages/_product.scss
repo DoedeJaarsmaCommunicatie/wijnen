@@ -17,12 +17,11 @@
         padding: 2.25rem 0 0;
         grid-template-areas: "thumb thumb . title title title title title . sidebar sidebar sidebar"
                              "thumb thumb . attributes attributes attributes attributes attributes . sidebar sidebar sidebar"
-                             "thumb thumb . attributes attributes attributes attributes attributes . sidebar sidebar sidebar"
                              "thumb thumb . main main main main main . sidebar sidebar sidebar"
-                             ". . . main main main main main . . . .";
+                             "thumb thumb . main main main main main . . . .";
 
         grid-template-columns: repeat(12, 1fr);
-        grid-template-rows: minmax(2rem, max-content) minmax(1rem, 2rem) ;
+        grid-template-rows: repeat(auto-fill, minmax(2rem, max-content));
     }
 
     & .product-image, & picture {
@@ -44,8 +43,8 @@
         grid-area: attributes;
         font-size: 1rem;
         font-weight: 400;
-        padding: $padding;
-        border: 1px solid scale-color($primary, $lightness: 40%);
+        //padding: $padding;
+        //border: 1px solid scale-color($primary, $lightness: 40%);
 
         & a {
             @include transition;
@@ -70,8 +69,6 @@
 
     & .product-content {
         @extend %content;
-
-        padding: $padding;
         grid-area: main;
         margin-top: $padding;
         background: scale-color($grey, $lightness: 90%);
@@ -83,7 +80,7 @@
             }
         }
 
-        @media screen and (min-width: 1024px) {
+        @screen lg {
             padding: 0;
             background: transparent;
             color: $black;
@@ -93,10 +90,11 @@
 
     .product_sidebar {
         grid-area: sidebar;
-        background: transparent;
+        background: white;
+        border: 1px solid $primary;
+        border-radius: 4px;
         @screen lg {
             padding: $padding;
-            background: scale-color($grey);
             position: absolute;
             top: 0;
             right: 0;
@@ -236,6 +234,20 @@
             padding: $padding_small $padding;
             text-align: center;
             margin-bottom: 1rem;
+        }
+    }
+
+    .product_sidebar--header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .simplefavorite-button {
+        @extend %btn , .secondary, .round, .large;
+
+        &.loading {
+            cursor: wait;
         }
     }
 }

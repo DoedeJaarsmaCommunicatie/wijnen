@@ -1,0 +1,9 @@
+.search .products {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-rows: repeat(auto-fill, 1fr);
+
+  @screen lg {
+    grid-template-columns: 1fr 1fr;
+  }
+}

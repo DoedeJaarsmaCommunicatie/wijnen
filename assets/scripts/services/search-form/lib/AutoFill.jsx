@@ -1,5 +1,6 @@
-import React, { Component, h } from 'preact';
+import React, { Component } from 'preact';
 import { AutoFillItem } from './AutoFillItem'
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const AutoFillWrapper = styled.div`
@@ -11,21 +12,32 @@ const AutoFillWrapper = styled.div`
   box-shadow: 0 4px 8px rgba(51, 51, 51, 0.345);
   z-index: 1;
   color: #000000;
-  padding: 1rem;
 `;
 
 export class AutoFill extends Component {
 	render() {
-		if (this.props.results.length === 0) {
+		const { results, keyDownEvent } = this.props;
+
+		if (results.length === 0) {
 			return '';
 		}
 
 		return (
 			<AutoFillWrapper className={'search-auto-fill'}>
 				<nav>
-					{this.props.results.map(res => <AutoFillItem res={res} />)}
+					{results.map((res, index) => (
+						<AutoFillItem
+							res={res}
+							keyDownEvent={keyDownEvent} />
+					))}
 				</nav>
 			</AutoFillWrapper>
 		);
 	}
+}
+
+AutoFill.propTypes = {
+	results: PropTypes.array,
+	cursor: PropTypes.number,
+	keyDownEvent: PropTypes.func,
 }

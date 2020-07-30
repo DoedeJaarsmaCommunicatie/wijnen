@@ -1,4 +1,4 @@
-import React, { render, h } from 'preact';
+import React, { render } from 'preact';
 import { Form } from './lib/Form.jsx';
 
 export function renderAddToCartButtons() {
@@ -9,13 +9,17 @@ export function renderAddToCartButtons() {
 		const {
 			product,
 			qty,
-			label
+			label,
+			secondary,
+			outline
 		} = target.dataset;
 		const icon = qty > 1 ? 'box' : 'wine-bottle'
 
 		render(<Form product={product}
 					 icon={icon}
 					 label={label}
+					 secondary={secondary}
+					 outline={outline}
 					 amount={qty} />, target);
 	}
 }

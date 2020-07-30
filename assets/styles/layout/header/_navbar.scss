@@ -1,5 +1,5 @@
 .menu-button {
-  color: $black;
+  color: $secondary-invert;
   font-size: 80%;
 
   small {
@@ -47,7 +47,7 @@
 }
 
 .menu-item {
-  color: $primary;
+  color: $secondary-invert;
   display: block;
   width: 100%;
   border-bottom: 1px solid;
@@ -55,40 +55,28 @@
   margin-bottom: .5rem;
 
   @screen md {
-    color: $primary;
     width: unset;
     border-bottom: none;
     padding-bottom: 0;
     margin-bottom: 0;
+    font-weight: bold;
 
     button.js-submenu-button {
       display: none;
+    }
+
+    &:last-of-type {
+      margin-right: 1rem;
     }
   }
 }
 
 .menu-item-submenu {
-  &:first-of-type {
-    @media screen and (min-width: 768px) {
-      margin-left: -1rem;
-    }
-  }
-
-  &:last-of-type {
-    margin-left: auto;
-  }
+  position: relative;
 
   &:hover {
     .submenu {
       transform: scale(1);
-    }
-  }
-
-  @media screen and (max-width: get-breakpoint('md')) {
-    position: relative;
-
-    &:last-of-type {
-      margin-left: unset;
     }
   }
 }
@@ -126,12 +114,13 @@
   margin-left: auto;
 }
 
-@media screen and (min-width: get-breakpoint('md')) {
+@screen md {
   .navbar {
+    justify-content: flex-end;
     & .menu-item {
       display: block;
       padding: 1rem;
-      font-size: 1.3rem;
+      font-size: 1rem;
     }
   }
 
@@ -169,4 +158,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: $secondary-invert;
+
+  @screen lg {
+    color: $white;
+  }
 }

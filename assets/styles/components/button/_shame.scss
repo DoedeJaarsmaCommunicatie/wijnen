@@ -29,7 +29,6 @@
   @extend %default-shadow;
   background: $primary;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: $fontSizeLarge;
@@ -38,10 +37,22 @@
   color: $primary-invert;
   text-align: center;
   transition: all 225ms ease;
+  padding: .5rem;
 
   @include transition;
 
   &:hover {
     background: adjust-color($primary, $lightness: -20%);
+  }
+
+  svg {
+    margin-left: .5rem;
+  }
+
+  @screen lg {
+    padding: unset;
+    svg {
+      display: none;
+    }
   }
 }

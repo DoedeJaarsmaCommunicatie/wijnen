@@ -1,18 +1,11 @@
-import React, { Component, h } from 'preact';
+import React, { Component } from 'preact';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBox, faWineBottle, faSpinner } from '@fortawesome/free-solid-svg-icons'
-import styled from 'styled-components';
+import { faBox, faPlus, faSpinner, faWineBottle } from '@fortawesome/free-solid-svg-icons'
 import { events, fireEvent } from '../../../tools/EventBus';
 import ky from 'ky';
+import { StyledButton } from './Button';
 
-const StyledButton = styled.button`
-	background: #c96464;
-	color: #fff;
-	padding: .5rem;
-	border-radius: 4px;
-	width: 100%;
-`;
 
 export class Form extends Component {
 	constructor() {
@@ -48,10 +41,19 @@ export class Form extends Component {
 			qty: this.props.amount
 		};
 
-		const res = await ky.post(`${window['ajax_url']}?action=add_product_to_cart`, {
-			json: data,
-			credentials: 'same-origin',
-		});
+		let res;
+		try {
+			res = await ky.post(`${window['ajax_url']}?action=add_product_to_cart`, {
+				json: data,
+				credentials: 'same-origin',
+			});
+		} catch (e) {
+			if (e.name !== 'AbortError') {
+				this.setState({loading: false});
+				fireEvent(events.PRODUCT.NOT_ADDED_TO_CART, { request: data, exception: e });
+				return;
+			}
+		}
 
 		const body = await res.json();
 		fireEvent(events.PRODUCT.ADDED_TO_CART, { request: data, response: body.data });
@@ -60,15 +62,16 @@ export class Form extends Component {
 	}
 
 	render() {
+		const { loading } = this.state;
+		const { label, amount, product, ...props } = this.props;
+
 		return (
 			<form className={this.classList()} onSubmit={this.submitEventListener}>
-				<input type="hidden" name="product_id" value={this.props.product} />
-				<input type="hidden" name="quantity" value={this.props.amount} />
-				<StyledButton type={'submit'}>
-					<FontAwesomeIcon icon={this.buttonIcon()} className={[
-						this.props.label? 'mr-2' : '',
-					].join(' ')} spin={ this.state.loading } />
-					{ this.props.label }
+				<input type="hidden" name="product_id" value={product} />
+				<input type="hidden" name="quantity" value={amount} />
+				<StyledButton type={'submit'} disabled={loading} {...props}>
+					{ label }
+					<FontAwesomeIcon icon={loading? faSpinner : faPlus} className={['ml-2'].join(' ')} spin={loading} />
 				</StyledButton>
 			</form>
 		)

@@ -47,6 +47,14 @@ html {
   }
 }
 
+.bg-primary {
+  & a {
+    &:hover {
+      color: $secondary
+    }
+  }
+}
+
 .content {
   @extend %content;
 }

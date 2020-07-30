@@ -1,9 +1,9 @@
 $search-form-color: $black !default;
-$search-form-background-color: $white !default;
+$search-form-background-color: scale-color($white, $alpha: -40%) !default;
 $search-form-padding: $padding_small !default;
 
 $search-form-border-width: 1px !default;
-$search-form-border-color: $search-form-color !default;
+$search-form-border-color: #1c413f !default;
 
 .search-form {
   background: $search-form-background-color;
@@ -26,6 +26,6 @@ $search-form-border-color: $search-form-color !default;
   @include radii;
 
   @media screen and (min-width: get-breakpoint('md')) {
-    min-width: 350px;
+    min-width: 250px;
   }
 }

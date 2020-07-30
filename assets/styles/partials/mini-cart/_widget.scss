@@ -1,6 +1,7 @@
 .widget_shopping_cart_content {
   transform: scale(0);
 
+  z-index: 10;
   position: fixed;
   top: 0;
   left: 0;
@@ -17,6 +18,23 @@
     display: flex;
     flex: 1 1 auto;
     flex-wrap: wrap;
+
+    #mini-cart-goto-cart,
+    #mini-cart-goto-checkout {
+      flex: 1 1 auto;
+      margin-right: .25rem;
+
+      @screen lg {
+        flex: unset;
+        margin-left: 0;
+        margin-right: 0;
+      }
+    }
+
+    #mini-cart-goto-checkout {
+      margin-right: 0;
+      margin-left: .25rem;
+    }
   }
 }
 
@@ -40,6 +58,8 @@
 
   & .cart_list.mini-cart {
     all: unset;
+    width: 100%;
+    display: table;
   }
 
   & .shopping-cart-title {
@@ -48,16 +68,23 @@
   }
 
   & .woo-mini-cart-item {
-    background: adjust-color($primary, $alpha: -.4%);
+    background: #f4f4f4;
     color: $black;
     border-radius: $radius;
     margin: $padding_small 0 !important;
     padding: $padding_small !important;
-    display: flex;
 
     & .woo-mini-cart-item_product {
       margin-right: auto;
     }
+
+    td {
+      padding: .5rem;
+    }
+  }
+
+  & .mini-cart_total {
+    text-align: right;
   }
 
   @include shadow;

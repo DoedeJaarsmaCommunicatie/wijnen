@@ -1,4 +1,4 @@
-import React, { Component, h } from 'preact';
+import React, { Component } from 'preact';
 import styled from 'styled-components';
 
 const Badge = styled.small`
@@ -10,9 +10,11 @@ border-radius: 50%;
 padding: 0.1rem .3rem;
 line-height: 1;
 font-size: 60%;
+color: currentColor;
 
 @media screen and (min-width: 1024px) {
 	left: 80%;
+	color: #000;
 }
 `;
 

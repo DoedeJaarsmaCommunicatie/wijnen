@@ -1,6 +1,6 @@
-import React, { Component, createRef, h } from 'preact';
+import React, { Component, createRef } from 'preact';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { AutoFill } from './AutoFill';
 import styled from 'styled-components';
 
@@ -8,6 +8,15 @@ const SearchApp = styled.div`
   display: flex;
   width: 100%;
   position: relative;
+  background: transparent;
+  
+  input {
+  	background: transparent;
+  	color: #1c413f;
+  	&::placeholder {
+  		opacity: 0.8;
+  	}
+  }
 `;
 
 export class App extends Component {
@@ -22,6 +31,7 @@ export class App extends Component {
 			loading: false,
 			show_results: false,
 			results: [],
+			cursor: 0
 		};
 
 		this.handleFocusEvent = this.handleFocusEvent.bind(this);
@@ -36,6 +46,10 @@ export class App extends Component {
 	}
 
 	hideSearchFill(e) {
+		if (!this.form.current) {
+			return;
+		}
+
 		if (this.form.current.contains(e.target)) {
 			return;
 		}
@@ -46,30 +60,32 @@ export class App extends Component {
 	}
 
 	async handleSearchInput(e) {
+		this.setState({ loading: true });
 		this.abortControllers.forEach(abortController => abortController.abort());
-		const abortController = new AbortController();
+		const abortController = new AbortController(),
+			value = e.target.value;
 		this.abortControllers.push(abortController);
-
-
-		const value = e.target.value;
 		if ('' === value || null === value || !value) {
 			return this.hideSearchFill();
 		}
+
 		let res;
 
 		try {
 			res = await (await fetch(window['ajax_url'] + `?action=search_results&s=${value}`, {
 				signal: abortController.signal,
 			})).json();
-		} catch { return; }
+		} catch { return; } // Signal aborted.
 
 		this.setState({
 			show_results: true,
-			results: res.data.posts
+			results: res.data.posts,
+			loading: false
 		});
 	}
 
 	render() {
+		const { show_results, results, loading, cursor } = this.state;
 		return (
 			<SearchApp className={'search-app'}>
 				<input
@@ -77,15 +93,20 @@ export class App extends Component {
 					id={'s'}
 					name={'s'}
 					type={'search'}
-					autocomplete={'off'}
+					autoComplete={'off'}
 					className={'search-form-input'}
 					onFocus={this.handleFocusEvent}
 					onBlur={this.hideSearchFill}
 					onInput={this.handleSearchInput} />
 
-				<button type={'submit'} class={'search-button'}><FontAwesomeIcon icon={faSearch} /></button>
+				<button type={'submit'} className={'search-button'}>
+					<FontAwesomeIcon icon={loading? faSpinner : faSearch} spin={loading} />
+				</button>
 
-				{this.state.show_results && <AutoFill results={this.state.results} className={'search-auto-fill'} />}
+				{show_results && <AutoFill results={results}
+										   keyDownEvent={this.keyDownEvent}
+										   cursor={cursor}
+										   className={'search-auto-fill'} />}
 			</SearchApp>
 		);
 	}

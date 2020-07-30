@@ -11,10 +11,14 @@ const common = async () =>
     (await import(/* webpackChunkName: "dist/scripts/routes/common" */'./routes/Common')).default;
 const home = async () =>
     (await import(/* webpackChunkName: "dist/scripts/routes/home" */ './routes/Home')).default;
+const product = async () =>
+    (await import(/* webpackChunkName: "dist/scripts/routes/product" */ './routes/Product')).default;
+
 
 const routes = new Router({
-    common: common(),
-    home: home()
+    common,
+    home,
+    singleProduct: product
 });
 
 Ready(() => routes.loadEvents());

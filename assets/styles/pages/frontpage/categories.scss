@@ -3,10 +3,11 @@
   display: flex;
   overflow: scroll;
   scroll-snap-type: x proximity;
+  flex-direction: column;
 
   .category-item {
-    @apply p-2 mr-2;
-    flex: 1 0 200px;
+    @apply p-2 mb-2;
+    flex: 1 0 auto;
     border: 1px solid $secondary;
     color: $primary;
     scroll-snap-align: start;
@@ -15,12 +16,23 @@
     align-items: center;
 
     &:last-of-type {
-      @apply mr-0;
+      @apply mb-0;
+
+      @screen lg {
+        @apply mr-0;
+      }
+    }
+
+    @screen lg {
+      @apply mr-2 mb-0;
+      flex-basis: 200px;
     }
   }
 
   @screen lg {
     @apply px-0;
+    overflow: auto;
+    flex-direction: row;
   }
 }
 

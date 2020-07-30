@@ -22,5 +22,12 @@ export const events = {
 	},
 	PRODUCT: {
 		ADDED_TO_CART: 'product-added-to-cart',
+		NOT_ADDED_TO_CART: 'product-not-added-to-cart'
+	},
+	FAVORITES: {
+		UPDATED_SINGLE: 'favorites-updated-single',
+		ADDED_SINGLE: 'favorites-added-single',
+		REMOVED_SINGLE: 'favorites-removed-single',
+		LOADED: 'favorites-user-loaded',
 	}
 }

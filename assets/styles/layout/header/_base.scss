@@ -1,12 +1,12 @@
 $header-background: $primary !default;
-$header-color: $black !default;
+$header-color: $white !default;
 $header-padding: $padding_small !default;
 $header-shadow: true !default;
 $header-sticky: true !default;
 $topnav-spacing: $padding_small !default;
 
 header.header {
-  background: $grey;
+  background: $secondary;
   color: $header-color;
   padding: $header-padding;
 
@@ -23,7 +23,10 @@ header.header {
   }
 
   .custom_logo {
-    max-height: 40px;
+    max-height: 21px;
+    @screen lg {
+      max-height: 40px;
+    }
   }
 
   & .header-usps {

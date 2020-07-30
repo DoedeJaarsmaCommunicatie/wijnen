@@ -5,63 +5,69 @@ import { removeAllNotificationsOnBodyClick } from '../lib/WooCommerce/notificati
 import { renderAddToCartButtons } from '../services/add-to-cart'
 import { renderMiniCartEventListener } from '../lib/cart/mini-cart-opener'
 import { renderShoppingCartButton } from '../services/cart/CartButton'
+import { HeaderTopBarSlider } from '../lib/Sliders';
+import { renderFavoritesButton } from '../services/favorites'
 
 export default {
-  init() {
-    navOpener();
-    removeAllNotificationsOnBodyClick();
-    renderMiniCartEventListener();
-    renderAddToCartButtons();
-  },
+    init() {
+        navOpener();
+        removeAllNotificationsOnBodyClick();
+        renderMiniCartEventListener();
+        renderAddToCartButtons();
 
-  finalize() {
-    filterOpener();
-    openShortList();
-    openMobileSubmenu();
-    renderSearchForm();
-    renderShoppingCartButton();
-  },
+        window['renderAddToCartButtons'] = renderAddToCartButtons;
+    },
+
+    finalize() {
+        filterOpener();
+        openShortList();
+        openMobileSubmenu();
+        renderSearchForm();
+        renderShoppingCartButton();
+        HeaderTopBarSlider();
+        renderFavoritesButton();
+    },
 };
 
 const openShortList = () => {
-  const lists = document.querySelectorAll('.shortened-list');
-  if (!lists || lists.length === 0) {
-    return;
-  }
+    const lists = document.querySelectorAll('.shortened-list');
+    if (!lists || lists.length === 0) {
+        return;
+    }
 
-  for ( let i = 0; i < lists.length; i++ ) {
-    lists[i].addEventListener('click', () => lists[i].classList.toggle('active'));
-  }
+    for ( let i = 0; i < lists.length; i++ ) {
+        lists[i].addEventListener('click', () => lists[i].classList.toggle('active'));
+    }
 };
 
 
 
 const openMobileSubmenu = () => {
-  if (window.innerWidth > 767) {
-    return;
-  }
-
-  const openers = document.querySelectorAll('.menu-w-submenu');
-  if (!openers) {
-    return;
-  }
-
-  for ( let i = 0; i < openers.length; i++ ) {
-    const button = openers[i];
-
-    button.addEventListener('click', (ev) => {
-      if (button.parentElement.classList.contains('clicked')) {
+    if (window.innerWidth > 767) {
         return;
-      }
-      ev.preventDefault();
-      button.parentElement.classList.add('clicked');
+    }
 
-      const target = ev.target;
-      const submenu = target.closest('.menu-item-submenu')?.querySelector('.submenu');
+    const openers = document.querySelectorAll('.menu-w-submenu');
+    if (!openers) {
+        return;
+    }
 
-      if (submenu) {
-        submenu.classList.toggle('active');
-      }
-    });
-  }
+    for ( let i = 0; i < openers.length; i++ ) {
+        const button = openers[i];
+
+        button.addEventListener('click', (ev) => {
+            if (button.parentElement.classList.contains('clicked')) {
+                return;
+            }
+            ev.preventDefault();
+            button.parentElement.classList.add('clicked');
+
+            const target = ev.target;
+            const submenu = target.closest('.menu-item-submenu')?.querySelector('.submenu');
+
+            if (submenu) {
+                submenu.classList.toggle('active');
+            }
+        });
+    }
 };
