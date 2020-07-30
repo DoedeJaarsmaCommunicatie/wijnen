@@ -5,7 +5,7 @@
 {% from 'macro/products/price.macro.twig' import tease_price %}
 
 <article class="product-card-large">
-    {% if special %}<span class="product-label">{{ special }}</span>{% endif %}
+    {% if is_wine_of_the_month(product.get_id) %}<span class="product-label">Wijn van de maand</span>{% endif %}
 
     <a href="{{ _permalink }}" class="product-large-image-wrapper" title="Bekijk {{ _name }}">
         {{ tease_thumbnail(product) }}
