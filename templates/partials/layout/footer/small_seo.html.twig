@@ -2,7 +2,7 @@
 <div role="group" class="lg:flex seo_small px-4 lg:px-0 mb-4">
     <section class="lg:w-1/4 shortened-list">
         <button class="footer-list-button">
-            {{ footer_heading(theme.theme_mod('shop_list_title', 'Onze winkels')) }}
+            {{ footer_heading(theme.theme_mod('shop_list_title', 'Onze wijnlanden')) }}
             <i class="fas fa-chevron-down"></i>
         </button>
         <section class="footer-list">
@@ -15,7 +15,9 @@
             <i class="fas fa-chevron-down"></i>
         </button>
         <section class="footer-list">
-            {{ theme_option('footer_domains_list') }}
+            {% for post in get_cpt_list('producent') %}
+                <a href="{{ post.link }}">{{ post.title }}</a>
+            {% endfor %}
         </section>
     </section>
     <section class="lg:w-1/4 shortened-list">
@@ -24,7 +26,9 @@
             <i class="fas fa-chevron-down"></i>
         </button>
         <section class="footer-list">
-            {{ theme_option('footer_grapes_list') }}
+            {% for post in get_cpt_list('druif') %}
+                <a href="{{ post.link }}">{{ post.title }}</a>
+            {% endfor %}
         </section>
     </section>
     <section class="lg:w-1/4 shortened-list">
@@ -33,7 +37,9 @@
             <i class="fas fa-chevron-down"></i>
         </button>
         <section class="footer-list">
-            {{ theme_option('footer_regions_list') }}
+            {% for post in get_cpt_list('streek') %}
+                <a href="{{ post.link }}">{{ post.title }}</a>
+            {% endfor %}
         </section>
     </section>
 </div>
