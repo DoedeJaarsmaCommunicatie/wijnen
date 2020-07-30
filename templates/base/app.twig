@@ -56,6 +56,12 @@
         <section role="complementary" class="content px-4 lg:px-0">
             <div id="mc_embed_signup" class="mc-form-wrapper lg:flex">
                 <form action="https://wijnen.us18.list-manage.com/subscribe/post?u=5de3f953492219c7ce8b00fa1&amp;id=3a4b0f38a8" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate mc-form lg:w-1/2" target="_blank" novalidate>
+                    <h3>
+                        Schrijf je in voor onze nieuwsbrief
+                    </h3>
+                    <p>
+                        Wij houden je op de hoogte van aanbiedingen en nieuwe wijnen.
+                    </p>
                     <div id="mc_embed_signup_scroll">
                         <div class="form-group">
                             <label for="mce-FNAME" class="mc-label">Voornaam</label>
@@ -66,7 +72,7 @@
                             <input type="text" value="" name="LNAME" class="mc-input mc-control" id="mce-LNAME">
                         </div>
                         <div class="form-group">
-                            <label for="mce-EMAIL" class="mc-label">Email Adres</label>
+                            <label for="mce-EMAIL" class="mc-label">E-mailadres</label>
                             <input type="email" value="" name="EMAIL" class="required email mc-input mc-control" id="mce-EMAIL">
                         </div>
                         <div id="mce-responses" class="clear">
@@ -77,9 +83,9 @@
                         <div class="clear"><input type="submit" value="Aanmelden" name="subscribe" id="mc-embedded-subscribe" class="button btn round animated shaded primary large"></div>
                     </div>
                 </form>
-                <aside class="lg:w-1/2 lg:ml-8">
-                    {% if theme.theme_mod('mailchimp_form_image') %}
-                        {% set _mcIMG = Image(theme.theme_mod('mailchimp_form_image')) %}
+                <aside class="lg:w-1/2 lg:ml-8 hidden lg:block">
+                    {% if theme_option('mailchimp_form_image') %}
+                        {% set _mcIMG = Image(theme_option('mailchimp_form_image')) %}
                     {% else %}
                         {% set _mcIMG = Image('https://picsum.photos/500/500') %}
                     {% endif %}
