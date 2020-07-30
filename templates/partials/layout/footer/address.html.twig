@@ -3,9 +3,9 @@
 <address class="lg:w-1/4 addressInfo">
     {{ footer_heading_small('Contact') }}
     {% do action('wijnen/footer/address/pre') %}
-    <p>{{ get_theme_option('store_name') }}</p>
-    <p>{{ get_theme_option('store_address') }}</p>
-    <p><a href="tel:{{ get_theme_option('store_phone') }}">{{ get_theme_option('store_phone') }}</a></p>
-    <p><a href="mailto:{{ get_theme_option('store_email') }}">{{ get_theme_option('store_email') }}</a></p>
+    <p>{{ theme_option('store_name') }}</p>
+    <p>{{ theme_option('store_address') }}</p>
+    <p><a href="tel:{{ theme_option('store_phone') }}">{{ theme_option('store_phone') }}</a></p>
+    <p><a href="mailto:{{ theme_option('store_email') }}">{{ theme_option('store_email') }}</a></p>
     {% do action('wijnen/footer/address/post') %}
 </address>
