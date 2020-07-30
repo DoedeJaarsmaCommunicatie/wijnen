@@ -10,11 +10,11 @@
         {{ include('base/lib/logo.part.twig') }}
 
         <aside class="header-usps">
-            <span>
-                <i class="fas fa-truck"></i> Gratis verzending vanaf €50 in NL en €100 in BE.
+            <span class="mr-2">
+                <i class="fas fa-truck"></i> Gratis verzending vanaf €60 in NL en €100 in BE
             </span>
             <span>
-                <i class="far fa-clock"></i> Voor 15:00 besteld, vandaag verzonden.
+                <i class="far fa-clock"></i> Voor 15:00 besteld, zelfde werkdag verzonden
             </span>
         </aside>
 
@@ -41,6 +41,15 @@
                     </small>
                 </a>
             </noscript>
+
+            <a class="top-nav-item pre-favorites-total relative" href="{{ get_custom_page_url('favorites') }}">
+                <noscript>
+                    <i class="fas fa-heart"></i>
+                    <small class="block lg:inline">
+                        Favorieten
+                    </small>
+                </noscript>
+            </a>
         </nav>
     </div>
 </header>
