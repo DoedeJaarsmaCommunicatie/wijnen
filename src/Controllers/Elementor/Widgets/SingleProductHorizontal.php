@@ -17,4 +17,12 @@ class SingleProductHorizontal extends SingleProductVertical
     {
         return 'Horizontale producten';
     }
+
+    protected function getWrapperClass()
+    {
+        return implode(' ', [
+            'horizontal-products',
+            'products-large',
+        ]);
+    }
 }
