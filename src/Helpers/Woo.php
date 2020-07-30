@@ -9,26 +9,26 @@ use App\Models\VariableProduct;
 
 class Woo
 {
-	protected static $products_cache_arr = [];
-	protected static $products_related_cache_arr = [];
+    protected static $products_cache_arr = [];
+    protected static $products_related_cache_arr = [];
 
-	public static function getStaticCachedRelatedProducts(int $product_id, int $limit = 4)
-	{
-		if (isset(static::$products_related_cache_arr[$product_id]) && count(static::$products_related_cache_arr) === $limit) {
-			return static::$products_related_cache_arr[$product_id];
-		}
+    public static function getStaticCachedRelatedProducts(int $product_id, int $limit = 4)
+    {
+        if (isset(static::$products_related_cache_arr[$product_id]) && count(static::$products_related_cache_arr) === $limit) {
+            return static::$products_related_cache_arr[$product_id];
+        }
 
-		return static::$products_related_cache_arr[$product_id] = wc_get_related_products($product_id, $limit);
-	}
+        return static::$products_related_cache_arr[$product_id] = wc_get_related_products($product_id, $limit);
+    }
 
-	public static function getStaticCachedProduct(int $product_id)
-	{
-		if (isset(static::$products_cache_arr[$product_id])) {
-			return static::$products_cache_arr[$product_id];
-		}
+    public static function getStaticCachedProduct(int $product_id)
+    {
+        if (isset(static::$products_cache_arr[$product_id])) {
+            return static::$products_cache_arr[$product_id];
+        }
 
-		return static::$products_cache_arr[$product_id] = wc_get_product($product_id);
-	}
+        return static::$products_cache_arr[$product_id] = wc_get_product($product_id);
+    }
 
     public static function getPopularProducts($limit = 4)
     {

@@ -2,8 +2,6 @@
 
 namespace App\Helpers;
 
-
 class Counter
 {
-
 }

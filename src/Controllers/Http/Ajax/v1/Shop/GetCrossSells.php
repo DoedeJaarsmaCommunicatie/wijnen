@@ -7,7 +7,6 @@ use App\Controllers\Http\Ajax\AjaxController;
 
 class GetCrossSells extends AjaxController
 {
-
     public function isPrivate(): bool
     {
         return false;
@@ -25,8 +24,8 @@ class GetCrossSells extends AjaxController
 
     public function getCrossSells()
     {
-    	$cart = WC()->cart;
+        $cart = WC()->cart;
 
-    	return $cart->get_cross_sells();
+        return $cart->get_cross_sells();
     }
 }

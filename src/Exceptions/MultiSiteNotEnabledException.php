@@ -3,7 +3,6 @@
 
 namespace App\Exceptions;
 
-
 class MultiSiteNotEnabledException extends \Exception
 {
     public function __construct(\Throwable $previous = null)

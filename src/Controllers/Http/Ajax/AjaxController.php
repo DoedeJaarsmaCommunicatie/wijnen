@@ -6,5 +6,4 @@ use App\Controllers\Http\Controller;
 
 abstract class AjaxController extends Controller implements AjaxInterface
 {
-
 }

@@ -4,5 +4,5 @@ namespace App\Controllers\Meta;
 
 interface Field
 {
-	public function register();
+    public function register();
 }

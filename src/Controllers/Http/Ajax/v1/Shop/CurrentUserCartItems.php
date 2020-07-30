@@ -7,7 +7,6 @@ use App\Controllers\Http\Ajax\AjaxController;
 
 class CurrentUserCartItems extends AjaxController
 {
-
     public function isPrivate(): bool
     {
         return false;

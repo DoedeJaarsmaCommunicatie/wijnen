@@ -6,16 +6,18 @@ use App\Controllers\Http\Controller;
 
 abstract class RestController extends Controller implements RestInterface
 {
-	public function baseUrl (): string {
-		return 'wijnen';
-	}
+    public function baseUrl(): string
+    {
+        return 'wijnen';
+    }
 
-	public function version(): string {
-		return 'v1';
-	}
+    public function version(): string
+    {
+        return 'v1';
+    }
 
-	public function getBaseNamespace(): string
-	{
-		return $this->baseUrl() . '/' . $this->version();
-	}
+    public function getBaseNamespace(): string
+    {
+        return $this->baseUrl() . '/' . $this->version();
+    }
 }

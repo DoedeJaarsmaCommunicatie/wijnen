@@ -3,8 +3,6 @@
 namespace App\Controllers\Customizer\Footer;
 
 use App\Controllers\Customizer\Customize;
-use App\Providers\CustomizerServiceProvider;
-use App\Controllers\Customizer\CustomizerTypeManager;
 
 class FooterCustomizer extends Customize
 {
@@ -20,5 +18,7 @@ class FooterCustomizer extends Customize
         return 160;
     }
 
-    public function register(): void {}
+    public function register(): void
+    {
+    }
 }

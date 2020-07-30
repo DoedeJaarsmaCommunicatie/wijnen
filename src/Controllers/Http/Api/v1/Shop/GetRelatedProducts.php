@@ -6,7 +6,6 @@ use App\Controllers\Http\Api\RestController;
 
 class GetRelatedProducts extends RestController
 {
-
     public function endpoint(): string
     {
         return 'shop/related/(?P<product_id>\d+)';
