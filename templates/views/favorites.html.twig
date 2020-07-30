@@ -1,0 +1,26 @@
+{% extends "base/app.twig" %}
+
+{% block content %}
+    <main class="container mx-auto px-4 lg:px-0">
+        <header class="basement-background content py-2">
+            <h1>
+                Jouw Wijnkelder
+            </h1>
+        </header>
+
+        <div class="favorites">
+            {% for post in favorites %}
+                <div class="products-large">
+                    {{ include('partials/tease/product-large.html.twig', { product: post }) }}
+                </div>
+            {% else %}
+                <div class="content">
+                    <h2>De kelder is leeg...</h2>
+                    <p>
+                        Voeg een wijn toe aan je favorieten om deze hier te bewaren.
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+{% endblock %}
