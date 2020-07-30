@@ -12,18 +12,27 @@
         .webp .frontpage-hero {
             background-image: url("{{ _img.src|towebp }}");
         }
+
+
+        .frontpage-hero {
+            height: 40vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-content: center;
+        }
+        .frontpage-hero--large-title,
+        .frontpage-hero--large-subtitle {
+            font-weight: normal;
+        }
+
     </style>
     <section class="frontpage-hero">
-        <div class="container mx-auto">
+        <div class="container mx-auto content text-white">
             <h2 class="frontpage-hero--large-title">Helaas! Helemaal op...</h2>
             <h3 class="frontpage-hero--large-subtitle">
                 Deze pagina bestaat niet. Ga naar de
-                <a href="/">homepage</a> of gebruik het onderstaande
-                filter om te zoeken naar een andere wijn!</h3>
-
-            <section class="lg:w-1/3">
-                <div id="filter-app"></div>
-            </section>
+                <a href="/">homepage</a> of bekijk alles in de <a href="{{ get_store_url() }}">winkel</a></h3>
         </div>
     </section>
 {% endblock %}
