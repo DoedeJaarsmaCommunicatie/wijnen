@@ -3,24 +3,24 @@
 {% block content %}
     <div class="container mx-auto px-4 lg:px-0 py-4 content">
         {% do action('wijnen/archive/product/title/pre') %}
-        <h1>{{ title|apply_filters('wijnen/archive/product/title') }}</h1>
+        <h1 class="mb-0">{{ title|apply_filters('wijnen/archive/product/title') }}</h1>
         {% do action('wijnen/archive/product/title/post') %}
     </div>
 
     <div class="container mx-auto">
         {% do action('wijnen/archive/product/content/pre') %}
-        <section class="lg:ml-auto lg:w-3/4 clearfix mt-4 px-4 lg:px-0">
+        <section class="lg:ml-auto lg:w-3/4 clearfix mt-4 px-4 lg:px-0 filter-grid">
             {% do action('woocommerce_before_shop_loop') %}
-            <button class="js-filter-opener filter-opener mx-auto">
+            <button class="js-filter-opener filter-opener w-full">
                 Filter <i class="ml-2 fas fa-filter"></i>
             </button>
         </section>
         <div class="lg:ml-auto lg:w-3/4 clearfix px-4 lg:px-0">
-            {{ theme.theme_mod('store_breadcrumbs_filter')|shortcodes }}
+            {{ theme_option('shortcode_product-archive_breadcrumbs')|shortcodes }}
         </div>
         <div class="lg:flex">
             <div class="lg:w-1/4 lg:pr-4 js-filter-container filter-container">
-                {{ theme.theme_mod('store_filter')|shortcodes }}
+                {{ theme_option('shortcode_product-archive_filter')|shortcodes }}
             </div>
             <div class="lg:w-3/4">
                 <div class="products-large-store px-4 lg:px-0">
