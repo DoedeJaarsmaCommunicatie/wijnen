@@ -11,11 +11,13 @@ class WooCommerceGeneral
     /**
      * Gets the current shop page
      *
+     * @param array|string $postfix
+     *
      * @return string
      */
-    public static function getShopUrl(): string
+    public static function getShopUrl($postfix = []): string
     {
-        return static::getUrl('shop');
+        return static::getUrl('shop') . implode('/', (array) $postfix);
     }
 
     public static function getCartUrl(): string
@@ -25,12 +27,12 @@ class WooCommerceGeneral
 
     public static function getAccountUrl(): string
     {
-    	return static::getUrl('myaccount');
+        return static::getUrl('myaccount');
     }
 
     public static function getCheckoutUrl(): string
     {
-    	return static::getUrl('checkout');
+        return static::getUrl('checkout');
     }
 
     public static function getUrl(string $page): string
