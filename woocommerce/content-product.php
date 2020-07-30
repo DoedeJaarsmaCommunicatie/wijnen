@@ -20,7 +20,7 @@ $context['post'] = new Product(get_queried_object_id());
 $context['product'] = Woo::getStaticCachedProduct($context['post']->id);
 
 $templates = [
-	Template::partialHtmlTwigFile('tease/product-large'),
+    Template::partialHtmlTwigFile('tease/product-large'),
 ];
 
 //return Timber::render(

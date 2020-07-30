@@ -8,6 +8,7 @@
  * @file-version 1.0.0
  * @author Mitch Hijlkema
  */
+
 use Timber\Timber;
 use App\Helpers\Template;
 
@@ -21,6 +22,6 @@ $templates = [
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/woo/form-checkout/templates', $templates),
-	apply_filters('wijnen/view-composer/woo/form-checkout/context', $context)
+    apply_filters('wijnen/view-composer/woo/form-checkout/templates', $templates),
+    apply_filters('wijnen/view-composer/woo/form-checkout/context', $context)
 );

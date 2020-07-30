@@ -24,6 +24,6 @@ $templates = [
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/woo/mini-cart/templates', $templates),
-	apply_filters('wijnen/view-composer/woo/mini-cart/context', $context)
+    apply_filters('wijnen/view-composer/woo/mini-cart/templates', $templates),
+    apply_filters('wijnen/view-composer/woo/mini-cart/context', $context)
 );

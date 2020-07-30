@@ -38,10 +38,10 @@ if (isset($_GET['product-land'])) {
 }
 
 $templates = [
-	Template::viewTwigFile('woocommerce/archive-product'),
+    Template::viewTwigFile('woocommerce/archive-product'),
 ];
 
 Timber::render(
-	apply_filters('wijnen/view-composer/woo/archive-product/templates', $templates),
-	apply_filters('wijnen/view-composer/woo/archive-product/context', $context)
+    apply_filters('wijnen/view-composer/woo/archive-product/templates', $templates),
+    apply_filters('wijnen/view-composer/woo/archive-product/context', $context)
 );

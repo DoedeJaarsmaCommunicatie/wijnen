@@ -17,22 +17,22 @@
 
 use Timber\Timber;
 
-defined( 'ABSPATH' ) || exit;
+defined('ABSPATH') || exit;
 
 global $product;
 
-$attribute_keys  = array_keys( $attributes );
-$variations_json = wp_json_encode( $available_variations );
-$variations_attr = function_exists( 'wc_esc_json' ) ? wc_esc_json( $variations_json ) : _wp_specialchars( $variations_json, ENT_QUOTES, 'UTF-8', true );
+$attribute_keys  = array_keys($attributes);
+$variations_json = wp_json_encode($available_variations);
+$variations_attr = function_exists('wc_esc_json') ? wc_esc_json($variations_json) : _wp_specialchars($variations_json, ENT_QUOTES, 'UTF-8', true);
 
 $context = Timber::get_context();
 $context['attributes'] = $attributes;
 $context['product'] = $product;
 $context['available_variations'] = $available_variations;
 $context['variations_attr'] = $variations_attr;
-$context['add_to_cart_url'] = esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) );
+$context['add_to_cart_url'] = esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink()));
 
-do_action( 'woocommerce_before_add_to_cart_form' );
+do_action('woocommerce_before_add_to_cart_form');
 
 return Timber::render(
     'partials/woocommerce/product/add-to-cart/variable.html.twig',
