@@ -19,7 +19,7 @@ class ElementorServiceProvider extends ServiceProvider
     {
         Plugin::instance()->widgets_manager->register_widget_type(new SingleProductVertical());
         Plugin::instance()->widgets_manager->register_widget_type(new SingleProductHorizontal());
-		Plugin::instance()->widgets_manager->register_widget_type(new KiyohCardWidget());
-		Plugin::instance()->widgets_manager->register_widget_type(new ProductButtonCard());
+        Plugin::instance()->widgets_manager->register_widget_type(new KiyohCardWidget());
+        Plugin::instance()->widgets_manager->register_widget_type(new ProductButtonCard());
     }
 }

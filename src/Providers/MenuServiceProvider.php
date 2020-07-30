@@ -3,6 +3,7 @@ namespace App\Providers;
 
 use Timber\Menu;
 use Illuminate\Support\Str;
+
 use function register_nav_menus;
 
 /**
@@ -28,19 +29,19 @@ class MenuServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-	    $this->menus ['top-menu'] = 'Top menu';
-	    $this->menus ['footer-menu'] = 'Footer menu';
+        $this->menus ['top-menu'] = 'Top menu';
+        $this->menus ['footer-menu'] = 'Footer menu';
     }
 
 
     public function register(): void
     {
-	    register_nav_menus(apply_filters('wijnen/providers/menus', $this->menus));
+        register_nav_menus(apply_filters('wijnen/providers/menus', $this->menus));
 
-	    add_filter('timber/context', [ $this, 'registerContent' ]);
+        add_filter('timber/context', [ $this, 'registerContent' ]);
     }
 
-	/**
+    /**
      * Register nav menu's in twig.
      *
      * @param array $content
