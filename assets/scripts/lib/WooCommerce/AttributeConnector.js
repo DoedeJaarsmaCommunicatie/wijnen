@@ -52,13 +52,13 @@ export class Linker {
 				let res;
 				try {
 					res = await fetch(`/wp-json/wp/v2/${this.slug}?slug=${el.dataset.value}`)
-				} catch { return; }
+				} catch {}
 				const body = await res.json();
 
 				const hasComma = el.innerHTML.endsWith(', ');
 				try {
 					el.innerHTML = `<a href="${body[0].link}">${body[0].title.rendered}</a>${hasComma? ', ' : ''}`;
-				} catch { return; }
+				} catch {}
 			}
 		}
 	}
