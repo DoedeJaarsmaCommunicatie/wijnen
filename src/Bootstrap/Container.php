@@ -33,8 +33,8 @@ class Container implements Bootstrapper
      * @param string $class
      *
      * @return mixed
-     * @throws DependencyException
-     * @throws NotFoundException
+     * @throws DependencyException Error while resolving the entry.
+     * @throws NotFoundException No entry found for the given name.
      */
     public static function get($class)
     {
