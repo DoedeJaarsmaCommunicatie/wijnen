@@ -6,7 +6,6 @@ import { events, fireEvent } from '../../../tools/EventBus';
 import ky from 'ky';
 import { StyledButton } from './Button';
 
-
 export class Form extends Component {
 	constructor() {
 		super();
