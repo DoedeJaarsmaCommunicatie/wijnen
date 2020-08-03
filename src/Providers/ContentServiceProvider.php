@@ -27,7 +27,7 @@ class ContentServiceProvider extends ServiceProvider
         $context['secure_payment'] = static::get_cached_payment_icons();
 
         if (
-            function_exists('wc')&&
+            function_exists('wc') &&
             !is_admin() &&
             wc()->cart
         ) {
