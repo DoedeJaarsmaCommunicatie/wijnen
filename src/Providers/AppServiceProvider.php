@@ -23,7 +23,12 @@ class AppServiceProvider extends ServiceProvider
             } catch (\ReflectionException $exception) {
                 Log::warning('Reflection error while registering providers', ['class' => $provider]);
             }
-            Container::get($provider);
+
+            try {
+                Container::get($provider);
+            } catch (\Throwable $exception) {
+                // Do nothing. Class not found so it wont be registered
+            }
         }
 
         do_action('wijnen/app/providers/initialized');

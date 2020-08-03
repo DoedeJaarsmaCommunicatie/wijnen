@@ -52,8 +52,12 @@ class CarbonServiceProvider extends ServiceProvider
     {
         foreach ($this->fields as $field) {
             /** @var Field $field */
-            $field = Container::get($field);
-            add_action('carbon_fields_register_fields', [$field, 'register']);
+            try {
+                $field = Container::get($field);
+                add_action('carbon_fields_register_fields', [$field, 'register']);
+            } catch (\Throwable $exception) {
+                // Do nothing. Class not found and not registered
+            }
         }
 
         foreach ($this->options as $option) {
