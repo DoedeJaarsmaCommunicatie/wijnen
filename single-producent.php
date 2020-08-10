@@ -9,7 +9,7 @@
  */
 
 
-use Timber\Post;
+use App\Models\Post;
 use Timber\Timber;
 use App\Helpers\Template;
 use Elderbraum\CasaProductFactory\Products\Newest;

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'preact';
+import React, { Component, h, Fragment } from 'preact';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { BadgeCounter } from '../../cart/CartButton/lib/BadgeCounter';

@@ -11,6 +11,7 @@ use WC_Product_Attribute;
 class Product extends Post
 {
     protected const VIVINO_PRICE_META = '_vivino_pricing';
+    protected const SUPPlIER_META_KEY = 'casalever_product_supplier';
 
     /**
      * @var WC_Product|null $product
@@ -183,6 +184,25 @@ class Product extends Post
         }
 
         return $this->product;
+    }
+
+    public function get_shipping_days($increment = 0)
+    {
+        if ($this->is_in_stock()) {
+            return 0 + $increment;
+        }
+
+        if (!$this->can_backorder()) {
+            return false;
+        }
+
+        $supplier = $this->setProduct()->get_meta(static::SUPPlIER_META_KEY);
+
+        if (in_array($supplier, ['wijntransport',], true)) {
+            return 5;
+        }
+
+        return 2;
     }
 
     public function __call($field, $args)

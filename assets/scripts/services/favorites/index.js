@@ -1,4 +1,4 @@
-import React, { render } from 'preact';
+import React, { render, h } from 'preact';
 import { FavoritesCounter } from './lib/app';
 
 export function renderFavoritesButton() {

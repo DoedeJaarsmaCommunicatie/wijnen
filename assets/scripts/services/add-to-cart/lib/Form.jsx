@@ -1,4 +1,4 @@
-import React, { Component } from 'preact';
+import React, { Component, h } from 'preact';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faPlus, faSpinner, faWineBottle } from '@fortawesome/free-solid-svg-icons'

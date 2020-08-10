@@ -1,5 +1,3 @@
-/*! MIT License © Sindre Sorhus */
-
 /** @license React v16.13.1
  * react-is.production.min.js
  *

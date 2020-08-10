@@ -1,5 +1,8 @@
-import React, { render } from 'preact';
-import { Form } from './lib/Form.jsx';
+import React, { render, h } from 'preact';
+import { AddToCartForm as Form } from '@elderbraum/wine-components';
+import { ThemeProvider, withTheme } from 'styled-components'
+
+const StyledForm = withTheme(Form)
 
 export function renderAddToCartButtons() {
 	const targets = document.querySelectorAll('.pr-add-to-cart');
@@ -13,13 +16,16 @@ export function renderAddToCartButtons() {
 			secondary,
 			outline
 		} = target.dataset;
-		const icon = qty > 1 ? 'box' : 'wine-bottle'
 
-		render(<Form product={product}
-					 icon={icon}
-					 label={label}
-					 secondary={secondary}
-					 outline={outline}
-					 amount={qty} />, target);
+		render(<ThemeProvider theme={{
+			outlined: !!outline,
+			background: '#c96464',
+			color: '#fff',
+			borderColor: '#c96464'
+		}}>
+			<StyledForm product={product}
+				  label={label}
+				  amount={qty} />
+		</ThemeProvider>, target);
 	}
 }

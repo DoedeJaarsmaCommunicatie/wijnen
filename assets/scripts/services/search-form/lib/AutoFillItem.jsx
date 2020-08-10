@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'preact';
+import React, { Component, createRef, h } from 'preact';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 

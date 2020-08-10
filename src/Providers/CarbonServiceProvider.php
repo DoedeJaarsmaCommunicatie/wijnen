@@ -7,6 +7,7 @@ use App\Controllers\Meta\Field;
 use Carbon_Fields\Carbon_Fields;
 use App\Controllers\Meta\Pages\FrontPage;
 use App\Controllers\Options\OptionManager;
+use App\Controllers\Meta\Pages\WinePostTypePages;
 use App\Controllers\Options\Pages\SpecialPages;
 use App\Controllers\Options\Pages\FooterSettings;
 use App\Controllers\Options\Pages\ProductOfTheMonth;
@@ -36,7 +37,8 @@ class CarbonServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->fields = apply_filters('wijnen/providers/fields', [
-            FrontPage::class
+            FrontPage::class,
+            WinePostTypePages::class
         ]);
 
         $this->options = apply_filters('wijnen/providers/options', [

@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'preact';
+import React, { Component, h, createRef } from 'preact';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { AutoFill } from './AutoFill';

@@ -1,8 +1,8 @@
 {
-    "/dist/scripts/vendor.js": "/dist/scripts/vendor.js?id=65ab80c9485cd18863e5",
-    "/dist/scripts/main.js": "/dist/scripts/main.js?id=d64ee0bc373bdaa8e679",
+    "/dist/scripts/vendor.js": "/dist/scripts/vendor.js?id=184c81097199e31140e3",
+    "/dist/scripts/main.js": "/dist/scripts/main.js?id=20335a811b5b6c02adee",
     "/dist/scripts/manifest.js": "/dist/scripts/manifest.js",
-    "/dist/scripts/routes/common.js": "/dist/scripts/routes/common.js?id=9af9e60db5c6a7110821",
-    "/dist/scripts/routes/home.js": "/dist/scripts/routes/home.js?id=1a6588a43aa7e8bc76ee",
-    "/dist/scripts/routes/product.js": "/dist/scripts/routes/product.js?id=406665558cfe6de1e61f"
+    "/dist/scripts/routes/common.js": "/dist/scripts/routes/common.js?id=182bccc588b8b86cf849",
+    "/dist/scripts/routes/home.js": "/dist/scripts/routes/home.js?id=ec8d6a9f6e5e422b92fe",
+    "/dist/scripts/routes/product.js": "/dist/scripts/routes/product.js?id=1140ae5c69c9c2ab048e"
 }

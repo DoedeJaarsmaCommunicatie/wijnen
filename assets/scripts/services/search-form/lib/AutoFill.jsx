@@ -1,4 +1,4 @@
-import React, { Component } from 'preact';
+import React, { Component, h } from 'preact';
 import { AutoFillItem } from './AutoFillItem'
 import PropTypes from 'prop-types';
 import styled from 'styled-components';

@@ -4,7 +4,7 @@
     <main class="container mx-auto px-4 lg:px-0 py-4 content">
         <h1>{{ __('Wijnen uit %s', 'wijnen')|format(post.title) }}</h1>
         {% do action('wijnen/single/region/'~post.slug~'/excerpt/pre') %}
-        {{ post.post_excerpt|wpautop }}
+        {{ post.get_field('intro')|wpautop }}
         {% do action('wijnen/single/region/'~post.slug~'/excerpt/post') %}
 
         <div class="products-large horizontal-products-unbound px-4 lg:px-0 py-4">

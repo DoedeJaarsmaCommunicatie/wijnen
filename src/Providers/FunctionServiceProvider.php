@@ -7,6 +7,7 @@ use Twig\TwigFunction;
 use App\Controllers\Functions\General\View;
 use App\Controllers\Functions\General\Carbon;
 use App\Controllers\Functions\General\Favorites;
+use App\Controllers\Functions\WooCommerce\Product;
 use App\Controllers\Functions\General\BottleImages;
 use App\Controllers\Functions\WooCommerce\WooCommerceGeneral;
 
@@ -30,6 +31,7 @@ class FunctionServiceProvider extends ServiceProvider
             'get_cpt_list' => [View::class, 'get_cached_cpt_list'],
             'get_user_favorites_count' => [Favorites::class, 'get_user_favorites_count'],
             'get_user_favorites' => [Favorites::class, 'get_user_favorites'],
+            'can_ship_today' => [Product::class, 'canShipToday'],
         ]);
 
         add_filter('timber/twig', [$this, 'registerFunctions']);

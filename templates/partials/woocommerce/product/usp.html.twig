@@ -12,7 +12,19 @@
     <tr>
         <th><i class="fas fa-dolly"></i></th>
         <td>
-            {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
+            {% if fn('current_user_can', 'administrator') %}
+                {% if product.is_in_stock and not product.is_on_backorder %}
+                <span data-days="{{ can_ship_today() ? product.get_shipping_days() : product.get_shipping_days(1) }}" class="pre-shipping-date-calc">
+                    <noscript>
+                        {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
+                    </noscript>
+                </span>
+                {% else %}
+                    {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
+                {% endif %}
+            {% else %}
+                {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
+            {% endif %}
         </td>
     </tr>
 

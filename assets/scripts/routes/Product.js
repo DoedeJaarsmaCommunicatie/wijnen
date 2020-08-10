@@ -1,5 +1,6 @@
 import { ProductUspSlider } from '../lib/Sliders'
 import { Linker } from '../lib/WooCommerce';
+import { renderShippingDate } from '../services/shipping-calculator'
 
 export default {
 	init() {
@@ -11,6 +12,7 @@ export default {
 
 	finalize() {
 		ProductUspSlider();
+		renderShippingDate();
 	}
 }
 
