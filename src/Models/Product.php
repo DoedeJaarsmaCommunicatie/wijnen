@@ -5,6 +5,7 @@ namespace App\Models;
 use WC_Product;
 use Timber\Post;
 use Timber\Term;
+use Carbon\Carbon;
 use Timber\PostQuery;
 use WC_Product_Attribute;
 
@@ -12,6 +13,9 @@ class Product extends Post
 {
     protected const VIVINO_PRICE_META = '_vivino_pricing';
     protected const SUPPlIER_META_KEY = 'casalever_product_supplier';
+
+
+    private static $dateTimeZone = 'Europe/Amsterdam';
 
     /**
      * @var WC_Product|null $product
@@ -29,6 +33,7 @@ class Product extends Post
     protected static $product_cache = [];
 
     protected static $gallery_id_cache = [];
+    protected static $supplier_cache = [];
 
     public function get_price()
     {
@@ -133,9 +138,9 @@ class Product extends Post
             return static::$stock_cache[$this->id]['in_stock'];
         }
 
-        $this->setProduct();
+        $status = $this->setProduct()->get_stock_status('edit');
 
-        return static::$stock_cache[$this->id]['in_stock'] = $this->product->is_in_stock();
+        return static::$stock_cache[$this->id]['in_stock'] = !in_array($status, ['outofstock', 'dropshipped']);
     }
 
     public function can_backorder()
@@ -147,6 +152,17 @@ class Product extends Post
         $this->setProduct();
 
         return static::$stock_cache[$this->id]['on_backorder'] = $this->product->backorders_allowed();
+    }
+
+    public function is_dropshipped()
+    {
+        if (isset(static::$stock_cache[$this->id]['is_dropshipped'])) {
+            return static::$stock_cache[$this->id]['is_dropshipped'];
+        }
+
+        $this->setProduct();
+
+        return static::$stock_cache[$this->id]['is_dropshipped'] = $this->product->get_stock_status('edit') === 'dropshipped';
     }
 
     public function related_products()
@@ -192,17 +208,52 @@ class Product extends Post
             return 0 + $increment;
         }
 
+        if ($this->is_dropshipped()) {
+            $supplier = $this->get_supplier();
+
+
+            if ($supplier !== 'wijntransport') {
+                return 2;
+            }
+
+            $thisWednesday = Carbon::now(static::$dateTimeZone)
+                                   ->startOfWeek(Carbon::WEDNESDAY)
+                                   ->setTime(9, 0, 0);
+
+            if ($thisWednesday->isPast()) {
+                return Carbon::now(static::$dateTimeZone)
+                             ->diffInDays(
+                                 Carbon::now()
+                                       ->endOfWeek(Carbon::FRIDAY)->addWeek()
+                             ) - 2;
+            }
+
+            return Carbon::now(static::$dateTimeZone)->diffInDays(Carbon::now()->endOfWeek(Carbon::FRIDAY));
+        }
+
         if (!$this->can_backorder()) {
             return false;
         }
 
-        $supplier = $this->setProduct()->get_meta(static::SUPPlIER_META_KEY);
+        $supplier = $this->get_supplier();
 
-        if (in_array($supplier, ['wijntransport',], true)) {
+        if ($supplier === 'wijntransport') {
             return 5;
         }
 
         return 2;
+    }
+
+    public function get_supplier()
+    {
+        if (isset(static::$supplier_cache[$this->id])) {
+            return static::$supplier_cache[$this->id];
+        }
+
+        return static::$supplier_cache[$this->id] =
+            strtolower(
+                $this->setProduct()->get_meta(static::SUPPlIER_META_KEY)
+            );
     }
 
     public function __call($field, $args)

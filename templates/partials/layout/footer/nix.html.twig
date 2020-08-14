@@ -2,5 +2,5 @@
 
 {% do action('wijnen/footer/nix/pre') %}
 <strong>{{ '&lt; 18 geen alcohol'|apply_filters('wijnen/footer/nix/title') }}</strong>
-<img src="{{ img.src|resize(150, 43) }}" alt="NIX18" class="nix-18-logo">
+<img src="{{ img.src|resize(150, 43) }}" alt="NIX18" class="nix-18-logo" loading="lazy" />
 {% do action('wijnen/footer/nix/post') %}

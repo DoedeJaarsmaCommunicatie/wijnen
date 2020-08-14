@@ -9,3 +9,4 @@ add_theme_support('woocommerce');
 Timber::$locations = [
     get_stylesheet_directory() . '/templates/',
 ];
+

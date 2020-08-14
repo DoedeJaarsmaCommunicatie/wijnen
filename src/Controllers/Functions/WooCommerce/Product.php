@@ -24,6 +24,13 @@ class Product
             $product = \get_queried_object_id();
         }
 
+        /** @noinspection CallableParameterUseCaseInTypeContextInspection */
+        $product = new \App\Models\Product($product);
+
+        if ($product->is_dropshipped()) {
+            return false;
+        }
+
         return !Carbon::now(static::$dateTimeZone)
                       ->setTimeFromTimeString(static::orderBeforeTime())
                       ->isPast();

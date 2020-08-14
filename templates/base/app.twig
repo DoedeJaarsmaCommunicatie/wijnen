@@ -90,7 +90,7 @@
                         {% set _mcIMG = Image('https://picsum.photos/500/500') %}
                     {% endif %}
                     <figure>
-                        <img src="{{ _mcIMG.src('large') }}" alt="{{ _mcIMG.alt ?? 'Meld je aan voor de nieuwe nieuwsbrief!' }}">
+                        <img src="{{ _mcIMG.src('large') }}" alt="{{ _mcIMG.alt ?? 'Meld je aan voor de nieuwe nieuwsbrief!' }}" loading="lazy" />
                     </figure>
                 </aside>
             </div>

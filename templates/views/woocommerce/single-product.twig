@@ -30,19 +30,25 @@
             {% if post %}
                 <div class="product-usp-stock stock-{{ post.get_stock_status }}">
                     {% if post.is_in_stock and not post.is_on_backorder %}
-                        <span><i class="fas fa-check hidden lg:inline"></i></span>
+                        <span><i class="fas fa-check hidden lg:inline">
+                            </i></span>
                         {% if not product.get_stock_quantity %}
-                            <span><i class="fas fa-check lg:hidden"></i> Op voorraad</span>
+                            <span><i class="fas fa-check lg:hidden">
+                                </i> Op voorraad</span>
                         {% elseif product.get_stock_quantity > 18 %}
-                            <span><i class="fas fa-check lg:hidden"></i> Op voorraad</span>
+                            <span><i class="fas fa-check lg:hidden">
+                                </i> Op voorraad</span>
                         {% else %}
-                            <span><i class="fas fa-check lg:hidden"></i> Nog {{ post.get_stock_quantity }} op voorraad.</span>
+                            <span><i class="fas fa-check lg:hidden">
+                                </i> Nog {{ post.get_stock_quantity }} op voorraad.</span>
                         {% endif %}
-                    {% elseif post.is_on_backorder %}
-                        <span class="mr-2"><i class="fas fa-exclamation-triangle"></i></span>
+                    {% elseif post.is_on_backorder or post.is_dropshipped %}
+                        <span class="mr-2"><i class="fas fa-exclamation-triangle">
+                            </i></span>
                         <span>Nabestelling. Langere levertijd</span>
                     {% else %}
-                        <span class="mr-2"><i class="fas fa-exclamation-triangle"></i></span>
+                        <span class="mr-2"><i class="fas fa-exclamation-triangle">
+                            </i></span>
                         <span>Niet op voorraad</span>
                     {% endif %}
                 {% endif %}
