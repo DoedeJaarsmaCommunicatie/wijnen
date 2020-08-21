@@ -55,12 +55,11 @@ class AssetsServiceProvider extends ServiceProvider
 
     public function register()
     {
-        WP::enqueue();
-
         add_action('wp_enqueue_scripts', [$this, 'dequeueAssets'], PHP_INT_MAX);
         add_action('elementor/frontend/after_register_scripts', [$this, 'deregister_elementor_scripts'], PHP_INT_MAX);
         add_action('elementor/frontend/after_enqueue_styles', [$this, 'deregister_elementor_styles'], PHP_INT_MAX);
         add_action('wp_footer', [$this, 'handleFooterAssets'], PHP_INT_MAX);
+        WP::enqueue();
     }
 
     public function dequeueAssets(): void
@@ -111,29 +110,23 @@ class AssetsServiceProvider extends ServiceProvider
             WP::removeScript('wcpf-plugin-polyfills-script');
             WP::removeScript('wcpf-plugin-vendor-script');
         }
-        // Remove jQuery.
-        //      WP::removeScript('jquery');
-        //      WP::addScript('jquery', get_stylesheet_directory_uri() . '/dist/jquery.min.js', [], false, false);
 
         if (!is_admin_bar_showing()) {
             WP::removeStyle('dashicons');
         }
-//        WP::removeScript('jquery');
     }
 
     public function handleFooterAssets()
     {
         if (is_product()) {
-            WP::addScript(
+            wp_deregister_script('elementor-pro-frontend');
+            wp_enqueue_script(
                 'updated-jquery',
                 'https://code.jquery.com/jquery-3.5.1.min.js',
                 [],
                 '3.5.1',
-                false
+                true
             );
-
-            wp_deregister_script('elementor-pro-frontend');
-
         }
     }
 

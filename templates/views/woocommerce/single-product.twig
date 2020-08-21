@@ -54,7 +54,7 @@
                 {% endif %}
             </div>
             <div class="my-4">
-                {{ add_to_cart(post.get_id,[], 'quantity', 'small') }}
+                {{ add_to_cart(post.get_id,[], 'quantity', 'large') }}
             </div>
             {{ include('partials/woocommerce/product/usp.html.twig', { product: post }) }}
         </aside>

@@ -10,6 +10,6 @@ export function renderShippingDate() {
 
 	target.forEach(el => {
 		const { days } = el.dataset;
-		render(<ShippingDateCalculator shippingDays={days?? 0} />, el);
+		render(<ShippingDateCalculator shippingDays={days? Number(days) : 0} />, el);
 	})
 }

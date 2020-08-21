@@ -7,5 +7,5 @@ export function renderShoppingCartButton() {
 	if (!target) {return;}
 	const { initialCount } = target.dataset;
 
-	render(<CartButton initialCount={initialCount} />, target);
+	render(<CartButton initialCount={Number(initialCount)} />, target);
 }

@@ -2,6 +2,7 @@ import React, { Component, h, Fragment } from 'preact';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { BadgeCounter } from '../../cart/CartButton/lib/BadgeCounter';
+import { otherwiseLoadJQuery } from '../../../tools/LoadJQuery'
 
 export class FavoritesCounter extends Component {
 	constructor(props) {
@@ -13,7 +14,12 @@ export class FavoritesCounter extends Component {
 		}
 
 		this.loadNewCount = this.loadNewCount.bind(this);
-		jQuery(document).on('favorites-updated-single', () => this.loadNewCount());
+		try {
+			jQuery(document).on('favorites-updated-single', () => this.loadNewCount());
+		} catch {
+			otherwiseLoadJQuery();
+			jQuery(document).on('favorites-updated-single', () => this.loadNewCount());
+		}
 	}
 
 	componentDidMount() {

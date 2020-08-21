@@ -1,40 +1,45 @@
 {% macro add_to_cart(ID, classes, qty_id = 'quantity', size = 'large', max = false) %}
 
 {% if size is same as('large') %}
-    <form method="GET" class="{{ classes }}" data-action="add-to-cart" data-product="{{ ID }}" data-size="{{ size }}" enctype="multipart/form-data">
-        <button type="button" class="js-less-qty left quantity_button" data-target="#{{ qty_id }}">-</button>
-        <input
-            type="number"
-            name="quantity"
-            value="1"
-            min="1"
-            id="{{ qty_id }}"
-            {% if max %}max="{{ max }}"{% endif %}
+    <section class="flex w-full justify-between pr-add-to-cart-wrapper">
+        <span class="pr-add-to-cart-large"
+              data-product="{{ ID }}"
+              data-label="Fles"
+              data-outline="1"
+              data-qty="1">
+        </span>
+    </section>
+
+    <noscript>
+        <form method="GET" class="{{ classes }}" data-action="add-to-cart" data-product="{{ ID }}" data-size="{{ size }}" enctype="multipart/form-data">
+            <input
+                    type="hidden"
+                    name="quantity"
+                    value="1"
+                    min="1"
+                    id="{{ qty_id }}"
+                    {% if max %}max="{{ max }}"{% endif %}
             >
-        <button type="button" class="quantity_button right js-add-qty" data-target="#{{ qty_id }}">+</button>
+            <input type="hidden" name="product" id="product" value="{{ ID }}">
 
-        <input type="hidden" name="product" id="product" value={{ ID }}>
+            <section class="flex">
+                <button type="submit" class="btn primary rounded large">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </section>
 
-        <button type="submit" class="btn secondary rounded large lg:mt-4 w-full justify-center">
-            <i class="fas fa-shopping-cart mr-2"></i> <span>{{ __('in wijnmandje', 'wijnen')}}</span>
-        </button>
-
-{#        {{ fn('get_favorites_button', ID) }}#}
-    </form>
+            <input type="hidden" name="product" id="product" value={{ ID }}>
+        </form>
+    </noscript>
 {% endif %}
 
 {% if size is same as('small') %}
     <section class="flex w-full justify-between pr-add-to-cart-wrapper">
         <span class="pr-add-to-cart"
               data-product="{{ ID }}"
-              data-label="Fles"
+              data-label=""
               data-outline="1"
               data-qty="1">
-        </span>
-        <span class="pr-add-to-cart"
-              data-product="{{ ID }}"
-              data-label="Doos"
-              data-qty="6">
         </span>
     </section>
 
@@ -66,15 +71,10 @@
 {% macro mini_add_to_cart(product) %}
     <section class="flex w-full justify-between">
         <span class="pr-add-to-cart"
-              data-product="{{ product.get_id }}"
-              data-label="Fles"
+              data-product="{{ ID }}"
+              data-label=""
               data-outline="1"
               data-qty="1">
-        </span>
-        <span class="pr-add-to-cart"
-              data-product="{{ product.get_id }}"
-              data-label="Doos"
-              data-qty="6">
         </span>
     </section>
 

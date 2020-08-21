@@ -1,4 +1,4 @@
-import React, { Component } from 'preact';
+import React, { Component, h } from 'preact';
 import styled from 'styled-components';
 
 const Badge = styled.small`
