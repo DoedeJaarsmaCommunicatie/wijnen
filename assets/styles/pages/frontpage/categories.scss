@@ -5,6 +5,10 @@
   scroll-snap-type: x proximity;
   flex-direction: column;
 
+  @screen lg {
+    display: none;
+  }
+
   .category-item {
     @apply p-2 mb-2;
     flex: 1 0 auto;

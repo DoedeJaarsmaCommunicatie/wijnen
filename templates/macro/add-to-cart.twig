@@ -3,6 +3,7 @@
 {% if size is same as('large') %}
     <section class="flex w-full justify-between pr-add-to-cart-wrapper">
         <span class="pr-add-to-cart-large"
+              style="width: 100%;"
               data-product="{{ ID }}"
               data-label="Fles"
               data-outline="1"
@@ -71,7 +72,7 @@
 {% macro mini_add_to_cart(product) %}
     <section class="flex w-full justify-between">
         <span class="pr-add-to-cart"
-              data-product="{{ ID }}"
+              data-product="{{ product.get_id }}"
               data-label=""
               data-outline="1"
               data-qty="1">

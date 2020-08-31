@@ -11,6 +11,7 @@ use App\Providers\UpdateServiceProvider;
 use App\Providers\ContentServiceProvider;
 use App\Providers\FunctionServiceProvider;
 use App\Providers\ElementorServiceProvider;
+use App\Providers\ShortcodeServiceProvider;
 use App\Providers\CustomizerServiceProvider;
 
 return [
@@ -23,6 +24,7 @@ return [
         AjaxServiceProvider::class,
         CustomizerServiceProvider::class,
         RestServiceProvider::class,
+        ShortcodeServiceProvider::class,
         ElementorServiceProvider::class,
         CarbonServiceProvider::class,
         UpdateServiceProvider::class,

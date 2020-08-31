@@ -78,6 +78,13 @@ class AssetsServiceProvider extends ServiceProvider
             wp_dequeue_style('elementor-global');
             wp_deregister_script('jquery-swiper');
             wp_deregister_script('mailchimp-woocommerce');
+            wp_enqueue_script(
+                'updated-jquery',
+                'https://code.jquery.com/jquery-3.5.1.min.js',
+                [],
+                '3.5.1',
+                true
+            );
         }
 
         if (is_product() || !(is_cart() || is_checkout() || is_woocommerce() || is_account_page())) {
@@ -120,13 +127,6 @@ class AssetsServiceProvider extends ServiceProvider
     {
         if (is_product()) {
             wp_deregister_script('elementor-pro-frontend');
-            wp_enqueue_script(
-                'updated-jquery',
-                'https://code.jquery.com/jquery-3.5.1.min.js',
-                [],
-                '3.5.1',
-                true
-            );
         }
     }
 

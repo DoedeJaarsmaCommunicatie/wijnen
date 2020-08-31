@@ -1,7 +1,7 @@
 import { ProductUspSlider } from '../lib/Sliders'
 import { Linker } from '../lib/WooCommerce';
 import { renderShippingDate } from '../services/shipping-calculator'
-import { renderLargeAddToCart } from '../services/add-to-cart'
+import { renderLargeAddToCart } from '../services/add-to-cart';
 
 export default {
 	init() {

@@ -47,7 +47,16 @@
             <i class="fas fa-truck"></i> {{ theme.theme_mod('shipping_fee', 'Gratis verzending vanaf € 60,-') }}
         </div>
         <div>
-            <i class="fas fa-dolly"></i> {{ theme.theme_mod('delivary_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
+            <i class="fas fa-dolly"></i>
+            {% if (product.is_in_stock or product.is_dropshipped) and not product.is_on_backorder %}
+                <span data-days="{{ can_ship_today() ? product.get_shipping_days() : product.get_shipping_days(1) }}" class="pre-shipping-date-calc">
+                    <noscript>
+                        {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
+                    </noscript>
+                </span>
+            {% else %}
+                {{ theme.theme_mod('delivery_time', 'Voor 15:00 besteld, dezelfde werkdag verzonden') }}
+            {% endif %}
         </div>
         <div>
             <i class="fas fa-wine-bottle"></i> Per fles te bestellen
