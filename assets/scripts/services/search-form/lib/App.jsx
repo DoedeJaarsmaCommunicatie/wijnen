@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 const SearchApp = styled.div`
   display: flex;
-  width: 100%;
+  width: 120px;
   position: relative;
   background: transparent;
   
@@ -15,6 +15,20 @@ const SearchApp = styled.div`
   	color: #1c413f;
   	&::placeholder {
   		opacity: 0.8;
+  	}
+  }
+  
+  button {
+  	display: none;
+  }
+  
+  .search-auto-fill {
+	  display: none;
+  }
+  
+  &:focus-within {
+  	.search-auto-fill {
+  		display: block;
   	}
   }
 `;

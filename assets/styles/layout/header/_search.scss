@@ -25,7 +25,22 @@ $search-form-border-color: #1c413f !default;
 
   @include radii;
 
-  @media screen and (min-width: get-breakpoint('md')) {
-    min-width: 250px;
+  @screen lg {
+    &:focus-within {
+      position: absolute;
+      background: hsl(0, 0%, 100%);
+      right: 0;
+      bottom: 0;
+      top: 0;
+      left: 15vw;
+
+      button {
+        display: block;
+      }
+
+      & .search-app {
+        width: 100%;
+      }
+    }
   }
 }
