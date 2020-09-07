@@ -12,12 +12,11 @@
   position: relative;
   height: $product-card-sm-height;
 
-  &.product-label {
+  & .product-label {
+    @apply bg-tertiary text-black;
     position: absolute;
     top: 2rem;
     left: 0;
-    background: $product-card-sm-label-background;
-    color: $product-card-sm-label-color;
     border-top-right-radius: $product-card-sm-label-radius;
     border-bottom-right-radius: $product-card-sm-label-radius;
     padding: $product-card-sm-label-padding;

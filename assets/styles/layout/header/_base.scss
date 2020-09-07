@@ -6,12 +6,11 @@ $header-sticky: true !default;
 $topnav-spacing: $padding_small !default;
 
 header.header {
-  background: $secondary;
-  color: $header-color;
+  @apply bg-tertiary text-black;
   padding: $header-padding;
 
   @screen lg {
-    background: $header-background;
+    @apply bg-tertiary;
   }
 
   .custom_logo_wrapper {
@@ -23,7 +22,7 @@ header.header {
   }
 
   .custom_logo {
-    max-height: 21px;
+    max-height: 27px;
     @screen lg {
       max-height: 40px;
     }

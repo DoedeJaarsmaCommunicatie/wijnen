@@ -1,7 +1,7 @@
 $logo-height: 65px !default;
 
 .logo-header {
-  background: $primary;
+  @apply bg-primary;
   padding: .5rem 0;
 
   .custom_logo_wrapper {
@@ -13,7 +13,7 @@ $logo-height: 65px !default;
   }
 
   @screen lg {
-    background: $secondary;
+    @apply bg-primary;
     padding: 1rem 0;
   }
 }
@@ -22,7 +22,6 @@ $logo-height: 65px !default;
   max-height: $logo-height;
   @media screen and (max-width: 1023px) {
     max-width: 300px !important;
-    margin-bottom: .5rem;
   }
 }
 

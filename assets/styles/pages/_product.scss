@@ -203,7 +203,7 @@
 
 .product-usp-stock {
     &.stock-instock {
-        color: $secondary;
+        @apply text-primary;
     }
 }
 
@@ -244,7 +244,8 @@
     }
 
     .simplefavorite-button {
-        @extend %btn , .secondary, .round, .large;
+        @apply bg-tertiary text-black;
+        @extend %btn, .round, .large;
 
         &.loading {
             cursor: wait;
@@ -368,5 +369,15 @@
                 transform: scale(1);
             }
         }
+    }
+}
+
+.pr-add-to-cart-large {
+    button {
+        @apply bg-primary;
+    }
+
+    input {
+        @apply border-primary;
     }
 }

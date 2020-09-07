@@ -9,7 +9,6 @@ $search-form-border-color: #1c413f !default;
   background: $search-form-background-color;
   display: flex;
   padding: $search-form-padding;
-  border: $search-form-border-width solid $search-form-border-color;
 
   & .search-form-input {
     color: $black;
@@ -42,5 +41,12 @@ $search-form-border-color: #1c413f !default;
         width: 100%;
       }
     }
+  }
+}
+
+.search-form-input {
+  &::placeholder {
+    color: #000;
+    opacity: 0;
   }
 }

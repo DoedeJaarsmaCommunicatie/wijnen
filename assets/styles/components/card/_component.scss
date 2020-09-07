@@ -2,10 +2,7 @@
   background: $card_background;
   color: $card_color;
   padding: $padding;
-
-  @if $shadow {
-    @include shadow;
-  }
+  @apply border border-primary;
 
   @if $card_radius {
     @include radii;

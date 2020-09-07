@@ -1,3 +1,8 @@
 {
-    "/dist/styles/main.css": "/dist/styles/main.css"
+    "/dist/scripts/vendor.js": "/dist/scripts/vendor.js?id=afba26a89df7239c5d8a",
+    "/dist/scripts/main.js": "/dist/scripts/main.js?id=fec861aaa1294ed6040e",
+    "/dist/scripts/manifest.js": "/dist/scripts/manifest.js",
+    "/dist/scripts/routes/common.js": "/dist/scripts/routes/common.js?id=c3ad679febab80efcfc6",
+    "/dist/scripts/routes/home.js": "/dist/scripts/routes/home.js?id=e7ae347ead81ec31aeac",
+    "/dist/scripts/routes/product.js": "/dist/scripts/routes/product.js?id=a679213f3bb0c3dfc724"
 }

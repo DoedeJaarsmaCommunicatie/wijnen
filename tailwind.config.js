@@ -5,11 +5,13 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          default: 'hsl(0,48%,59%)',
+          default: 'hsl(33,26%,52%)',
         },
         secondary: {
-          default: 'hsl(177,40%,73%)',
-          def: 'hsl(173,58%,39%)',
+          default: 'hsl(46,52%,94%)',
+        },
+        tertiary: {
+          default: 'hsl(20,25%,79%)'
         },
         black: {
           default: 'hsl(0,0%,0%)',
@@ -22,6 +24,9 @@ module.exports = {
         }
       }
     },
+  },
+  future: {
+    removeDeprecatedGapUtilities: true,
   },
   variants: {},
   plugins: [],

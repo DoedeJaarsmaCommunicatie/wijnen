@@ -19,9 +19,9 @@ export function renderAddToCartButtons() {
 
 		render(<ThemeProvider theme={{
 			outlined: !!outline,
-			background: '#c96464',
+			background: '#a48865',
 			color: '#fff',
-			borderColor: '#c96464',
+			borderColor: '#a48865',
 		}}>
 			<StyledAddToCartIconButton product={Number(product)}
 				  label={label}
@@ -44,9 +44,9 @@ export function renderLargeAddToCart()  {
 
 		render(<ThemeProvider theme={{
 			outlined: !!outline,
-			background: '#c96464',
+			background: '#a48865',
 			color: '#fff',
-			borderColor: '#c96464'
+			borderColor: '#a48865'
 		}}>
 			<StyledPlusMinusForm product={Number(product)} amount={Number(qty)} />
 		</ThemeProvider>, target);

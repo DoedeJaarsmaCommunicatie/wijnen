@@ -103,7 +103,7 @@ export class App extends Component {
 		return (
 			<SearchApp className={'search-app'}>
 				<input
-					placeholder={'Zoek een product...'}
+					placeholder={'Zoeken...'}
 					id={'s'}
 					name={'s'}
 					type={'search'}

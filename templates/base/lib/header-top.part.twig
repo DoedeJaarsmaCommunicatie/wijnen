@@ -27,6 +27,15 @@
                 </small>
             </a>
 
+            <a class="top-nav-item pre-favorites-total relative" href="{{ get_custom_page_url('favorites') }}">
+                <noscript>
+                    <i class="fas fa-heart"></i>
+                    <small class="block lg:inline">
+                        Favorieten
+                    </small>
+                </noscript>
+            </a>
+
             <a class="top-nav-item pr-shopping-cart-button relative"
                data-initial-count="{{ wc_cart_count }}"
                href="{{ get_cart_url() }}">
@@ -41,15 +50,6 @@
                     </small>
                 </a>
             </noscript>
-
-            <a class="top-nav-item pre-favorites-total relative" href="{{ get_custom_page_url('favorites') }}">
-                <noscript>
-                    <i class="fas fa-heart"></i>
-                    <small class="block lg:inline">
-                        Favorieten
-                    </small>
-                </noscript>
-            </a>
         </nav>
     </div>
 </header>
