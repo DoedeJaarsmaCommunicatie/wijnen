@@ -8,11 +8,6 @@
         {{ term.description|wpautop }}
         {% do action('wijnen/taxonomy/country/'~term.slug~'/content/post') %}
     </main>
-
-    {{ include('partials/taxonomies/country/regions.html.twig', { term: term }) }}
-    {{ include('partials/taxonomies/country/domains.html.twig', { term: term }) }}
-    {{ include('partials/taxonomies/country/grapes.html.twig', { term: term }) }}
-
     <section class="container mx-auto content mb-5">
         <h2>{{ __('Bekijk ons aanbod wijnen uit %s')|format(term.name) }}</h2>
         <div class="products-large horizontal-products-unbound px-4 lg:px-0 py-4">
@@ -26,4 +21,9 @@
             Meer wijnen uit {{ term.name }} bekijken
         </a>
     </section>
+    {{ include('partials/taxonomies/country/regions.html.twig', { term: term }) }}
+    {{ include('partials/taxonomies/country/domains.html.twig', { term: term }) }}
+    {{ include('partials/taxonomies/country/grapes.html.twig', { term: term }) }}
+
+
 {% endblock %}
